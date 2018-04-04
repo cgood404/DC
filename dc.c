@@ -1,4 +1,4 @@
-#include "DC.h"
+#include "dc.h"
 
 struct variable VARIABLES[0];
 void readfile(char *file_name){
@@ -11,13 +11,10 @@ void readfile(char *file_name){
 }
 
 int main(int argc, char **argv){
-    bool read_file = false;
-    if(argc > 1 && argv[1]){
-        printf("opening file: %s\n", argv[2]);
-        read_file = true;
+    if(argc > 1 && argv[1]){ // if user specifies a file to open
         readfile(argv[1]);
     }
-    else{
+    else{ // if user wants a command line
         printf("DC v0.0.1\nNo copyright, no money back, no nothin\'\n\n");
         while(true){
             char inputstr[100];
