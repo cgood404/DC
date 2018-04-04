@@ -8,12 +8,15 @@
 #include <string.h>
 #include <stdint.h>
 
-const char *KEYWORDS[] = {"print", "conjure", "string", "num", "bool"};
-
-typedef struct _Variable {
-    char *name;
-    int pvalue;
-} Variable;
+// typedef struct _TOKEN {
+//     char *keyword;
+//     int value_ptr;
+// } TOKEN;
+enum {
+    Plus, Min, Mult, Div, Mod, Inc, Dec,
+    Assn, Eql, NotEql, If, Else,
+    Func, Main, Var, Print, EOL
+};
 struct dc_file {
     char *__name__;
     FILE *file;

@@ -1,12 +1,13 @@
 #include "dc.h"
 
-Variable VARIABLES[0];
+
 void readfile(char *file_name){
     FILE *file = fopen(file_name, "r");
-    if(file == NULL){
-        printf("FileNotFound: %s\n", file_name);
+    if(file == NULL || file <= 0){
+        printf("FileNotFoundError: %s\n", file_name);
         exit(1);
     }
+
     fclose(file);
 }
 
