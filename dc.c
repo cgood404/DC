@@ -1,6 +1,6 @@
 #include "dc.h"
 
-struct variable VARIABLES[0];
+Variable VARIABLES[0];
 void readfile(char *file_name){
     FILE *file = fopen(file_name, "r");
     if(file == NULL){

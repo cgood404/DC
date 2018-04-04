@@ -10,10 +10,10 @@
 
 const char *KEYWORDS[] = {"print", "conjure", "string", "num", "bool"};
 
-struct variable {
+typedef struct _Variable {
     char *name;
     int pvalue;
-};
+} Variable;
 struct dc_file {
     char *__name__;
     FILE *file;
