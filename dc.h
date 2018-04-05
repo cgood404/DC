@@ -7,8 +7,6 @@
 #include <string.h>
 #include <stdint.h>
 
-#include "dc_token.h"
-
 struct dc_file {
     char *__name__;
     FILE *file;

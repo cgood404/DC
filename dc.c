@@ -1,4 +1,6 @@
 #include "dc.h"
+#include "dc_token.h"
+#include "dc_lexer.h"
 
 
 void readfile(char *file_name){
@@ -11,10 +13,11 @@ void readfile(char *file_name){
 }
 
 void raise(char *exception, int line, int column){
-    return;
+    exit(1);
 }
 
 int main(int argc, char **argv){
+    createTokens();
     if(argc > 1 && argv[1]){ // if user specifies a file to open
         readfile(argv[1]);
     }
@@ -26,6 +29,8 @@ int main(int argc, char **argv){
             scanf("%s", inputstr);
             if(strncmp(inputstr, "exit", 100) == 0){
                 return 0;
+            }else{
+                
             }
         }
         

@@ -1,10 +1,11 @@
 #ifndef lexer_dc_h
 #define lexer_dc_h
 
-#include "dc.h"
-#include "dc_token.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 void createTokens(void);
+void lex(char *line, int length);
 
 void sol(char* keyword, int length);
 void plus(char* keyword, int length);
@@ -25,5 +26,6 @@ void print(char* keyword, int length);
 void run(char* keyword, int length);
 void eol(char* keyword, int length);
 void eof(char* keyword, int length);
+void exits(char* keyword, int length);
 
 #endif
