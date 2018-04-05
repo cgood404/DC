@@ -4,4 +4,8 @@
 #include "dc.h"
 #include "dc_token.h"
 
+void createTokens(void);
+void plus(char* keyword, int length);
+void min(char *keyword, int length);
+
 #endif

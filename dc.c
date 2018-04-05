@@ -7,7 +7,6 @@ void readfile(char *file_name){
         printf("FileNotFoundError: %s\n", file_name);
         exit(1);
     }
-
     fclose(file);
 }
 

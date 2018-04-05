@@ -2,16 +2,17 @@
 #define token_dc_h
 
 typedef int destination_t(char*, int);
-typedef struct _Token {
+typedef struct {
     char *keyword;
-    char *type;
+    int type;
     destination_t destination;
 } Token;
-enum {
-    Plus, Min, Mult, Div, Mod, Inc, Dec,
-    Assn, Eql, NotEql, If, Else,
-    Func, Main, Var, Print, EOL
+enum tokens {
+    _Plus, _Min, _Mult, _Div, _Mod, _Inc, _Dec,
+    _Assn, _Eql, _NotEql, _If, _Then, _Else,
+    _Func, _Var, _Print, _EOL, __TOKENS_SIZE
 };
 
-
+Token SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
+    EQL, NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, EOL;
 #endif

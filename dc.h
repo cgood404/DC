@@ -9,10 +9,6 @@
 
 #include "dc_token.h"
 
-// typedef struct _TOKEN {
-//     char *keyword;
-//     int value_ptr;
-// } TOKEN;
 struct dc_file {
     char *__name__;
     FILE *file;
