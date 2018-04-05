@@ -10,6 +10,10 @@ void readfile(char *file_name){
     fclose(file);
 }
 
+void raise(char *exception, int line, int column){
+    return;
+}
+
 int main(int argc, char **argv){
     if(argc > 1 && argv[1]){ // if user specifies a file to open
         readfile(argv[1]);
