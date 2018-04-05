@@ -82,6 +82,7 @@ void eof(char* keyword, int length){
 }
 
 void exits(char*keyword, int length){
+    printf("Exiting...");
     exit(0);
 }
 
