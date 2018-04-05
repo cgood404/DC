@@ -3,8 +3,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void createTokens(void);
+void printTokens(void);
 void lex(char *line, int length);
 
 void sol(char* keyword, int length);

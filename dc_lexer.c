@@ -2,29 +2,34 @@
 #include "dc_token.h"
 
 // I HATE "IF" STATEMENTS >:(
-
-void createTokens(void){
-    Token SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
+Token SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
         EQL, NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EXIT;
 
+void createTokens(void){
     Token tokens[] = {SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
         EQL, NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EXIT};
 
     char *keywords[] = {"(","+", "-", "*", "/", "\%", "++", "--",
         "=", "==", "!=", "?", ":", "::", "define", "print", "run", ")", "\0", "exit"};
         
-    destination_t destinations[] = {*sol, *plus, *min, *mult, *divide, *mod,
-        *inc, *dec, *assn, *eql, *noteql, *ifs, *thens, *elses, *define, *print, *run, *eol, *eof, *exits};
+    destination_t destinations[] = {&sol, &plus, &min, &mult, &divide, &mod,
+        &inc, &dec, &assn, &eql, &noteql, &ifs, &thens, &elses, &define, &print,
+        &run, &eol, &eof, &exits};
 
     for(int i = _SOL; i < __TOKENS_SIZE; i++){
         tokens[i].type = i;
-        tokens[i].keyword = keywords[i];
+        strcpy(tokens[i].keyword, keywords[i]);
         tokens[i].destination = destinations[i];
     }
-    // for(int i = _SOL; i < __TOKENS_SIZE; i++){
-    //     printf("TOKEN: %s %d\n", tokens[i].keyword, tokens[i].type);
-    //     tokens[i].destination("", 0);
-    // }
+}
+
+void printTokens(void){
+    Token tokens[] = {SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
+        EQL, NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EXIT};
+    for(int i = _SOL; i < __TOKENS_SIZE; i++){
+        printf("TOKEN: %s %d\n", tokens[i].keyword, tokens[i].type);
+        tokens[i].destination("", 0);
+    }
 }
 
 void lex(char *line, int length){

@@ -17,7 +17,7 @@ WHEN CREATING NEW KEYWORDS:
 */
 typedef void (*destination_t)(char*, int);
 typedef struct {
-    char *keyword;
+    char keyword[20];
     int type;
     destination_t destination;
 } Token;
@@ -26,5 +26,8 @@ enum token_types {
     _Assn, _Eql, _NotEql, _If, _Then, _Else,
     _Define, _Print, _Run,  _EOL, _Exits, __TOKENS_SIZE
 };
+
+extern Token SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
+        EQL, NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EXIT;
 
 #endif
