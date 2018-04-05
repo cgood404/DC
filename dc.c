@@ -18,7 +18,6 @@ void raise(char *exception, int line, int column){
 
 int main(int argc, char **argv){
     createTokens();
-    printTokens();
     if(argc > 1 && argv[1]){ // if user specifies a file to open
         readfile(argv[1]);
     }
@@ -28,7 +27,7 @@ int main(int argc, char **argv){
             char inputstr[100];
             printf(">> ");
             scanf("%s", inputstr);
-            
+            lex(inputstr, strlen(inputstr));
         }
         
     }

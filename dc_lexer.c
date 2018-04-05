@@ -5,41 +5,6 @@
 Token SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
         EQL, NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EXIT;
 
-void createTokens(void){
-    Token tokens[] = {SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
-        EQL, NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EXIT};
-
-    char *keywords[] = {"(","+", "-", "*", "/", "\%", "++", "--",
-        "=", "==", "!=", "?", ":", "::", "define", "print", "run", ")", "\0", "exit"};
-        
-    destination_t destinations[] = {&sol, &plus, &min, &mult, &divide, &mod,
-        &inc, &dec, &assn, &eql, &noteql, &ifs, &thens, &elses, &define, &print,
-        &run, &eol, &eof, &exits};
-
-    for(int i = _SOL; i < __TOKENS_SIZE; i++){
-        tokens[i].type = i;
-        strcpy(tokens[i].keyword, keywords[i]);
-        tokens[i].destination = destinations[i];
-    }
-}
-
-void printTokens(void){
-    Token tokens[] = {SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
-        EQL, NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EXIT};
-    for(int i = _SOL; i < __TOKENS_SIZE; i++){
-        printf("TOKEN: %s %d\n", tokens[i].keyword, tokens[i].type);
-        tokens[i].destination("", 0);
-    }
-}
-
-void lex(char *line, int length){
-    for(int i = 0; i < length; i++){
-
-    }
-}
-
-
-
 void sol(char *keyword, int length){
     printf("Found a start of line token.\n");
 }
@@ -118,4 +83,38 @@ void eof(char* keyword, int length){
 
 void exits(char*keyword, int length){
     exit(0);
+}
+
+void printTokens(void){
+    Token tokens[] = {SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
+        EQL, NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EXIT};
+    for(int i = _SOL; i < __TOKENS_SIZE; i++){
+        printf("TOKEN: %s %d\n", tokens[i].keyword, tokens[i].type);
+        tokens[i].destination("", 0);
+    }
+}
+
+int lex(char *statement, int length){
+    for(int i = 0; i < length; i++){
+        
+    }
+    return 0;
+}
+
+void createTokens(void){
+    Token *tokens[] = {&SOL, &PLUS, &MIN, &MULT, &DIV, &MOD, &INC, &DEC, &ASSN,
+        &EQL, &NOTEQL, &IF, &THEN, &ELSE, &DEFINE, &PRINT, &RUN, &EOL, &EXIT};
+
+    char *keywords[] = {"(","+", "-", "*", "/", "\%", "++", "--",
+        "=", "==", "!=", "?", ":", "::", "define", "print", "run", ")", "\0", "exit"};
+        
+    destination_t destinations[] = {&sol, &plus, &min, &mult, &divide, &mod,
+        &inc, &dec, &assn, &eql, &noteql, &ifs, &thens, &elses, &define, &print,
+        &run, &eol, &eof, &exits};
+
+    for(int i = _SOL; i < __TOKENS_SIZE; i++){
+        strcpy(tokens[i] -> keyword, keywords[i]);
+        tokens[i] -> type = i;
+        tokens[i] -> destination = destinations[i];
+    }
 }
