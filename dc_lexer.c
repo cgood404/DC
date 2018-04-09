@@ -1,16 +1,16 @@
 #include "dc_lexer.h"
 
 Token SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
-        NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EOFS, EXIT, VARIABLE;
+        NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EXIT, EOFS, VARIABLE;
 Token *tokens[] = {&SOL, &PLUS, &MIN, &MULT, &DIV, &MOD, &INC, &DEC, &ASSN,
-        &NOTEQL, &IF, &THEN, &ELSE, &DEFINE, &PRINT, &RUN, &EOL, &EOFS, &EXIT, &VARIABLE};
+        &NOTEQL, &IF, &THEN, &ELSE, &DEFINE, &PRINT, &RUN, &EOL, &EXIT, &EOFS, &VARIABLE};
 
 Token file_tokens[] = {};
 int filesize = 0;
 int filemax = 0;
 
 int addToFile(Token token){
-
+    printToken(token);
     return 0;
 }
 
@@ -105,6 +105,9 @@ void printToken(Token token){
 
 int matchStart(char *first, char *second, int first_length, int second_length){
     int bool_matches = true;
+    if(first_length == 0 && second != '\0'){
+        return bool_matches;
+    }
     if(first_length < second_length){
         for(int i = 0; i < first_length; i++){
             if(first[i] != second[i]){
@@ -134,6 +137,7 @@ int lex(char *statement, int length){
     for(int i = _SOL; i < __TOKENS_SIZE; i++){
         if(matchToken(*tokens[i], statement, length)){
             addToFile(*tokens[i]);
+            break;
         }
     }
     return 0;
@@ -157,13 +161,13 @@ void createTokens(void){
                         "print", // Print
                         "run", // Run
                         ")", // End of Line
-                        "\0", // End of File
                         "exit", // Exit
-                        ""}; // Variables (matches everything else)
+                        "", // Variables (matches everything else)
+                        "\0"}; // End of File
         
     destination_t destinations[] = {&sol, &plus, &min, &mult, &divide, &mod,
         &inc, &dec, &assn, &noteql, &ifs, &thens, &elses, &define, &print,
-        &run, &eol, &eof, &exits, &variable};
+        &run, &eol, &exits, &variable, &eof};
 
     for(int i = _SOL; i < __TOKENS_SIZE; i++){
         strcpy(tokens[i] -> keyword, keywords[i]);

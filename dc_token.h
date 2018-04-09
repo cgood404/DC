@@ -28,6 +28,6 @@ enum token_types {
 };
 
 extern Token SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
-        NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EOFS, EXIT, VARIABLE;
+        NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EXIT, EOFS, VARIABLE;
 
 #endif
