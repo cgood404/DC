@@ -1,10 +1,18 @@
 #include "dc_lexer.h"
 
-// I HATE "IF" STATEMENTS >:(
 Token SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
-        EQL, NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EXIT;
+        NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EOFS, EXIT, VARIABLE;
 Token *tokens[] = {&SOL, &PLUS, &MIN, &MULT, &DIV, &MOD, &INC, &DEC, &ASSN,
-        &EQL, &NOTEQL, &IF, &THEN, &ELSE, &DEFINE, &PRINT, &RUN, &EOL, &EXIT};
+        &NOTEQL, &IF, &THEN, &ELSE, &DEFINE, &PRINT, &RUN, &EOL, &EOFS, &EXIT, &VARIABLE};
+
+Token file_tokens[] = {};
+int filesize = 0;
+int filemax = 0;
+
+int addToFile(Token token){
+
+    return 0;
+}
 
 void sol(char *keyword, int length){
     printf("Found a start of line token.\n");
@@ -82,15 +90,17 @@ void eof(char* keyword, int length){
     printf("Found an end of file token.\n");
 }
 
-void exits(char*keyword, int length){
+void exits(char* keyword, int length){
     exit(0);
 }
 
-void printTokens(void){        
-    for(int i = _SOL; i < __TOKENS_SIZE; i++){
-        printf("TOKEN: %s %d\n", tokens[i] -> keyword, tokens[i] -> type);
-        tokens[i] -> destination("", 0);
-    }
+void variable(char* keyword, int length){
+    printf("Found a variable token.\n");
+}
+
+void printToken(Token token){        
+    printf("%s %d\n", token.keyword, token.type);
+    token.destination("", 0);
 }
 
 int matchStart(char *first, char *second, int first_length, int second_length){
@@ -111,8 +121,8 @@ int matchStart(char *first, char *second, int first_length, int second_length){
     return bool_matches;
 }
 
-// currently just a high level wrapper for the matchStart function
-int expect(Token token, char *statement, int length){
+// Just a high level wrapper for the matchStart function
+int matchToken(Token token, char *statement, int length){
     if(matchStart(token.keyword, statement, strlen(token.keyword), length)){
         return true;
     }else{
@@ -121,17 +131,39 @@ int expect(Token token, char *statement, int length){
 }
 
 int lex(char *statement, int length){
-    expect(SOL, statement, length);
+    for(int i = _SOL; i < __TOKENS_SIZE; i++){
+        if(matchToken(*tokens[i], statement, length)){
+            addToFile(*tokens[i]);
+        }
+    }
     return 0;
 }
 
 void createTokens(void){
-    char *keywords[] = {"(","+", "-", "*", "/", "\%", "++", "--",
-        "=", "==", "!=", "?", ":", "::", "define", "print", "run", ")", "\0", "exit"};
+    char *keywords[] = {"(", // Start of Line
+                        "+", // Plus
+                        "-", // Minus
+                        "*", // Multiply
+                        "/", // Divide
+                        "\%", // Modulus
+                        "++", // Increment
+                        "--", // Decrement
+                        "==", // Is Equal To
+                        "!=", // Is Not Equal To
+                        "?", // If
+                        ":", // Then
+                        "::", // Else
+                        "define", // Define
+                        "print", // Print
+                        "run", // Run
+                        ")", // End of Line
+                        "\0", // End of File
+                        "exit", // Exit
+                        ""}; // Variables (matches everything else)
         
     destination_t destinations[] = {&sol, &plus, &min, &mult, &divide, &mod,
-        &inc, &dec, &assn, &eql, &noteql, &ifs, &thens, &elses, &define, &print,
-        &run, &eol, &eof, &exits};
+        &inc, &dec, &assn, &noteql, &ifs, &thens, &elses, &define, &print,
+        &run, &eol, &eof, &exits, &variable};
 
     for(int i = _SOL; i < __TOKENS_SIZE; i++){
         strcpy(tokens[i] -> keyword, keywords[i]);

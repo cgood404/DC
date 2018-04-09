@@ -23,11 +23,11 @@ typedef struct {
 } Token;
 enum token_types {
     _SOL, _Plus, _Min, _Mult, _Div, _Mod, _Inc, _Dec,
-    _Assn, _Eql, _NotEql, _If, _Then, _Else,
-    _Define, _Print, _Run,  _EOL, _Exits, __TOKENS_SIZE
+    _Assn, _NotEql, _If, _Then, _Else,
+    _Define, _Print, _Run,  _EOL, _EOF, _Exits, _Variable, __TOKENS_SIZE
 };
 
 extern Token SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
-        EQL, NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EXIT;
+        NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EOFS, EXIT, VARIABLE;
 
 #endif

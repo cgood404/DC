@@ -10,9 +10,9 @@
 #define false 0
 
 void createTokens(void);
-void printTokens(void);
+void printToken(Token token);
 int lex(char *line, int length);
-int expect(Token token, char *statement, int length);
+int matchToken(Token token, char *statement, int length);
 int matchStart(char *first, char *second, int first_length, int secnod_length);
 
 void sol(char* keyword, int length);
@@ -35,5 +35,6 @@ void run(char* keyword, int length);
 void eol(char* keyword, int length);
 void eof(char* keyword, int length);
 void exits(char* keyword, int length);
+void variable(char* keyword, int length);
 
 #endif
