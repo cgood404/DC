@@ -1,9 +1,18 @@
 #include "dc_lexer.h"
-#include "dc_token.h"
 
-// I HATE "IF" STATEMENTS >:(
 Token SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
-        EQL, NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EXIT;
+        NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EXIT, EOFS, VARIABLE;
+Token *tokens[] = {&SOL, &PLUS, &MIN, &MULT, &DIV, &MOD, &INC, &DEC, &ASSN,
+        &NOTEQL, &IF, &THEN, &ELSE, &DEFINE, &PRINT, &RUN, &EOL, &EXIT, &EOFS, &VARIABLE};
+
+Token file_tokens[] = {};
+int filesize = 0;
+int filemax = 0;
+
+int addToFile(Token token){
+    printToken(token);
+    return 0;
+}
 
 void sol(char *keyword, int length){
     printf("Found a start of line token.\n");
@@ -81,36 +90,84 @@ void eof(char* keyword, int length){
     printf("Found an end of file token.\n");
 }
 
-void exits(char*keyword, int length){
+void exits(char* keyword, int length){
     exit(0);
 }
 
-void printTokens(void){
-    Token tokens[] = {SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
-        EQL, NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EXIT};
-    for(int i = _SOL; i < __TOKENS_SIZE; i++){
-        printf("TOKEN: %s %d\n", tokens[i].keyword, tokens[i].type);
-        tokens[i].destination("", 0);
+void variable(char* keyword, int length){
+    printf("Found a variable token.\n");
+}
+
+void printToken(Token token){        
+    printf("%s %d\n", token.keyword, token.type);
+    token.destination("", 0);
+}
+
+int matchStart(char *first, char *second, int first_length, int second_length){
+    int bool_matches = true;
+    if(first_length == 0 && second != '\0'){
+        return bool_matches;
+    }
+    if(first_length < second_length){
+        for(int i = 0; i < first_length; i++){
+            if(first[i] != second[i]){
+                bool_matches = false;
+            }
+        }
+    }else{
+        for(int i = 0; i < second_length; i++){
+            if(first[i] != second[i]){
+                bool_matches = false;
+            }
+        }
+    }
+    return bool_matches;
+}
+
+// Just a high level wrapper for the matchStart function
+int matchToken(Token token, char *statement, int length){
+    if(matchStart(token.keyword, statement, strlen(token.keyword), length)){
+        return true;
+    }else{
+        return false;
     }
 }
 
 int lex(char *statement, int length){
-    for(int i = 0; i < length; i++){
-        
+    for(int i = _SOL; i < __TOKENS_SIZE; i++){
+        if(matchToken(*tokens[i], statement, length)){
+            addToFile(*tokens[i]);
+            break;
+        }
     }
     return 0;
 }
 
 void createTokens(void){
-    Token *tokens[] = {&SOL, &PLUS, &MIN, &MULT, &DIV, &MOD, &INC, &DEC, &ASSN,
-        &EQL, &NOTEQL, &IF, &THEN, &ELSE, &DEFINE, &PRINT, &RUN, &EOL, &EXIT};
-
-    char *keywords[] = {"(","+", "-", "*", "/", "\%", "++", "--",
-        "=", "==", "!=", "?", ":", "::", "define", "print", "run", ")", "\0", "exit"};
+    char *keywords[] = {"(", // Start of Line
+                        "+", // Plus
+                        "-", // Minus
+                        "*", // Multiply
+                        "/", // Divide
+                        "\%", // Modulus
+                        "++", // Increment
+                        "--", // Decrement
+                        "==", // Is Equal To
+                        "!=", // Is Not Equal To
+                        "?", // If
+                        ":", // Then
+                        "::", // Else
+                        "define", // Define
+                        "print", // Print
+                        "run", // Run
+                        ")", // End of Line
+                        "exit", // Exit
+                        "", // Variables (matches everything else)
+                        "\0"}; // End of File
         
     destination_t destinations[] = {&sol, &plus, &min, &mult, &divide, &mod,
-        &inc, &dec, &assn, &eql, &noteql, &ifs, &thens, &elses, &define, &print,
-        &run, &eol, &eof, &exits};
+        &inc, &dec, &assn, &noteql, &ifs, &thens, &elses, &define, &print,
+        &run, &eol, &exits, &variable, &eof};
 
     for(int i = _SOL; i < __TOKENS_SIZE; i++){
         strcpy(tokens[i] -> keyword, keywords[i]);
