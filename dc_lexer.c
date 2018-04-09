@@ -1,9 +1,10 @@
 #include "dc_lexer.h"
-#include "dc_token.h"
 
 // I HATE "IF" STATEMENTS >:(
 Token SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
         EQL, NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EXIT;
+Token *tokens[] = {&SOL, &PLUS, &MIN, &MULT, &DIV, &MOD, &INC, &DEC, &ASSN,
+        &EQL, &NOTEQL, &IF, &THEN, &ELSE, &DEFINE, &PRINT, &RUN, &EOL, &EXIT};
 
 void sol(char *keyword, int length){
     printf("Found a start of line token.\n");
@@ -85,26 +86,46 @@ void exits(char*keyword, int length){
     exit(0);
 }
 
-void printTokens(void){
-    Token tokens[] = {SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
-        EQL, NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EXIT};
+void printTokens(void){        
     for(int i = _SOL; i < __TOKENS_SIZE; i++){
-        printf("TOKEN: %s %d\n", tokens[i].keyword, tokens[i].type);
-        tokens[i].destination("", 0);
+        printf("TOKEN: %s %d\n", tokens[i] -> keyword, tokens[i] -> type);
+        tokens[i] -> destination("", 0);
+    }
+}
+
+int matchStart(char *first, char *second, int first_length, int second_length){
+    int bool_matches = true;
+    if(first_length < second_length){
+        for(int i = 0; i < first_length; i++){
+            if(first[i] != second[i]){
+                bool_matches = false;
+            }
+        }
+    }else{
+        for(int i = 0; i < second_length; i++){
+            if(first[i] != second[i]){
+                bool_matches = false;
+            }
+        }
+    }
+    return bool_matches;
+}
+
+// currently just a high level wrapper for the matchStart function
+int expect(Token token, char *statement, int length){
+    if(matchStart(token.keyword, statement, strlen(token.keyword), length)){
+        return true;
+    }else{
+        return false;
     }
 }
 
 int lex(char *statement, int length){
-    for(int i = 0; i < length; i++){
-        
-    }
+    expect(SOL, statement, length);
     return 0;
 }
 
 void createTokens(void){
-    Token *tokens[] = {&SOL, &PLUS, &MIN, &MULT, &DIV, &MOD, &INC, &DEC, &ASSN,
-        &EQL, &NOTEQL, &IF, &THEN, &ELSE, &DEFINE, &PRINT, &RUN, &EOL, &EXIT};
-
     char *keywords[] = {"(","+", "-", "*", "/", "\%", "++", "--",
         "=", "==", "!=", "?", ":", "::", "define", "print", "run", ")", "\0", "exit"};
         
