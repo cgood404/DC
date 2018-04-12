@@ -30,12 +30,7 @@ void noteql(char* keyword, int length);
 void ifs(char* keyword, int length);
 void thens(char* keyword, int length);
 void elses(char* keyword, int length);
-void define(char* keyword, int length);
-void lambda(char* keyword, int length);
-void print(char* keyword, int length);
-void run(char* keyword, int length);
 void eol(char* keyword, int length);
 void eof(char* keyword, int length);
-void exits(char* keyword, int length);
 
 #endif

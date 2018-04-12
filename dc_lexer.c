@@ -1,9 +1,9 @@
 #include "dc_lexer.h"
 
 Token SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
-        NOTEQL, IF, THEN, ELSE, DEFINE, LAMBDA, PRINT, RUN, EOL, EXIT, EOFS;
+        NOTEQL, IF, THEN, ELSE, EOL, EOFS;
 Token *tokens[] = {&SOL, &PLUS, &MIN, &MULT, &DIV, &MOD, &INC, &DEC, &ASSN,
-        &NOTEQL, &IF, &THEN, &ELSE, &DEFINE, &LAMBDA, &PRINT, &RUN, &EOL, &EXIT, &EOFS};
+        &NOTEQL, &IF, &THEN, &ELSE, &EOL, &EOFS};
 
 Token file_tokens[] = {};
 int filesize = 0;
@@ -70,32 +70,12 @@ void elses(char *keyword, int length){
     printf("Found an else token.\n");
 }
 
-void define(char *keyword, int length){
-    printf("Found a define token.\n");
-}
-
-void lambda(char *keyword, int length){
-    printf("Found a lambda token\n");
-}
-
-void print(char *keyword, int length){
-    printf("Found a print token.\n");
-}
-
-void run(char *keyword, int length){
-    printf("Found a run token.\n");
-}
-
 void eol(char *keyword, int length){
     printf("Found an end of line token.\n");
 }
 
 void eof(char* keyword, int length){
     printf("Found an end of file token.\n");
-}
-
-void exits(char* keyword, int length){
-    exit(0);
 }
 
 void printToken(Token token){        
@@ -154,7 +134,7 @@ int lex(char *statement, int length){
 
 void createTokens(void){
     char end_of_file = EOF;
-    char *keywords[] = {"(", // Start of Line
+    char *symbols[] = {"(", // Start of Line
                         "+", // Plus
                         "-", // Minus
                         "*", // Multiply
@@ -167,20 +147,14 @@ void createTokens(void){
                         "?", // If
                         ":", // Then
                         "::", // Else
-                        "define", // Define
-                        "lambda", // Lambda
-                        "print", // Print
-                        "run", // Run
                         ")", // End of Line
-                        "exit", // Exit
                         &end_of_file}; // End of File
         
     destination_t destinations[] = {&sol, &plus, &min, &mult, &divide, &mod,
-        &inc, &dec, &assn, &noteql, &ifs, &thens, &elses, &define, &lambda, &print,
-        &run, &eol, &exits, &eof};
+        &inc, &dec, &assn, &noteql, &ifs, &thens, &elses, &eol, &eof};
 
     for(int i = _SOL; i < __TOKENS_SIZE; i++){
-        strcpy(tokens[i] -> keyword, keywords[i]);
+        strcpy(tokens[i] -> keyword, symbols[i]);
         tokens[i] -> type = i;
         tokens[i] -> destination = destinations[i];
     }
