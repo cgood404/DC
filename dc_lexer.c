@@ -2,9 +2,10 @@
 
 #define MAX_INPUT_SIZE 256
 
-Token SOL, INC, DEC, PLUSEQL, MINEQL, MULTEQL, DIVEQL, PLUS, MIN, MULT, DIV,
+Token COM, SOL, INC, DEC, PLUSEQL, MINEQL, MULTEQL, DIVEQL, PLUS, MIN, MULT, DIV,
         MOD, ASSN, NOTEQL, IF, THEN, ELSE, EOL, EOFS;
-Token *token_symbols[] = {&SOL, &INC, &DEC, &PLUSEQL, &MINEQL, &MULTEQL, &DIVEQL, &PLUS, &MIN, &MULT, &DIV,
+Token *token_symbols[] = {&COM, &SOL, &INC, &DEC,
+        &PLUSEQL, &MINEQL, &MULTEQL, &DIVEQL, &PLUS, &MIN, &MULT, &DIV,
         &MOD,  &ASSN, &NOTEQL, &IF, &ELSE, &THEN, &EOL, &EOFS};
 
 Token file_tokens[] = {};
@@ -58,7 +59,7 @@ void lex(char *statement, int length){
     char *buffer = malloc(MAX_INPUT_SIZE);
     while(j < length){
 
-        for(int i = _SOL; i < __TOKENS_SIZE; i++){
+        for(int i = _Com; i < __TOKENS_SIZE; i++){
             slice_str(statement, buffer, j, length);
             if(matchToken(*token_symbols[i], buffer, length - j)){
                 addToFile(*token_symbols[i]);
@@ -85,7 +86,8 @@ void lexfile(char *file_name){
 
 void createTokens(void){
     char end_of_file = EOF;
-    char *symbols[] = {"(", // Start of Line
+    char *symbols[] = {"//", // Comment
+                        "(", // Start of Line
                         "++", // Increment
                         "--", // Decrement
                         "+=", // Plus Equals
@@ -105,7 +107,7 @@ void createTokens(void){
                         ")", // End of Line
                         &end_of_file}; // End of File
 
-    for(int i = _SOL; i < __TOKENS_SIZE; i++){
+    for(int i = _Com; i < __TOKENS_SIZE; i++){
         strcpy(token_symbols[i] -> keyword, symbols[i]);
         token_symbols[i] -> type = i;
     }
