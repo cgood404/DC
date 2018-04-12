@@ -13,6 +13,7 @@ void createTokens(void);
 void printToken(Token token);
 int lex(char *line, int length);
 int matchToken(Token token, char *statement, int length);
+void slice_str(const char *str, char *buffer, size_t start, size_t end);
 int matchStart(char *first, char *second, int first_length, int secnod_length);
 
 void sol(char* keyword, int length);
@@ -36,6 +37,5 @@ void run(char* keyword, int length);
 void eol(char* keyword, int length);
 void eof(char* keyword, int length);
 void exits(char* keyword, int length);
-void variable(char* keyword, int length);
 
 #endif
