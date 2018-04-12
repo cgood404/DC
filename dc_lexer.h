@@ -11,7 +11,8 @@
 
 void createTokens(void);
 void printToken(Token token);
-int lex(char *line, int length);
+void lex(char *line, int length);
+void lexfile(char *file_name);
 int matchToken(Token token, char *statement, int length);
 void slice_str(const char *str, char *buffer, size_t start, size_t end);
 int matchStart(char *first, char *second, int first_length, int secnod_length);

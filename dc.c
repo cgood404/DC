@@ -6,13 +6,7 @@
 
 
 void readfile(char *file_name){
-    FILE *file = fopen(file_name, "r");
-    if(file == NULL || file <= 0){
-        printf("FileNotFoundError: %s\n", file_name);
-        exit(1);
-    }
-    
-    fclose(file);
+    lexfile(file_name);
 }
 
 void raise(char *exception, int line, int column){
@@ -26,8 +20,8 @@ int main(int argc, char **argv){
     }
     else{ // if user wants a command line
         printf("DC v0.0.1\nNo copyright, no money back, no nothin\'\nPress ^C or type (exit) to exit\n\n");
+        char *inputstr = malloc(MAX_INPUT_SIZE);
         while(true){
-            char *inputstr = malloc(MAX_INPUT_SIZE);
             printf(">> ");
             fgets(inputstr, MAX_INPUT_SIZE, stdin);
             lex(inputstr, strlen(inputstr));

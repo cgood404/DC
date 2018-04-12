@@ -1,8 +1,10 @@
 #include "dc_lexer.h"
 
+#define MAX_INPUT_SIZE 256
+
 Token SOL, INC, DEC, PLUSEQL, MINEQL, MULTEQL, DIVEQL, PLUS, MIN, MULT, DIV,
         MOD, ASSN, NOTEQL, IF, THEN, ELSE, EOL, EOFS;
-Token *tokens[] = {&SOL, &INC, &DEC, &PLUSEQL, &MINEQL, &MULTEQL, &DIVEQL, &PLUS, &MIN, &MULT, &DIV,
+Token *token_symbols[] = {&SOL, &INC, &DEC, &PLUSEQL, &MINEQL, &MULTEQL, &DIVEQL, &PLUS, &MIN, &MULT, &DIV,
         &MOD,  &ASSN, &NOTEQL, &IF, &ELSE, &THEN, &EOL, &EOFS};
 
 Token file_tokens[] = {};
@@ -51,22 +53,34 @@ void slice_str(const char *str, char *buffer, size_t start, size_t end){
     buffer[j] = 0;
 }
 
-int lex(char *statement, int length){
+void lex(char *statement, int length){
     int j = 0;
-    char *buffer;
+    char *buffer = malloc(MAX_INPUT_SIZE);
     while(j < length){
 
         for(int i = _SOL; i < __TOKENS_SIZE; i++){
             slice_str(statement, buffer, j, length);
-            if(matchToken(*tokens[i], buffer, length - j)){
-                addToFile(*tokens[i]);
-                j += strlen(tokens[i] -> keyword) - 1;
+            if(matchToken(*token_symbols[i], buffer, length - j)){
+                addToFile(*token_symbols[i]);
+                j += strlen(token_symbols[i] -> keyword) - 1;
                 break;
             }
         }
         j++;
     }
-    return 0;
+}
+
+void lexfile(char *file_name){
+    FILE *file = fopen(file_name, "r");
+    if(file == NULL || file <= 0){
+        printf("FileNotFoundError: %s\n", file_name);
+        exit(1);
+    }
+    char *inputstr = (char *) malloc(MAX_INPUT_SIZE);
+    while(fgets(inputstr, MAX_INPUT_SIZE, file) != NULL){
+        printf(">> %s\n", inputstr);
+        lex(inputstr, strlen(inputstr));
+    }
 }
 
 void createTokens(void){
@@ -92,7 +106,7 @@ void createTokens(void){
                         &end_of_file}; // End of File
 
     for(int i = _SOL; i < __TOKENS_SIZE; i++){
-        strcpy(tokens[i] -> keyword, symbols[i]);
-        tokens[i] -> type = i;
+        strcpy(token_symbols[i] -> keyword, symbols[i]);
+        token_symbols[i] -> type = i;
     }
 }
