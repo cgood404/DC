@@ -1,9 +1,9 @@
 #include "dc_lexer.h"
 
-Token SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
-        NOTEQL, IF, THEN, ELSE, EOL, EOFS;
-Token *tokens[] = {&SOL, &PLUS, &MIN, &MULT, &DIV, &MOD, &INC, &DEC, &ASSN,
-        &NOTEQL, &IF, &THEN, &ELSE, &EOL, &EOFS};
+Token SOL, PLUS, MIN, MULT, DIV, PLUSEQL, MINEQL, MULTEQL, DIVEQL,
+        MOD, INC, DEC, ASSN, NOTEQL, IF, THEN, ELSE, EOL, EOFS;
+Token *tokens[] = {&SOL, &PLUS, &MIN, &MULT, &DIV, &PLUSEQL, &MINEQL, &MULTEQL, &DIVEQL,
+        &MOD, &INC, &DEC, &ASSN, &NOTEQL, &IF, &THEN, &ELSE, &EOL, &EOFS};
 
 Token file_tokens[] = {};
 int filesize = 0;
@@ -14,73 +14,8 @@ int addToFile(Token token){
     return 0;
 }
 
-void sol(char *keyword, int length){
-    printf("Found a start of line token.\n");
-}
-
-void plus(char *keyword, int length){
-    printf("Found a plus token.\n");
-}
-
-void min(char *keyword, int length){
-    printf("Found a minus token.\n");
-}
-
-void mult(char *keyword, int length){
-    printf("Found a multiply token.\n");
-}
-
-void divide(char *keyword, int length){
-    printf("Found a divide token.\n");
-}
-
-void mod(char *keyword, int length){
-    printf("Found a modulus token.\n");
-}
-
-void inc(char *keyword, int length){
-    printf("Found an increment token.\n");
-}
-
-void dec(char *keyword, int length){
-    printf("Found a decrement token.\n");
-}
-
-void assn(char *keyword, int length){
-    printf("Found an assignment token.\n");
-}
-
-void eql(char *keyword, int length){
-    printf("Found an equals token.\n");
-}
-
-void noteql(char *keyword, int length){
-    printf("Found a not equals token.\n");
-}
-
-void ifs(char *keyword, int length){
-    printf("Found an if token.\n");
-}
-
-void thens(char *keyword, int length){
-    printf("Found a then token.\n");
-}
-
-void elses(char *keyword, int length){
-    printf("Found an else token.\n");
-}
-
-void eol(char *keyword, int length){
-    printf("Found an end of line token.\n");
-}
-
-void eof(char* keyword, int length){
-    printf("Found an end of file token.\n");
-}
-
 void printToken(Token token){        
     printf("%s %d\n", token.keyword, token.type);
-    token.destination("", 0);
 }
 
 int matchStart(char *token, char *input, int token_length, int input_length){
@@ -120,6 +55,7 @@ int lex(char *statement, int length){
     int j = 0;
     char *buffer;
     while(j < length){
+
         for(int i = _SOL; i < __TOKENS_SIZE; i++){
             slice_str(statement, buffer, j, length);
             if(matchToken(*tokens[i], buffer, length - j)){
@@ -139,6 +75,10 @@ void createTokens(void){
                         "-", // Minus
                         "*", // Multiply
                         "/", // Divide
+                        "+=", // Plus Equals
+                        "-=", // Minus Equals
+                        "*=", // Multiply Equals
+                        "/=", // Divide Equals
                         "\%", // Modulus
                         "++", // Increment
                         "--", // Decrement
@@ -149,13 +89,9 @@ void createTokens(void){
                         "::", // Else
                         ")", // End of Line
                         &end_of_file}; // End of File
-        
-    destination_t destinations[] = {&sol, &plus, &min, &mult, &divide, &mod,
-        &inc, &dec, &assn, &noteql, &ifs, &thens, &elses, &eol, &eof};
 
     for(int i = _SOL; i < __TOKENS_SIZE; i++){
         strcpy(tokens[i] -> keyword, symbols[i]);
         tokens[i] -> type = i;
-        tokens[i] -> destination = destinations[i];
     }
 }

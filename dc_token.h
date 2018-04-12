@@ -15,19 +15,17 @@ WHEN CREATING NEW KEYWORDS:
     7) Add a pointer to the function declared in step 5 to the end of the *destinations[] array
     8) Make sure you didn't break anything. If you did, repeat all steps, but slower this time
 */
-typedef void (*destination_t)(char*, int);
 typedef struct {
     char keyword[20];
     int type;
-    destination_t destination;
 } Token;
 enum token_types {
-    _SOL, _Plus, _Min, _Mult, _Div, _Mod, _Inc, _Dec,
-    _Assn, _NotEql, _If, _Then, _Else,
+    _SOL, _Plus, _Min, _Mult, _Div, _PlusEql, _MinEql, _MultEql, _DivEql,
+    _Mod, _Inc, _Dec, _Assn, _NotEql, _If, _Then, _Else,
     _EOL, _EOF, __TOKENS_SIZE
 };
 
-extern Token SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
-        NOTEQL, IF, THEN, ELSE, EOL, EOFS;
+extern Token SOL, PLUS, MIN, MULT, DIV, PLUSEQL, MINEQL, MULTEQL, DIVEQL,
+        MOD, INC, DEC, ASSN, NOTEQL, IF, THEN, ELSE, EOL, EOFS;
 
 #endif
