@@ -144,7 +144,7 @@ int lex(char *statement, int length){
             slice_str(statement, buffer, j, length);
             if(matchToken(*tokens[i], buffer, length - j)){
                 addToFile(*tokens[i]);
-                j += strlen(buffer) - 1;
+                j += strlen(tokens[i] -> keyword) - 1;
             }
         }
         j++;

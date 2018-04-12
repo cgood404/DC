@@ -2,6 +2,8 @@
 #include "dc_token.h"
 #include "dc_lexer.h"
 
+#define MAX_INPUT_SIZE 256
+
 
 void readfile(char *file_name){
     FILE *file = fopen(file_name, "r");
@@ -24,9 +26,9 @@ int main(int argc, char **argv){
     else{ // if user wants a command line
         printf("DC v0.0.1\nNo copyright, no money back, no nothin\'\nPress ^C or type (exit) to exit\n\n");
         while(true){
-            char inputstr[100];
+            char *inputstr = malloc(MAX_INPUT_SIZE);
             printf(">> ");
-            scanf("%s", inputstr);
+            fgets(inputstr, MAX_INPUT_SIZE, stdin);
             lex(inputstr, strlen(inputstr));
         }
         
