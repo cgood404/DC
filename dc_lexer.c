@@ -1,9 +1,9 @@
 #include "dc_lexer.h"
 
-Token SOL, PLUS, MIN, MULT, DIV, PLUSEQL, MINEQL, MULTEQL, DIVEQL,
-        MOD, INC, DEC, ASSN, NOTEQL, IF, THEN, ELSE, EOL, EOFS;
-Token *tokens[] = {&SOL, &PLUS, &MIN, &MULT, &DIV, &PLUSEQL, &MINEQL, &MULTEQL, &DIVEQL,
-        &MOD, &INC, &DEC, &ASSN, &NOTEQL, &IF, &THEN, &ELSE, &EOL, &EOFS};
+Token SOL, INC, DEC, PLUSEQL, MINEQL, MULTEQL, DIVEQL, PLUS, MIN, MULT, DIV,
+        MOD, ASSN, NOTEQL, IF, THEN, ELSE, EOL, EOFS;
+Token *tokens[] = {&SOL, &INC, &DEC, &PLUSEQL, &MINEQL, &MULTEQL, &DIVEQL, &PLUS, &MIN, &MULT, &DIV,
+        &MOD,  &ASSN, &NOTEQL, &IF, &THEN, &ELSE, &EOL, &EOFS};
 
 Token file_tokens[] = {};
 int filesize = 0;
@@ -61,6 +61,7 @@ int lex(char *statement, int length){
             if(matchToken(*tokens[i], buffer, length - j)){
                 addToFile(*tokens[i]);
                 j += strlen(tokens[i] -> keyword) - 1;
+                break;
             }
         }
         j++;
@@ -71,17 +72,17 @@ int lex(char *statement, int length){
 void createTokens(void){
     char end_of_file = EOF;
     char *symbols[] = {"(", // Start of Line
-                        "+", // Plus
-                        "-", // Minus
-                        "*", // Multiply
-                        "/", // Divide
+                        "++", // Increment
+                        "--", // Decrement
                         "+=", // Plus Equals
                         "-=", // Minus Equals
                         "*=", // Multiply Equals
                         "/=", // Divide Equals
+                        "+", // Plus
+                        "-", // Minus
+                        "*", // Multiply
+                        "/", // Divide
                         "\%", // Modulus
-                        "++", // Increment
-                        "--", // Decrement
                         "==", // Is Equal To
                         "!=", // Is Not Equal To
                         "?", // If
