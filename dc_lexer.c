@@ -1,7 +1,5 @@
 #include "dc_lexer.h"
 
-#define MAX_INPUT_SIZE 256
-
 Token COM, SOL, INC, DEC, PLUSEQL, MINEQL, MULTEQL, DIVEQL, PLUS, MIN, MULT, DIV,
         MOD, ASSN, NOTEQL, IF, THEN, ELSE, EOL, EOFS;
 Token *token_symbols[] = {&COM, &SOL, &INC, &DEC,
@@ -55,19 +53,48 @@ void slice_str(const char *str, char *buffer, size_t start, size_t end){
 }
 
 void lex(char *statement, int length){
-    int j = 0;
+    int current = 0;
     char *buffer = malloc(MAX_INPUT_SIZE);
-    while(j < length){
+    int not_symbols = 0;
+    while(current < length){
+        if((statement[current] > 64 && statement[current] < 91) ||
+                                    (statement[current] > 96 && statement[current] < 123)){
+            while((statement[current] > 47 && statement[current] < 58) ||
+                                    (statement[current] > 64 && statement[current] < 91) ||
+                                    (statement[current] > 96 && statement[current] < 123)){
+                not_symbols++;
+                current++;
+            }
+            Token token;
+            slice_str(statement, token.keyword, current - not_symbols, not_symbols);
+            token.type = -2;
 
+            addToFile(token);
+            not_symbols = 0;
+        }
+
+        if(statement[current] > 47 && statement[current] < 58){
+            while(statement[current] > 47 && statement[current] < 58){
+                not_symbols++;
+                current++;
+            }
+            Token token;
+            slice_str(statement, token.keyword, current - not_symbols, not_symbols);
+            token.type = -1;
+
+            addToFile(token);
+            not_symbols = 0;
+        }
         for(int i = _Com; i < __TOKENS_SIZE; i++){
-            slice_str(statement, buffer, j, length);
-            if(matchToken(*token_symbols[i], buffer, length - j)){
+            slice_str(statement, buffer, current, length);
+            if(matchToken(*token_symbols[i], buffer, length - current)){
                 addToFile(*token_symbols[i]);
-                j += strlen(token_symbols[i] -> keyword) - 1;
+                current += strlen(token_symbols[i] -> keyword) - 1;
                 break;
             }
         }
-        j++;
+        
+        current++;
     }
 }
 
@@ -86,7 +113,7 @@ void lexfile(char *file_name){
 
 void createTokens(void){
     char end_of_file = EOF;
-    char *symbols[] = {"//", // Comment
+    char *symbols[] = {"#", // Comment
                         "(", // Start of Line
                         "++", // Increment
                         "--", // Decrement

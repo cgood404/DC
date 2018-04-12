@@ -1,7 +1,7 @@
 #ifndef token_dc_h
 #define token_dc_h
 
-
+#include "dc.h"
 /*
 WHEN CREATING NEW KEYWORDS:
     *) DO NOT ADD WORDS AS TOKENS, they are read by the parser. They will be declared
@@ -18,7 +18,7 @@ WHEN CREATING NEW KEYWORDS:
     8) Make sure you didn't break anything. If you did, repeat all steps, but slower this time
 */
 typedef struct {
-    char keyword[20];
+    char keyword[256];
     int type;
 } Token;
 enum token_types {

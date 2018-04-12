@@ -6,6 +6,10 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdint.h>
+#include "dc_token.h"
+#include "dc_lexer.h"
+
+#define MAX_INPUT_SIZE 256
 
 struct dc_file {
     char *__name__;

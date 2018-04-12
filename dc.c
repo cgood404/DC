@@ -1,9 +1,4 @@
 #include "dc.h"
-#include "dc_token.h"
-#include "dc_lexer.h"
-
-#define MAX_INPUT_SIZE 256
-
 
 void readfile(char *file_name){
     lexfile(file_name);
