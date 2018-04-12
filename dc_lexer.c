@@ -3,7 +3,7 @@
 Token SOL, INC, DEC, PLUSEQL, MINEQL, MULTEQL, DIVEQL, PLUS, MIN, MULT, DIV,
         MOD, ASSN, NOTEQL, IF, THEN, ELSE, EOL, EOFS;
 Token *tokens[] = {&SOL, &INC, &DEC, &PLUSEQL, &MINEQL, &MULTEQL, &DIVEQL, &PLUS, &MIN, &MULT, &DIV,
-        &MOD,  &ASSN, &NOTEQL, &IF, &THEN, &ELSE, &EOL, &EOFS};
+        &MOD,  &ASSN, &NOTEQL, &IF, &ELSE, &THEN, &EOL, &EOFS};
 
 Token file_tokens[] = {};
 int filesize = 0;
@@ -86,8 +86,8 @@ void createTokens(void){
                         "==", // Is Equal To
                         "!=", // Is Not Equal To
                         "?", // If
-                        ":", // Then
                         "::", // Else
+                        ":", // Then
                         ")", // End of Line
                         &end_of_file}; // End of File
 
