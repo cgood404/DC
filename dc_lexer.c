@@ -1,9 +1,9 @@
 #include "dc_lexer.h"
 
 Token SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
-        NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EXIT, EOFS, VARIABLE;
+        NOTEQL, IF, THEN, ELSE, DEFINE, LAMBDA, PRINT, RUN, EOL, EXIT, EOFS, VARIABLE;
 Token *tokens[] = {&SOL, &PLUS, &MIN, &MULT, &DIV, &MOD, &INC, &DEC, &ASSN,
-        &NOTEQL, &IF, &THEN, &ELSE, &DEFINE, &PRINT, &RUN, &EOL, &EXIT, &EOFS, &VARIABLE};
+        &NOTEQL, &IF, &THEN, &ELSE, &DEFINE, &LAMBDA, &PRINT, &RUN, &EOL, &EXIT, &EOFS, &VARIABLE};
 
 Token file_tokens[] = {};
 int filesize = 0;
@@ -72,6 +72,10 @@ void elses(char *keyword, int length){
 
 void define(char *keyword, int length){
     printf("Found a define token.\n");
+}
+
+void lambda(char *keyword, int length){
+    printf("Found a lambda token\n");
 }
 
 void print(char *keyword, int length){
@@ -158,6 +162,7 @@ void createTokens(void){
                         ":", // Then
                         "::", // Else
                         "define", // Define
+                        "lambda", // Lambda
                         "print", // Print
                         "run", // Run
                         ")", // End of Line
@@ -166,7 +171,7 @@ void createTokens(void){
                         "\0"}; // End of File
         
     destination_t destinations[] = {&sol, &plus, &min, &mult, &divide, &mod,
-        &inc, &dec, &assn, &noteql, &ifs, &thens, &elses, &define, &print,
+        &inc, &dec, &assn, &noteql, &ifs, &thens, &elses, &define, &lambda, &print,
         &run, &eol, &exits, &variable, &eof};
 
     for(int i = _SOL; i < __TOKENS_SIZE; i++){
