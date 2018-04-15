@@ -28,6 +28,6 @@ enum token_types {
 };
 
 extern Token COM, SOL, PLUS, MIN, MULT, DIV, PLUSEQL, MINEQL, MULTEQL, DIVEQL,
-        MOD, INC, DEC, ASSN, NOTEQL, IF, THEN, ELSE, EOL, EOFS;
+        MOD, INC, DEC, EQL, NOTEQL, IF, THEN, ELSE, EOL, EOFS;
 
 #endif

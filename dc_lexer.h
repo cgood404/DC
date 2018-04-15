@@ -7,31 +7,16 @@
 #include "dc_token.h"
 #include "dc.h"
 
+extern Token *file_tokens;
 
 void createTokens(void);
-void printToken(Token token);
+void printToken(const Token *token);
 void lex(char *line, int length);
 void lexfile(char *file_name);
-int matchToken(Token token, char *statement, int length);
+int matchToken(const Token *token, char *statement, int length);
 void slice_str(char *str, char *buffer, int start, int end);
 void replace(char* src, int src_length, char oldchar, char newchar);
-int matchStart(char *first, char *second, int first_length, int secnod_length);
-
-void sol(char* keyword, int length);
-void plus(char* keyword, int length);
-void min(char *keyword, int length);
-void mult(char* keyword, int length);
-void divide(char* keyword, int length);
-void mod(char* keyword, int length);
-void inc(char* keyword, int length);
-void dec(char* keyword, int length);
-void assn(char* keyword, int length);
-void eql(char* keyword, int length);
-void noteql(char* keyword, int length);
-void ifs(char* keyword, int length);
-void thens(char* keyword, int length);
-void elses(char* keyword, int length);
-void eol(char* keyword, int length);
-void eof(char* keyword, int length);
+int matchStart(const char *first, char *second, int first_length, int secnod_length);
+int addToFile(const Token *token);
 
 #endif
