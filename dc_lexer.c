@@ -16,7 +16,7 @@ int addToFile(Token token){
 }
 
 void printToken(Token token){        
-    printf("%s %d\n", token.keyword, token.type);
+    printf("keyword: %s -- type: %d\n", token.keyword, token.type);
 }
 
 int matchStart(char *token, char *input, int token_length, int input_length){
@@ -44,18 +44,27 @@ int matchToken(Token token, char *statement, int length){
     }
 }
 
-void slice_str(const char *str, char *buffer, size_t start, size_t end){
-    size_t j = 0;
-    for ( size_t i = start; i <= end; ++i ) {
+void slice_str(char *str, char *buffer, int start, int end){
+    int j = 0;
+    for (int i = start; i <= end; ++i) {
         buffer[j++] = str[i];
     }
     buffer[j] = 0;
+}
+
+void replace(char* src, int src_length, char oldchar, char newchar){
+    for(int i = 0; i < src_length; i++){
+        if(src[i] == oldchar){
+            src[i] = newchar;
+        }
+    }
 }
 
 void lex(char *statement, int length){
     int current = 0;
     char *buffer = malloc(MAX_INPUT_SIZE);
     int not_symbols = 0;
+    replace(statement, length, '\n', ' ');
     while(current < length){
         if((statement[current] > 64 && statement[current] < 91) ||
                                     (statement[current] > 96 && statement[current] < 123)){
@@ -65,36 +74,34 @@ void lex(char *statement, int length){
                 not_symbols++;
                 current++;
             }
-            Token token;
-            slice_str(statement, token.keyword, current - not_symbols, not_symbols);
-            token.type = -2;
+            Token n_token;
+            slice_str(statement, n_token.keyword, current - not_symbols, current);
+            n_token.type = -2;
 
-            addToFile(token);
+            addToFile(n_token);
             not_symbols = 0;
-        }
-
-        if(statement[current] > 47 && statement[current] < 58){
+        }else if(statement[current] > 47 && statement[current] < 58){
             while(statement[current] > 47 && statement[current] < 58){
                 not_symbols++;
                 current++;
             }
-            Token token;
-            slice_str(statement, token.keyword, current - not_symbols, not_symbols);
-            token.type = -1;
+            Token w_token;
+            slice_str(statement, w_token.keyword, current - not_symbols, current);
+            w_token.type = -1;
 
-            addToFile(token);
+            addToFile(w_token);
             not_symbols = 0;
-        }
-        for(int i = _Com; i < __TOKENS_SIZE; i++){
-            slice_str(statement, buffer, current, length);
-            if(matchToken(*token_symbols[i], buffer, length - current)){
-                addToFile(*token_symbols[i]);
-                current += strlen(token_symbols[i] -> keyword) - 1;
-                break;
+        }else{
+            for(int i = _Com; i < __TOKENS_SIZE; i++){
+                slice_str(statement, buffer, current, length);
+                if(matchToken(*token_symbols[i], buffer, length - current)){
+                    addToFile(*token_symbols[i]);
+                    current += strlen(token_symbols[i] -> keyword) - 1;
+                    break;
+                }
             }
+            current++;
         }
-        
-        current++;
     }
 }
 
