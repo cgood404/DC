@@ -2,7 +2,7 @@
 
 void readfile(char *file_name){
     lexfile(file_name);
-
+    parseFile();
     for(int i = 0; i < file_size; i++){
         printToken(&file_tokens[i]);
     }
@@ -24,6 +24,8 @@ int main(int argc, char **argv){
             printf(">> ");
             fgets(inputstr, MAX_INPUT_SIZE, stdin);
             lex(inputstr, strlen(inputstr));
+            parseFile();
+            resetFile();
         }
         
     }

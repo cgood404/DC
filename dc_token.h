@@ -28,7 +28,7 @@ enum token_types {
     _EOL, _EOF, __TOKENS_SIZE
 };
 
-extern int file_size;
+extern int file_size, file_max;
 extern Token *file_tokens;
 
 extern Token COM, SOL, PLUS, MIN, MULT, DIV, PLUSEQL, MINEQL, MULTEQL, DIVEQL,

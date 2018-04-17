@@ -32,8 +32,8 @@ int file_max = 1;
 
 int addToFile(Token *token){
     if(file_size >= file_max){
-        Token *buffer = malloc((int) (sizeof(Token) * file_size * file_inc));
-        memmove(buffer, file_tokens, (sizeof(Token) * file_size) + 0);
+        Token *buffer = malloc((int) (sizeof(*file_tokens) * file_inc));
+        memmove(buffer, file_tokens, (sizeof(*file_tokens)) + 0);
 
         free(file_tokens);
         file_max *= file_inc;
@@ -43,6 +43,12 @@ int addToFile(Token *token){
     memmove(&file_tokens[file_size], token, sizeof(*token));
     file_size++;
     return 0;
+}
+
+void resetFile(){
+    free(file_tokens);
+    file_size = file_max = 1;
+    file_tokens = malloc(0);
 }
 
 void printToken(Token *token){        
