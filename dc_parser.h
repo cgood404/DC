@@ -16,7 +16,7 @@ int diveql();
 int plus();
 int min();
 int mult();
-int div();
+int divs();
 int mod();
 int eql();
 int noteql();

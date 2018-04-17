@@ -29,7 +29,7 @@ typedef struct {
 enum token_types {
     _Com, _SOL, _Plus, _Min, _Mult, _Div, _PlusEql, _MinEql, _MultEql, _DivEql,
     _Mod, _Inc, _Dec, _Assn, _NotEql, _If, _Then, _Else,
-    _EOL, _EOF, _STR, __TOKENS_SIZE
+    _EOL, _EOF, _Str, __TOKENS_SIZE
 };
 
 extern int file_size, file_max;

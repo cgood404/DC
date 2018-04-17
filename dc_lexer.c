@@ -25,7 +25,7 @@ Token STR = {.keyword = "\"", .type = 20};
 
 Token *token_symbols[] = {&COM, &SOL, &INC, &DEC,
         &PLUSEQL, &MINEQL, &MULTEQL, &DIVEQL, &PLUS, &MIN, &MULT, &DIV,
-        &MOD,  &EQL, &NOTEQL, &IF, &ELSE, &THEN, &EOL, &EOFS};
+        &MOD,  &EQL, &NOTEQL, &IF, &ELSE, &THEN, &EOL, &EOFS, &STR};
 
 Token *file_tokens;
 int file_size = 1;
@@ -115,8 +115,8 @@ void lex(char *statement, int length){
             slice_str(statement, buffer, current - not_symbols, current);
 
             Token w_token;
-            memmove(&w_token, buffer, not_symbols+1);
-            w_token.type = -2;
+            memmove(&w_token.keyword, buffer, not_symbols+1);
+            w_token.type = -1;
 
             addToFile(&w_token);
             not_symbols = 0;
@@ -128,8 +128,8 @@ void lex(char *statement, int length){
             slice_str(statement, buffer, current - not_symbols, current);
 
             Token n_token;
-            memmove(&n_token, buffer, not_symbols+1);
-            n_token.type = -1;
+            memmove(&n_token.keyword, buffer, not_symbols+1);
+            n_token.type = -2;
 
             addToFile(&n_token);
             not_symbols = 0;
@@ -145,13 +145,31 @@ void lex(char *statement, int length){
                         while(statement[current] != '\n'){
                             current++;
                         }
+                    }else if(i == _Str){
+                        current++;
+                        slice_str(statement, buffer, current, length);
+                        int str_len = 0;
+                        while(!matchToken(&STR, buffer, length - current)){
+                            if(current == length){
+                                sprintf(buffer, "StringError: Unclosed String statement in line: %s", statement);
+                                raise(buffer, filename, line, current);
+                            }
+                            current++;
+                            str_len++;
+                            slice_str(statement, buffer, current, length);
+                        }
+                        Token str_token;
+                        str_token.type = -3;
+                        memmove(&str_token.keyword, statement + current - str_len, str_len);
+                        addToFile(&str_token);
+                        addToFile(&STR);
                     }
                     break;
                 }
             }
             if(error){
                 char* error_statement = (char *)malloc(MAX_INPUT_SIZE);
-                sprintf(error_statement, "LexerError: Invalid token in statement: \"%s\"",
+                sprintf(error_statement, "TokenError: Invalid token in statement: \"%s\"",
                                         statement);
                 raise(error_statement, filename, line, current);
             }

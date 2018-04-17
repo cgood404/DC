@@ -3,9 +3,9 @@
 //define, lambda, print, run, exit
 unsigned int current = 0;
 int parseFile(){
-    while(!eof(&file_tokens[++current])){
-        sol(&file_tokens[++current]);
-    };
+    // while(!eof(&file_tokens[++current])){
+    //     sol(&file_tokens[++current]);
+    // };
     return 2;
 }
 
@@ -126,7 +126,7 @@ int mult(Token *token){
     return 0;
 }
 
-int div(Token *token){
+int divs(Token *token){
     if(token -> type == 11){
         printf("Found division\n");
         

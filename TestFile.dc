@@ -1,5 +1,8 @@
+(define str "Hello World!")
+(print str)
+
 (define x 2)
-(define y 3)
-(define z (+ x y))
+(define z (+ x 3))
 (print z)
+(print (++ z))
 (exit)
