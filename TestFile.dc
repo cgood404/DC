@@ -2,10 +2,4 @@
 (-)
 ( test)
 (111 )
-
-(# this is
-all comments
-because newlines arent 1124392
-counted. the only thing that
-ends a comment is a
-closing parenthesis &@!#%^$*&@!* )
+(a bunch of valid tokens + - / *)

@@ -100,7 +100,6 @@ void lex(char *statement, int length){
     int current = 0;
     char *buffer = malloc(MAX_INPUT_SIZE + 1);
     int not_symbols = 0;
-    replace(statement, length, ' ', ' ');
     while(current < length){
         if(statement[current] == ' ' || statement[current] == '\n'){
             current++;
@@ -141,12 +140,17 @@ void lex(char *statement, int length){
                     addToFile(token_symbols[i]);
                     current += strlen(token_symbols[i] -> keyword) - 1;
                     error = 0;
+                    if(i == _Com){
+                        while(statement[current] != '\n'){
+                            current++;
+                        }
+                    }
                     break;
                 }
             }
             if(error){
                 char* error_statement = (char *)malloc(MAX_INPUT_SIZE);
-                sprintf(error_statement, "LexerError: Invalid token in statement: %s",
+                sprintf(error_statement, "LexerError: Invalid token in statement: \"%s\"",
                                         statement);
                 raise(error_statement, filename, line, current);
             }
