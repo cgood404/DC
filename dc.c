@@ -25,7 +25,6 @@ int main(int argc, char **argv){
             fgets(inputstr, MAX_INPUT_SIZE, stdin);
             lex(inputstr, strlen(inputstr));
             parseFile();
-            resetFile();
         }
         
     }

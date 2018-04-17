@@ -32,8 +32,8 @@ int file_max = 1;
 
 int addToFile(Token *token){
     if(file_size >= file_max){
-        Token *buffer = malloc((int) (sizeof(*file_tokens) * file_inc));
-        memmove(buffer, file_tokens, (sizeof(*file_tokens)) + 0);
+        Token *buffer = malloc((int) (sizeof(Token) * file_size * file_inc));
+        memmove(buffer, file_tokens, (sizeof(Token) * file_size) + 0);
 
         free(file_tokens);
         file_max *= file_inc;
@@ -99,7 +99,9 @@ void lex(char *statement, int length){
     int not_symbols = 0;
     replace(statement, length, '\n', ' ');
     while(current < length){
-        if((statement[current] > 64 && statement[current] < 91) ||
+        if(statement[current] == ' '){
+            current++;
+        }else if((statement[current] > 64 && statement[current] < 91) ||
                                     (statement[current] > 96 && statement[current] < 123)){
             while((statement[current] > 47 && statement[current] < 58) ||
                                     (statement[current] > 64 && statement[current] < 91) ||
@@ -129,13 +131,21 @@ void lex(char *statement, int length){
             addToFile(&n_token);
             not_symbols = 0;
         }else{
+            int error = 1;
             for(int i = _Com; i < __TOKENS_SIZE; i++){
                 slice_str(statement, buffer, current, length);
                 if(matchToken(token_symbols[i], buffer, length - current)){
                     addToFile(token_symbols[i]);
                     current += strlen(token_symbols[i] -> keyword) - 1;
+                    error = 0;
                     break;
                 }
+            }
+            if(error){
+                char* error_statement = (char *)malloc(MAX_INPUT_SIZE);
+                sprintf(error_statement, "Invalid token in statement: %s, at character: %d",
+                                        statement, current);
+                lexerError(error_statement);
             }
             current++;
         }
@@ -154,6 +164,12 @@ void lexfile(char *file_name){
         printf(">> %s\n", inputstr);
         lex(inputstr, strlen(inputstr));
     }
+    addToFile(&EOFS);
+}
+
+void lexerError(char *error_statement){
+    printf("%s\n", error_statement);
+    exit(0);
 }
 
 void createTokens(void){

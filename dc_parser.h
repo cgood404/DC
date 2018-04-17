@@ -5,6 +5,8 @@
 #include "dc_token.h"
 #include "dc_lexer.h"
 
-void parseFile();
+int parseFile();
+int eof();
+int sol();
 
 #endif
