@@ -2,6 +2,10 @@
 
 void readfile(char *file_name){
     lexfile(file_name);
+
+    for(int i = 0; i < file_size; i++){
+        printToken(&file_tokens[i]);
+    }
 }
 
 void raise(char *exception, int line, int column){

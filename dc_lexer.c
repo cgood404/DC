@@ -40,7 +40,7 @@ int addToFile(Token *token){
         file_tokens = buffer;
     }
 
-    memmove(&file_tokens[file_size], token, sizeof(*token)); // sizeof(*token)
+    memmove(&file_tokens[file_size], token, sizeof(*token));
     file_size++;
     return 0;
 }
@@ -135,7 +135,6 @@ void lex(char *statement, int length){
         }
     }
     free(buffer);
-    // parse();
 }
 
 void lexfile(char *file_name){
@@ -148,9 +147,6 @@ void lexfile(char *file_name){
     while(fgets(inputstr, MAX_INPUT_SIZE, file) != NULL){
         printf(">> %s\n", inputstr);
         lex(inputstr, strlen(inputstr));
-    }
-    for(int i = 0; i < file_size; i++){
-        printToken(&file_tokens[i]);
     }
 }
 
