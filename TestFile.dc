@@ -1,6 +1,6 @@
 (define str "Hello World!")
 (print str)
-
+# comments don't need a SOL token
 (define x 2)
 (define z (+ x 3))
 (print z)
