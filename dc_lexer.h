@@ -10,13 +10,13 @@
 extern Token *file_tokens;
 
 void createTokens(void);
-void printToken(const Token *token);
+void printToken(Token *token);
 void lex(char *line, int length);
 void lexfile(char *file_name);
-int matchToken(const Token *token, char *statement, int length);
+int matchToken(Token *token, char *statement, int length);
 void slice_str(char *str, char *buffer, int start, int end);
 void replace(char* src, int src_length, char oldchar, char newchar);
-int matchStart(const char *first, char *second, int first_length, int secnod_length);
-int addToFile(const Token *token);
+int matchStart(char *first, char *second, int first_length, int secnod_length);
+int addToFile(Token *token);
 
 #endif

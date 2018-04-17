@@ -9,7 +9,7 @@
 #include "dc_token.h"
 #include "dc_lexer.h"
 
-#define MAX_INPUT_SIZE 256
+#define MAX_INPUT_SIZE 255
 
 struct dc_file {
     char *__name__;

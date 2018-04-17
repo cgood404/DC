@@ -21,6 +21,7 @@ typedef struct {
     char keyword[256];
     int type;
 } Token;
+
 enum token_types {
     _Com, _SOL, _Plus, _Min, _Mult, _Div, _PlusEql, _MinEql, _MultEql, _DivEql,
     _Mod, _Inc, _Dec, _Assn, _NotEql, _If, _Then, _Else,
