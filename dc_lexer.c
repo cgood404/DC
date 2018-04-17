@@ -21,6 +21,7 @@ Token THEN = {.keyword = ":", .type = 16};
 Token ELSE = {.keyword = "::", .type = 17};
 Token EOL = {.keyword = ")", .type = 18};
 Token EOFS = {.keyword = (char) EOF, .type = 19};
+Token STR = {.keyword = "\"", .type = 20};
 
 Token *token_symbols[] = {&COM, &SOL, &INC, &DEC,
         &PLUSEQL, &MINEQL, &MULTEQL, &DIVEQL, &PLUS, &MIN, &MULT, &DIV,
