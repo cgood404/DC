@@ -27,8 +27,8 @@ Token *token_symbols[] = {&COM, &SOL, &INC, &DEC,
         &MOD,  &EQL, &NOTEQL, &IF, &ELSE, &THEN, &EOL, &EOFS};
 
 Token *file_tokens;
-int file_size = 0;
-int file_max = 0;
+int file_size = 1;
+int file_max = 1;
 
 int addToFile(Token *token){
     if(file_size >= file_max){
@@ -40,7 +40,7 @@ int addToFile(Token *token){
         file_tokens = buffer;
     }
 
-    memmove(&file_tokens[file_size], token, 25); // sizeof(*token)
+    memmove(&file_tokens[file_size], token, sizeof(*token)); // sizeof(*token)
     file_size++;
     return 0;
 }
@@ -155,5 +155,5 @@ void lexfile(char *file_name){
 }
 
 void createTokens(void){
-    file_tokens = malloc(1);
+    file_tokens = malloc(0);
 }
