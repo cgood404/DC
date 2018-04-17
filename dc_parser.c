@@ -9,12 +9,23 @@ int parseFile(){
     return 2;
 }
 
+void parserError(char *statement){
+    printf("%s\n", statement);
+    exit(EXIT_FAILURE);
+}
+
 int eof(Token *token){
-    return (token -> type == 19);
+    if(token -> type == 19){
+        printf("Found end of file\n");
+        return 1;
+    }
+    return 0;
 }
 
 int sol(Token *token){
     if(token -> type == 1){
+        printf("Found start of line\n");
+        
         return 1;
     }
 

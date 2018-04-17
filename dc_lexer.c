@@ -30,6 +30,9 @@ Token *file_tokens;
 int file_size = 1;
 int file_max = 1;
 
+char *filename;
+int line = 0;
+
 int addToFile(Token *token){
     if(file_size >= file_max){
         Token *buffer = malloc((int) (sizeof(Token) * file_size * file_inc));
@@ -97,9 +100,9 @@ void lex(char *statement, int length){
     int current = 0;
     char *buffer = malloc(MAX_INPUT_SIZE + 1);
     int not_symbols = 0;
-    replace(statement, length, '\n', ' ');
+    replace(statement, length, ' ', ' ');
     while(current < length){
-        if(statement[current] == ' '){
+        if(statement[current] == ' ' || statement[current] == '\n'){
             current++;
         }else if((statement[current] > 64 && statement[current] < 91) ||
                                     (statement[current] > 96 && statement[current] < 123)){
@@ -143,9 +146,9 @@ void lex(char *statement, int length){
             }
             if(error){
                 char* error_statement = (char *)malloc(MAX_INPUT_SIZE);
-                sprintf(error_statement, "Invalid token in statement: %s, at character: %d",
-                                        statement, current);
-                lexerError(error_statement);
+                sprintf(error_statement, "LexerError: Invalid token in statement: %s",
+                                        statement);
+                raise(error_statement, filename, line, current);
             }
             current++;
         }
@@ -154,6 +157,7 @@ void lex(char *statement, int length){
 }
 
 void lexfile(char *file_name){
+    filename = file_name;
     FILE *file = fopen(file_name, "r");
     if(file == NULL || file <= 0){
         printf("FileNotFoundError: %s\n", file_name);
@@ -161,15 +165,11 @@ void lexfile(char *file_name){
     }
     char *inputstr = (char *) malloc(MAX_INPUT_SIZE);
     while(fgets(inputstr, MAX_INPUT_SIZE, file) != NULL){
+        line++;
         printf(">> %s\n", inputstr);
         lex(inputstr, strlen(inputstr));
     }
     addToFile(&EOFS);
-}
-
-void lexerError(char *error_statement){
-    printf("%s\n", error_statement);
-    exit(0);
 }
 
 void createTokens(void){

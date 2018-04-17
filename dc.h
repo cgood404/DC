@@ -18,6 +18,6 @@ struct dc_file {
 };
 
 void readfile(char *file_name);
-void raise(char *exception, int line, int column);
+void raise(char *exception, char *filename, int line, int column);
 
 #endif
