@@ -214,3 +214,11 @@ int eof(Token *token){
     return 0;
 }
 
+int str(Token *token){
+    if(token -> type == 20){
+        printf("Found string\n");
+        return 1;
+    }
+    return 0;
+}
+
