@@ -138,13 +138,11 @@ void lex(char *statement, int length){
             for(int i = _Com; i < __TOKENS_SIZE; i++){
                 slice_str(statement, buffer, current, length);
                 if(matchToken(token_symbols[i], buffer, length - current)){
-                    addToFile(token_symbols[i]);
-                    current += strlen(token_symbols[i] -> keyword) - 1;
-                    error = 0;
                     if(i == _Com){
                         while(statement[current] != '\n'){
                             current++;
                         }
+                        error = 0;
                     }else if(i == _Str){
                         current++;
                         slice_str(statement, buffer, current, length);
@@ -162,8 +160,13 @@ void lex(char *statement, int length){
                         str_token.type = -3;
                         memmove(&str_token.keyword, statement + current - str_len, str_len);
                         addToFile(&str_token);
-                        addToFile(&STR);
+                        error = 0;
+                    }else{
+                        addToFile(token_symbols[i]);
+                        current += strlen(token_symbols[i] -> keyword) - 1;
+                        error = 0;
                     }
+                    
                     break;
                 }
             }
