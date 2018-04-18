@@ -138,41 +138,48 @@ void lex(char *statement, int length){
             for(int i = _Com; i < __TOKENS_SIZE; i++){
                 slice_str(statement, buffer, current, length);
                 if(matchToken(token_symbols[i], buffer, length - current)){
+                    // if token is comment, ignore the rest of the line
                     if(i == _Com){
                         while(statement[current] != '\n'){
                             current++;
                         }
                         error = 0;
+                    // if token is a string, save everything up to the next " as a type -3
                     }else if(i == _Str){
                         current++;
                         slice_str(statement, buffer, current, length);
                         int str_len = 0;
                         while(!matchToken(&STR, buffer, length - current)){
                             if(current == length){
-                                sprintf(buffer, "StringError: Unclosed String statement in line: %s", statement);
+                                sprintf(buffer, "StringError: Unclosed string in statement: \"%s\"", statement);
                                 raise(buffer, filename, line, current);
                             }
                             current++;
                             str_len++;
                             slice_str(statement, buffer, current, length);
                         }
-                        Token str_token;
-                        str_token.type = -3;
-                        memmove(&str_token.keyword, statement + current - str_len, str_len);
-                        addToFile(&str_token);
-                        error = 0;
+                        if(str_len == 0){
+                            Token str_token = {.keyword = "", .type = -3};
+                            addToFile(&str_token);
+                            error = 0;
+                        }else{
+                            Token str_token;
+                            str_token.type = -3;
+                            memmove(&str_token.keyword, statement + current - str_len, str_len);
+                            addToFile(&str_token);
+                            error = 0;
+                        }
                     }else{
                         addToFile(token_symbols[i]);
                         current += strlen(token_symbols[i] -> keyword) - 1;
                         error = 0;
                     }
-                    
                     break;
                 }
             }
             if(error){
                 char* error_statement = (char *)malloc(MAX_INPUT_SIZE);
-                sprintf(error_statement, "TokenError: Invalid token in statement: \"%s\"",
+                sprintf(error_statement, "TokenError: Unknown token in statement: \"%s\"",
                                         statement);
                 raise(error_statement, filename, line, current);
             }
@@ -186,7 +193,7 @@ void lexfile(char *file_name){
     filename = file_name;
     FILE *file = fopen(file_name, "r");
     if(file == NULL || file <= 0){
-        printf("FileNotFoundError: %s\n", file_name);
+        printf("FileNotFoundError: \"%s\"\n", file_name);
         exit(1);
     }
     char *inputstr = (char *) malloc(MAX_INPUT_SIZE);
