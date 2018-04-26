@@ -7,9 +7,9 @@
 #include <string.h>
 #include <stdint.h>
 
-#include "dc_token.h"
 #include "dc_lexer.h"
 #include "dc_parser.h"
+#include "dc_token.h"
 
 #define MAX_INPUT_SIZE 255
 

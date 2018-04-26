@@ -26,7 +26,7 @@ WHEN CREATING NEW KEYWORDS:
 
     variables/functions are type -1, numbers are type -2, strings are type -3
 */
-typedef struct _token {
+typedef struct Token {
     char keyword[256];
     int type;
     int line;

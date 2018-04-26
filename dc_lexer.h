@@ -5,10 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "dc_token.h"
 #include "dc_parser.h"
 #include "dc_memory.h"
 #include "dc.h"
+#include "dc_token.h"
 
 extern Token *file_tokens;
 extern char *filename;
@@ -19,7 +19,6 @@ void lex();
 void lexfile();
 int matchToken();
 void slice_str();
-void replace();
 int matchStart();
 int addToFile();
 void resetFile(void);

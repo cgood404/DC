@@ -35,6 +35,34 @@ int eof(Token *token){
     return 0;
 }
 
+void *plus(Token *token){
+    return 0;
+}
+
+void *min(Token *token){
+    return 0;
+}
+
+void *mult(Token *token){
+    return 0;
+}
+
+void *divs(Token *token){
+    return 0;
+}
+
+void *mod(Token *token){
+    return 0;
+}
+
+void *eql(Token *token){
+    return 0;
+}
+
+void *noteql(Token *token){
+    return 0;
+}
+
 void *sol(Token *token){
     current++;
     if(token -> type == 1){
@@ -43,15 +71,19 @@ void *sol(Token *token){
         }else if(file_tokens[current].type == 1){
             sol(&file_tokens[current]);
         }else if(file_tokens[current].type == 2){
-            
+            plus(&file_tokens[current]);
         }else if(file_tokens[current].type == 3){
-            
+            min(&file_tokens[current]);
         }else if(file_tokens[current].type == 4){
-            
+            mult(&file_tokens[current]);
         }else if(file_tokens[current].type == 5){
-            
+            divs(&file_tokens[current]);
         }else if(file_tokens[current].type == 6){
-            
+            mod(&file_tokens[current]);
+        }else if(file_tokens[current].type == 6){
+            eql(&file_tokens[current]);
+        }else if(file_tokens[current].type == 6){
+            noteql(&file_tokens[current]);
         }
     }else parserError("Expected Start of Line token \"(\"",
                         token -> line, token -> column);
