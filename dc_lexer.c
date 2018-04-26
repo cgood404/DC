@@ -34,7 +34,7 @@ int file_max = 1;
 char *filename;
 int line = 0;
 
-int addToFile(Token *token){
+int addToFile(Token *token, int line, int column){
     if(file_size >= file_max){
         Token *buffer = malloc((int) (sizeof(Token) * file_size * file_inc));
         memmove(buffer, file_tokens, (sizeof(Token) * file_size) + 0);
@@ -45,6 +45,8 @@ int addToFile(Token *token){
     }
 
     memmove(&file_tokens[file_size], token, sizeof(*token));
+    file_tokens[file_size].line = line;
+    file_tokens[file_size].column = column;
     file_size++;
     return 0;
 }
@@ -56,7 +58,8 @@ void resetFile(){
 }
 
 void printToken(Token *token){        
-    printf("keyword: %s -- type: %d\n", token -> keyword, token -> type);
+    printf("keyword: %s -- type: %d\n\tline: %d, column: %d\n",
+                    token -> keyword, token -> type, token -> line, token -> column);
 }
 
 int matchStart(char *token, char *input, int token_length, int input_length){
@@ -118,7 +121,7 @@ void lex(char *statement, int length){
             memmove(&w_token.keyword, buffer, not_symbols+1);
             w_token.type = -1;
 
-            addToFile(&w_token);
+            addToFile(&w_token, line, current);
             not_symbols = 0;
         }else if(statement[current] > 47 && statement[current] < 58){
             while(statement[current] > 47 && statement[current] < 58){
@@ -131,7 +134,7 @@ void lex(char *statement, int length){
             memmove(&n_token.keyword, buffer, not_symbols+1);
             n_token.type = -2;
 
-            addToFile(&n_token);
+            addToFile(&n_token, line, current);
             not_symbols = 0;
         }else{
             int error = 1;
@@ -161,17 +164,17 @@ void lex(char *statement, int length){
                         
                         if(str_len == 0){
                             Token str_token = {.keyword = "", .type = -3};
-                            addToFile(&str_token);
+                            addToFile(&str_token, line, current);
                             error = 0;
                         }else{
                             Token str_token;
                             str_token.type = -3;
                             memmove(&str_token.keyword, statement + current - str_len, str_len);
-                            addToFile(&str_token);
+                            addToFile(&str_token, line, current);
                             error = 0;
                         }
                     }else{
-                        addToFile(token_symbols[i]);
+                        addToFile(token_symbols[i], line, current);
                         current += strlen(token_symbols[i] -> keyword) - 1;
                         error = 0;
                     }
@@ -203,7 +206,7 @@ void lexfile(char *file_name){
         printf(">> %s\n", inputstr);
         lex(inputstr, strlen(inputstr));
     }
-    addToFile(&EOFS);
+    addToFile(&EOFS, line, -1);
 }
 
 void createTokens(void){

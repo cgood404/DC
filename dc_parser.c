@@ -2,16 +2,75 @@
 
 //define, lambda, print, run, exit
 unsigned int current = 0;
+unsigned int temp_current = 0;
 int parseFile(){
-    // while(!eof(&file_tokens[++current])){
-    //     sol(&file_tokens[++current]);
+    // while(true){
+    //     if(eof(&file_tokens[++current])){
+    //         return EXIT_SUCCESS;
+    //     }else if(sol(&file_tokens[current])){
+    //         //do stuff
+    //     }else parserError("Expected Start of Line token \"(\"",
+    //                     file_tokens[current].line, file_tokens[current].column);
     // };
-    return 2;
+    return EXIT_SUCCESS;
 }
 
-void parserError(char *statement){
-    printf("%s\n", statement);
+int parse(Token *tokens){
+    while(true){
+        if(eof(&tokens[++current])){
+            return EXIT_SUCCESS;
+        }else if(sol(&tokens[current])){
+            //do stuff
+        }else parserError("Expected Start of Line token \"(\"",
+                        tokens[current].line, tokens[current].column);
+    };
+}
+
+void parserError(char *statement, int line, int column){
+    perror(statement);
     exit(EXIT_FAILURE);
+}
+
+// returns string (type -3), can be formatted in the future with escape characters
+char *strGet(Token *token){
+    return token -> keyword;
+}
+
+// returns number (type -2), can be added to in order to prevent overflow, improper tokens, etc
+long double numGet(Token *token){
+    long double num = 0;
+    num = strtold(token -> keyword, NULL);
+    return num;
+}
+
+// returns keyword (type -1), reserved words such as "define", "lambda", etc. OR
+// user defined functions and/or variables
+char *keywordGet(Token *token){
+    return token -> keyword;
+}
+
+int str(Token *token){
+    if(token -> type == -3){
+        printf("Found string\n");
+        return 1;
+    }
+    return 0;
+}
+
+int num(Token *token){
+    if(token -> type == -2){
+        printf("Found number\n");
+        return 1;
+    }
+    return 0;
+}
+
+int keyword(Token *token){
+    if(token -> type == -1){
+        printf("Found keyword\n");
+        return 1;
+    }
+    return 0;
 }
 
 int com(Token *token){
@@ -23,8 +82,6 @@ int com(Token *token){
 
     return 0;
 }
-
-
 
 int sol(Token *token){
     if(token -> type == 1){
@@ -213,12 +270,3 @@ int eof(Token *token){
     }
     return 0;
 }
-
-int str(Token *token){
-    if(token -> type == 20){
-        printf("Found string\n");
-        return 1;
-    }
-    return 0;
-}
-

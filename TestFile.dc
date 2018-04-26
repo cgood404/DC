@@ -8,4 +8,8 @@
 (define z (+ x 3))
 (print z)
 (print (++ z))
+
+# a function
+(lambda func1 (x y) (* 2 (- y x)))
+(func1 2 4) # resolves to: 2 * (4 - 2) = 4
 (exit)

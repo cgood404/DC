@@ -14,20 +14,23 @@ WHEN CREATING NEW KEYWORDS:
         with other tokens, and that have as little letters and/or numbers as possible
     1) Add the keyword, Capitalized, with a leading _underscore, to the end of the 
         token_types enum, but before __TOKEN_SIZE
-    2) Add the Token declaration to the end of the Token declarations at the top
+    2) Add a declaration for the token to the extern declarations in dc_token.h
+    3) Add the Token initialization to the end of the Token initializations at the top
         of dc_lexer.c, in UPPERCASE
-    3) Add the token's keyword string to the token declaration in step 2
-    4) Add the token's type number to the token declaration in step 2 (This is the
+    4) Add the token's keyword string to the token declaration in step 2
+    5) Add the token's type number to the token declaration in step 2 (This is the
         number corresponding to its enum variable in step 1)
-    5) Add a pointer to the token to the token_symbols[] array at the top
+    6) Add a pointer to the token to the token_symbols[] array at the top
         of dc_lexer.c in the order of the token_types enum
-    8) Make sure you didn't break anything. If you did, repeat all steps, but slower this time
+    7) Make sure you didn't break anything. If you did, repeat all steps, but slower this time
 
     variables/functions are type -1, numbers are type -2, strings are type -3
 */
 typedef struct {
     char keyword[256];
     int type;
+    int line;
+    int column;
 } Token;
 
 enum token_types {

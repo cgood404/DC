@@ -6,6 +6,13 @@
 #include "dc_lexer.h"
 
 int parseFile();
+int parse();
+void parserError(char *statement, int line, int column);
+
+char *strGet();
+long double numGet();
+char *keywordGet();
+
 int sol();
 int inc();
 int dec();
@@ -25,6 +32,5 @@ int then();
 int elses();
 int eol();
 int eof();
-
 
 #endif
