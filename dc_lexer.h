@@ -7,6 +7,7 @@
 
 #include "dc_token.h"
 #include "dc_parser.h"
+#include "dc_memory.h"
 #include "dc.h"
 
 extern Token *file_tokens;

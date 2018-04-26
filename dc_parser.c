@@ -4,27 +4,30 @@
 unsigned int current = 0;
 unsigned int temp_current = 0;
 int parseFile(){
-    // while(true){
-    //     if(eof(&file_tokens[++current])){
-    //         return EXIT_SUCCESS;
-    //     }else if(sol(&file_tokens[current])){
-    //         //do stuff
-    //     }else parserError("Expected Start of Line token \"(\"",
-    //                     file_tokens[current].line, file_tokens[current].column);
-    // };
+    while(true){
+        if(eof(&file_tokens[++current])){
+            return EXIT_SUCCESS;
+        }else if(sol(&file_tokens[current])){
+            //do stuff
+        }else parserError("Expected Start of Line token \"(\"",
+                        file_tokens[current].line, file_tokens[current].column);
+    };
     return EXIT_SUCCESS;
 }
 
 int parse(Token *tokens){
+    temp_current = 0;
     while(true){
-        if(eof(&tokens[++current])){
+        if(eof(&tokens[++temp_current])){
             return EXIT_SUCCESS;
-        }else if(sol(&tokens[current])){
+        }else if(sol(&tokens[temp_current])){
             //do stuff
         }else parserError("Expected Start of Line token \"(\"",
-                        tokens[current].line, tokens[current].column);
+                        tokens[temp_current].line, tokens[temp_current].column);
     };
 }
+
+// Nothing below this line changes the "current" variable
 
 void parserError(char *statement, int line, int column){
     perror(statement);

@@ -3,13 +3,13 @@
 
 #include "dc.h"
 #include "dc_token.h"
-#include "dc_lexer.h"
 #include "dc_parser.h"
+#include "dc_memory.h"
 
-int define();
-int lambda();
-int print();
-int run();
-void exit();
+int define(int current);
+int lambda(int current);
+int print(int current);
+int run(int current);
+void exit(int current);
 
 #endif

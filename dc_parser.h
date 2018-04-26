@@ -5,6 +5,7 @@
 #include "dc_token.h"
 #include "dc_lexer.h"
 #include "dc_builtins.c"
+#include "dc_memory.h"
 
 int parseFile();
 int parse();
