@@ -7,6 +7,7 @@
 #include "dc.h"
 
 #define MAX_FUNCTION_ARGS 16
+#define MAX_FUNCTION_SIZE 256
 
 typedef struct {
     char name[MAX_INPUT_SIZE];
@@ -16,7 +17,7 @@ typedef struct {
 typedef struct {
     char name[MAX_INPUT_SIZE];
     Variable arguments[MAX_FUNCTION_ARGS];
-    Token *code;
+    Token code[MAX_FUNCTION_SIZE];
 } Function;
 
 extern Function *function_table;

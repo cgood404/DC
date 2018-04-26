@@ -34,15 +34,14 @@ typedef struct {
 } Token;
 
 enum token_types {
-    _Com, _SOL, _Plus, _Min, _Mult, _Div, _PlusEql, _MinEql, _MultEql, _DivEql,
-    _Mod, _Inc, _Dec, _Assn, _NotEql, _If, _Then, _Else,
+    _Com, _SOL, _Plus, _Min, _Mult, _Div, _Mod, _Eql, _NotEql, _If, _Then, _Else,
     _EOL, _EOF, _Str, __TOKENS_SIZE
 };
 
 extern int file_size, file_max;
 extern Token *file_tokens;
 
-extern Token COM, SOL, PLUS, MIN, MULT, DIV, PLUSEQL, MINEQL, MULTEQL, DIVEQL,
-        MOD, INC, DEC, EQL, NOTEQL, IF, THEN, ELSE, EOL, EOFS, STR;
+extern Token COM, SOL, PLUS, MIN, MULT, DIV, MOD,
+    EQL, NOTEQL, IF, THEN, ELSE, EOL, EOFS, STR;
 
 #endif

@@ -3,28 +3,21 @@
 
 Token COM = {.keyword = "#", .type = 0};
 Token SOL = {.keyword = "(", .type = 1};
-Token INC = {.keyword = "++", .type = 2};
-Token DEC = {.keyword = "--", .type = 3};
-Token PLUSEQL = {.keyword = "+=", .type = 4};
-Token MINEQL = {.keyword = "-=", .type = 5};
-Token MULTEQL = {.keyword = "*=", .type = 6};
-Token DIVEQL = {.keyword = "/=", .type = 7};
-Token PLUS = {.keyword = "+", .type = 8};
-Token MIN = {.keyword = "-", .type = 9};
-Token MULT = {.keyword = "*", .type = 10};
-Token DIV = {.keyword = "/", .type = 11};
-Token MOD = {.keyword = "\%", .type = 12};
-Token EQL = {.keyword = "==", .type = 13};
-Token NOTEQL = {.keyword = "!=", .type = 14};
-Token IF = {.keyword = "?", .type = 15};
-Token THEN = {.keyword = ":", .type = 16};
-Token ELSE = {.keyword = "::", .type = 17};
-Token EOL = {.keyword = ")", .type = 18};
-Token EOFS = {.keyword = (char) EOF, .type = 19};
-Token STR = {.keyword = "\"", .type = 20};
+Token PLUS = {.keyword = "+", .type = 2};
+Token MIN = {.keyword = "-", .type = 3};
+Token MULT = {.keyword = "*", .type = 4};
+Token DIV = {.keyword = "/", .type = 5};
+Token MOD = {.keyword = "\%", .type = 6};
+Token EQL = {.keyword = "==", .type = 7};
+Token NOTEQL = {.keyword = "!=", .type = 8};
+Token IF = {.keyword = "?", .type = 9};
+Token THEN = {.keyword = ":", .type = 10};
+Token ELSE = {.keyword = "::", .type = 11};
+Token EOL = {.keyword = ")", .type = 12};
+Token EOFS = {.keyword = (char) EOF, .type = 13};
+Token STR = {.keyword = "\"", .type = 14};
 
-Token *token_symbols[] = {&COM, &SOL, &INC, &DEC,
-        &PLUSEQL, &MINEQL, &MULTEQL, &DIVEQL, &PLUS, &MIN, &MULT, &DIV,
+Token *token_symbols[] = {&COM, &SOL, &PLUS, &MIN, &MULT, &DIV,
         &MOD,  &EQL, &NOTEQL, &IF, &ELSE, &THEN, &EOL, &EOFS, &STR};
 
 Token *file_tokens;
