@@ -1,5 +1,7 @@
 #include "dc_parser.h"
 
+#define num_t long double
+
 
 unsigned int current = 0;
 unsigned int temp_current = 0;
@@ -16,7 +18,7 @@ char *strGet(Token *token){
 }
 
 // returns number (type -2), can be added to in order to prevent overflow, improper tokens, etc
-long double numGet(Token *token){
+num_t numGet(Token *token){
     long double num = 0;
     num = strtold(token -> keyword, NULL);
     return num;
@@ -30,83 +32,153 @@ char *keywordGet(Token *token){
 
 int eof(Token *token){
     if(token -> type == 13){
+        current++;
+        printf("End of file\n");
         return 1;
     }
     return 0;
 }
 
-void *plus(Token *token){
+num_t plus(Token *token){
+    if(token -> type == 2){
+        current++;
+        num_t total;
+        printf("Plus Function\n");
+        if(file_tokens[current].type == -2){
+            total = numGet(&file_tokens[current]);
+        }else if(file_tokens[current].type == -1){
+            // variable stuff
+            total = 0;
+        }else{
+            char *buffer = malloc(67 + MAX_INPUT_SIZE);
+            sprintf(buffer, "Unexpected token in function \"+\", expected number or variable of type number, found:  %s",
+            file_tokens[current].keyword);
+            raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
+        }
+
+        current++;
+        if(file_tokens[current].type == -1 || file_tokens[current].type == -2){
+            while(file_tokens[current].type != 12){
+                if(file_tokens[current].type == -2){
+                    total += numGet(&file_tokens[current]);
+                }else if(file_tokens[current].type == -1){
+                    // variable stuff
+                    total += 0;
+                }else{
+                    char *buffer = malloc(67 + MAX_INPUT_SIZE);
+                    sprintf(buffer, "Unexpected token in function \"+\", expected number or variable of type number, found:  %s",
+                    file_tokens[current].keyword);
+                    raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
+                }
+                current++;
+            }
+            printf("%LG\n", total);
+        }else{
+            char *buffer = malloc(67 + MAX_INPUT_SIZE);
+            sprintf(buffer, "Expected at least two arguments in function \"+\", found:  %s",
+            file_tokens[current].keyword);
+            raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
+        }
+    }
+}
+
+num_t min(Token *token){
+    if(token -> type == 3){
+        current++;
+        printf("Minus Function\n");
+        return 1;
+    }
     return 0;
 }
 
-void *min(Token *token){
+num_t mult(Token *token){
+    if(token -> type == 4){
+        current++;
+        printf("Multiply Function\n");
+        return 1;
+    }
     return 0;
 }
 
-void *mult(Token *token){
+num_t divs(Token *token){
+    if(token -> type == 5){
+        current++;
+        printf("Divide Function\n");
+        return 1;
+    }
     return 0;
 }
 
-void *divs(Token *token){
+num_t mod(Token *token){
+    if(token -> type == 6){
+        current++;
+        printf("Modulus Function\n");
+        return 1;
+    }
     return 0;
 }
 
-void *mod(Token *token){
+int eql(Token *token){
+    if(token -> type == 7){
+        current++;
+        printf("End of file\n");
+        return 1;
+    }
     return 0;
 }
 
-void *eql(Token *token){
+int noteql(Token *token){
+    if(token -> type == 8){
+        current++;
+        printf("End of file\n");
+        return 1;
+    }
     return 0;
 }
 
-void *noteql(Token *token){
-    return 0;
-}
-
-void *sol(Token *token){
-    current++;
+num_t sol(Token *token){
     if(token -> type == 1){
+        current++;
+        printf("Start of line\n");
+
         if(file_tokens[current].type == -1){
             // function calls, TODO
         }else if(file_tokens[current].type == 1){
-            sol(&file_tokens[current]);
+            return sol(&file_tokens[current]);
         }else if(file_tokens[current].type == 2){
-            plus(&file_tokens[current]);
+            return plus(&file_tokens[current]);
         }else if(file_tokens[current].type == 3){
-            min(&file_tokens[current]);
+            return min(&file_tokens[current]);
         }else if(file_tokens[current].type == 4){
-            mult(&file_tokens[current]);
+            return mult(&file_tokens[current]);
         }else if(file_tokens[current].type == 5){
-            divs(&file_tokens[current]);
+            return divs(&file_tokens[current]);
         }else if(file_tokens[current].type == 6){
-            mod(&file_tokens[current]);
-        }else if(file_tokens[current].type == 6){
-            eql(&file_tokens[current]);
-        }else if(file_tokens[current].type == 6){
-            noteql(&file_tokens[current]);
+            return mod(&file_tokens[current]);
+        }else if(file_tokens[current].type == 7){
+            return eql(&file_tokens[current]);
+        }else if(file_tokens[current].type == 8){
+            return noteql(&file_tokens[current]);
+        }else{
+            char *buffer = malloc(40 + MAX_INPUT_SIZE);
+            sprintf(buffer, "Invalid statement after start of line: %s", file_tokens[current].keyword);
+            parserError(buffer, token -> line, token -> column);
         }
-    }else parserError("Expected Start of Line token \"(\"",
-                        token -> line, token -> column);
+    }else{
+        char *buffer = malloc(40 + MAX_INPUT_SIZE);
+        sprintf(buffer, "Expected start of line token: \"%s\", found: \"%s\"",
+                    SOL.keyword, file_tokens[current].keyword);
+        parserError(buffer, token -> line, token -> column);
+    }
 }
 
 int parseFile(){
     while(true){
-        if(eof(&file_tokens[++current])){
+        current++;
+        if(eof(&file_tokens[current])){
             return EXIT_SUCCESS;
         }
-        sol(&file_tokens[++current]);
+        sol(&file_tokens[current]);
     };
     return EXIT_SUCCESS;
-}
-
-int parse(Token *tokens){
-    temp_current = 0;
-    while(true){
-        if(eof(&tokens[++temp_current])){
-            return EXIT_SUCCESS;
-        }else if(sol(&tokens[temp_current])){
-            //do stuff
-        }else parserError("Expected Start of Line token \"(\"",
-                        tokens[temp_current].line, tokens[temp_current].column);
-    };
 }

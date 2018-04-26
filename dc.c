@@ -2,10 +2,10 @@
 
 void readfile(char *file_name){
     lexfile(file_name);
+    // for(int i = 0; i < file_size; i++){
+    //     printToken(&file_tokens[i]);
+    // }
     parseFile();
-    for(int i = 0; i < file_size; i++){
-        printToken(&file_tokens[i]);
-    }
 }
 
 void raise(char *error_statement, char *filename, int line, int column){

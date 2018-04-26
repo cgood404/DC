@@ -1,16 +1,2 @@
-(define str "Hello World!")
-(print str)
-# The lexer ignores anything in the quotations, just looks for the next "
-# Then saves that as a type -3 token
-(define str2 "")
-# comments don't need a SOL token
-(define x 2)
-(define z (+ x 3))
-(print z)
-(print (+ z 1))
-
-# a function
-(lambda func1 (x y) (* 2 (- y x)))
-# resolves to: 2 * (4 - 2) = 4
-(func1 2 4)
-(exit)
+(+ 2 3 4 5 6 7 8 9 0 3 5 6 7 4 3 244557 4 53)
+# should resolve to 20

@@ -114,7 +114,7 @@ void lex(char *statement, int length){
             memmove(&w_token.keyword, buffer, not_symbols+1);
             w_token.type = -1;
 
-            addToFile(&w_token, line, current);
+            addToFile(&w_token, line, current - not_symbols);
             not_symbols = 0;
         }else if(statement[current] > 47 && statement[current] < 58){
             while(statement[current] > 47 && statement[current] < 58){
@@ -127,7 +127,7 @@ void lex(char *statement, int length){
             memmove(&n_token.keyword, buffer, not_symbols+1);
             n_token.type = -2;
 
-            addToFile(&n_token, line, current);
+            addToFile(&n_token, line, current - not_symbols);
             not_symbols = 0;
         }else{
             int error = 1;
@@ -163,7 +163,7 @@ void lex(char *statement, int length){
                             Token str_token;
                             str_token.type = -3;
                             memmove(&str_token.keyword, statement + current - str_len, str_len);
-                            addToFile(&str_token, line, current);
+                            addToFile(&str_token, line, current - str_len);
                             error = 0;
                         }
                     }else{
