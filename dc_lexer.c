@@ -158,6 +158,7 @@ void lex(char *statement, int length){
                             str_len++;
                             slice_str(statement, buffer, current, length);
                         }
+                        
                         if(str_len == 0){
                             Token str_token = {.keyword = "", .type = -3};
                             addToFile(&str_token);

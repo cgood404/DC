@@ -1,6 +1,7 @@
 (define str "Hello World!")
 (print str)
 # The lexer ignores anything in the quotations, just looks for the next "
+# Then saves that as a type -3 token
 (define str2 "")
 # comments don't need a SOL token
 (define x 2)
