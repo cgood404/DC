@@ -26,7 +26,7 @@ WHEN CREATING NEW KEYWORDS:
 
     variables/functions are type -1, numbers are type -2, strings are type -3
 */
-typedef struct {
+typedef struct _token {
     char keyword[256];
     int type;
     int line;
@@ -39,7 +39,6 @@ enum token_types {
 };
 
 extern int file_size, file_max;
-extern Token *file_tokens;
 
 extern Token COM, SOL, PLUS, MIN, MULT, DIV, MOD,
     EQL, NOTEQL, IF, THEN, ELSE, EOL, EOFS, STR;

@@ -11,16 +11,17 @@
 #include "dc.h"
 
 extern Token *file_tokens;
+extern char *filename;
 
 void createTokens(void);
-void printToken(Token *token);
-void lex(char *line, int length);
-void lexfile(char *file_name);
-int matchToken(Token *token, char *statement, int length);
-void slice_str(char *str, char *buffer, int start, int end);
-void replace(char* src, int src_length, char oldchar, char newchar);
-int matchStart(char *first, char *second, int first_length, int secnod_length);
-int addToFile(Token *token, int line, int column);
+void printToken();
+void lex();
+void lexfile();
+int matchToken();
+void slice_str();
+void replace();
+int matchStart();
+int addToFile();
 void resetFile(void);
 
 #endif

@@ -15,24 +15,4 @@ char *strGet();
 long double numGet();
 char *keywordGet();
 
-int sol();
-int inc();
-int dec();
-int pluseql();
-int mineql();
-int multeql();
-int diveql();
-int plus();
-int min();
-int mult();
-int divs();
-int mod();
-int eql();
-int noteql();
-int ifs();
-int then();
-int elses();
-int eol();
-int eof();
-
 #endif
