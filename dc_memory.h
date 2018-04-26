@@ -6,18 +6,20 @@
 #include "dc_builtins.h"
 #include "dc.h"
 
-typedef struct {
-    char *name;
-    Token *code;
-} Function;
+#define MAX_FUNCTION_ARGS 16
 
 typedef struct {
-    char *name;
-    void *value;
+    char name[MAX_INPUT_SIZE];
     int type;
 } Variable;
 
-extern Function function_table[];
-extern Variable variable_table[];
+typedef struct {
+    char name[MAX_INPUT_SIZE];
+    Variable arguments[MAX_FUNCTION_ARGS];
+    Token *code;
+} Function;
+
+extern Function *function_table;
+extern Variable *variable_table;
 
 #endif
