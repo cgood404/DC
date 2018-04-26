@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdint.h>
+
 #include "dc_token.h"
 #include "dc_lexer.h"
 #include "dc_parser.h"

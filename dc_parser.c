@@ -1,6 +1,6 @@
 #include "dc_parser.h"
 
-//define, lambda, print, run, exit
+
 unsigned int current = 0;
 unsigned int temp_current = 0;
 int parseFile(){
