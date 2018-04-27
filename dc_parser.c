@@ -85,28 +85,130 @@ num_t plus(Token *token){
 num_t min(Token *token){
     if(token -> type == 3){
         current++;
+        num_t total;
         printf("Minus Function\n");
-        return 1;
-    }
-    return 0;
-}
+        if(file_tokens[current].type == -2){
+            total = numGet(&file_tokens[current]);
+        }else if(file_tokens[current].type == -1){
+            // variable stuff
+            total = 0;
+        }else{
+            char *buffer = malloc(67 + MAX_INPUT_SIZE);
+            sprintf(buffer, "Unexpected token in function \"-\", expected number or variable of type number, found:  %s",
+            file_tokens[current].keyword);
+            raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
+        }
 
-num_t mult(Token *token){
-    if(token -> type == 4){
         current++;
-        printf("Multiply Function\n");
-        return 1;
+        if(file_tokens[current].type == -1 || file_tokens[current].type == -2){
+            while(file_tokens[current].type != 12){
+                if(file_tokens[current].type == -2){
+                    total -= numGet(&file_tokens[current]);
+                }else if(file_tokens[current].type == -1){
+                    // variable stuff
+                    total -= 0;
+                }else{
+                    char *buffer = malloc(67 + MAX_INPUT_SIZE);
+                    sprintf(buffer, "Unexpected token in function \"-\", expected number or variable of type number, found:  %s",
+                    file_tokens[current].keyword);
+                    raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
+                }
+                current++;
+            }
+            printf("%LG\n", total);
+        }else{
+            char *buffer = malloc(67 + MAX_INPUT_SIZE);
+            sprintf(buffer, "Expected at least two arguments in function \"-\", found:  %s",
+            file_tokens[current].keyword);
+            raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
+        }
     }
-    return 0;
 }
 
 num_t divs(Token *token){
-    if(token -> type == 5){
+    if(token -> type == 3){
         current++;
+        num_t total;
         printf("Divide Function\n");
-        return 1;
+        if(file_tokens[current].type == -2){
+            total = numGet(&file_tokens[current]);
+        }else if(file_tokens[current].type == -1){
+            // variable stuff
+            total = 0;
+        }else{
+            char *buffer = malloc(67 + MAX_INPUT_SIZE);
+            sprintf(buffer, "Unexpected token in function \"/\", expected number or variable of type number, found:  %s",
+            file_tokens[current].keyword);
+            raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
+        }
+
+        current++;
+        if(file_tokens[current].type == -1 || file_tokens[current].type == -2){
+            while(file_tokens[current].type != 12){
+                if(file_tokens[current].type == -2){
+                    total /= numGet(&file_tokens[current]);
+                }else if(file_tokens[current].type == -1){
+                    // variable stuff
+                    total /= 0;
+                }else{
+                    char *buffer = malloc(67 + MAX_INPUT_SIZE);
+                    sprintf(buffer, "Unexpected token in function \"/\", expected number or variable of type number, found:  %s",
+                    file_tokens[current].keyword);
+                    raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
+                }
+                current++;
+            }
+            printf("%LG\n", total);
+        }else{
+            char *buffer = malloc(67 + MAX_INPUT_SIZE);
+            sprintf(buffer, "Expected at least two arguments in function \"/\", found:  %s",
+            file_tokens[current].keyword);
+            raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
+        }
     }
-    return 0;
+}
+
+num_t mult(Token *token){
+    if(token -> type == 3){
+        current++;
+        num_t total;
+        printf("Multiply Function\n");
+        if(file_tokens[current].type == -2){
+            total = numGet(&file_tokens[current]);
+        }else if(file_tokens[current].type == -1){
+            // variable stuff
+            total = 0;
+        }else{
+            char *buffer = malloc(67 + MAX_INPUT_SIZE);
+            sprintf(buffer, "Unexpected token in function \"*\", expected number or variable of type number, found:  %s",
+            file_tokens[current].keyword);
+            raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
+        }
+
+        current++;
+        if(file_tokens[current].type == -1 || file_tokens[current].type == -2){
+            while(file_tokens[current].type != 12){
+                if(file_tokens[current].type == -2){
+                    total *= numGet(&file_tokens[current]);
+                }else if(file_tokens[current].type == -1){
+                    // variable stuff
+                    total *= 0;
+                }else{
+                    char *buffer = malloc(67 + MAX_INPUT_SIZE);
+                    sprintf(buffer, "Unexpected token in function \"*\", expected number or variable of type number, found:  %s",
+                    file_tokens[current].keyword);
+                    raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
+                }
+                current++;
+            }
+            printf("%LG\n", total);
+        }else{
+            char *buffer = malloc(67 + MAX_INPUT_SIZE);
+            sprintf(buffer, "Expected at least two arguments in function \"*\", found:  %s",
+            file_tokens[current].keyword);
+            raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
+        }
+    }
 }
 
 num_t mod(Token *token){
