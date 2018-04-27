@@ -1,19 +1,19 @@
 #include "dc.h"
-#include "dc_token.h"
-#include "dc_lexer.h"
-
 
 void readfile(char *file_name){
-    FILE *file = fopen(file_name, "r");
-    if(file == NULL || file <= 0){
-        printf("FileNotFoundError: %s\n", file_name);
-        exit(1);
-    }
-    fclose(file);
+    lexfile(file_name);
+    // for(int i = 0; i < file_size; i++){
+    //     printToken(&file_tokens[i]);
+    // }
+    parseFile();
 }
 
-void raise(char *exception, int line, int column){
-    exit(1);
+void raise(char *error_statement, char *filename, int line, int column){
+    column++;
+    printf(ANSI_COLOR_RED "Error in source file: \"%s\" at line: %d, column: %d\n" ANSI_COLOR_RESET, filename, line, column);
+    printf(ANSI_COLOR_RED "%s\n" ANSI_COLOR_RESET, error_statement);
+    printf(ANSI_COLOR_RED "System Failure, Exiting...\n" ANSI_COLOR_RESET);
+    exit(EXIT_FAILURE);
 }
 
 int main(int argc, char **argv){
@@ -22,13 +22,15 @@ int main(int argc, char **argv){
         readfile(argv[1]);
     }
     else{ // if user wants a command line
-        printf("DC v0.0.1\nNo copyright, no money back, no nothin\'\nPress ^C or type (exit) to exit\n\n");
+        printf("DC v0.1.1\nNo copyright, no money back, no nothin\'\nPress ^C or type (exit) to exit\n\n");
+        char *inputstr = malloc(MAX_INPUT_SIZE);
         while(true){
-            char inputstr[100];
             printf(">> ");
-            scanf("%s", inputstr);
+            fgets(inputstr, MAX_INPUT_SIZE, stdin);
             lex(inputstr, strlen(inputstr));
+            parseFile();
         }
         
     }
+    return 0;
 }

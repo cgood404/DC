@@ -1,122 +1,69 @@
 #include "dc_lexer.h"
+#define file_inc 2
 
-Token SOL, PLUS, MIN, MULT, DIV, MOD, INC, DEC, ASSN,
-        NOTEQL, IF, THEN, ELSE, DEFINE, PRINT, RUN, EOL, EXIT, EOFS, VARIABLE;
-Token *tokens[] = {&SOL, &PLUS, &MIN, &MULT, &DIV, &MOD, &INC, &DEC, &ASSN,
-        &NOTEQL, &IF, &THEN, &ELSE, &DEFINE, &PRINT, &RUN, &EOL, &EXIT, &EOFS, &VARIABLE};
+Token COM = {.keyword = "#", .type = 0};
+Token SOL = {.keyword = "(", .type = 1};
+Token PLUS = {.keyword = "+", .type = 2};
+Token MIN = {.keyword = "-", .type = 3};
+Token MULT = {.keyword = "*", .type = 4};
+Token DIV = {.keyword = "/", .type = 5};
+Token MOD = {.keyword = "\%", .type = 6};
+Token EQL = {.keyword = "==", .type = 7};
+Token NOTEQL = {.keyword = "!=", .type = 8};
+Token IF = {.keyword = "?", .type = 9};
+Token THEN = {.keyword = ":", .type = 10};
+Token ELSE = {.keyword = "::", .type = 11};
+Token EOL = {.keyword = ")", .type = 12};
+Token EOFS = {.keyword = (char) EOF, .type = 13};
+Token STR = {.keyword = "\"", .type = 14};
 
-Token file_tokens[] = {};
-int filesize = 0;
-int filemax = 0;
+Token *token_symbols[] = {&COM, &SOL, &PLUS, &MIN, &MULT, &DIV,
+        &MOD,  &EQL, &NOTEQL, &IF, &ELSE, &THEN, &EOL, &EOFS, &STR};
 
-int addToFile(Token token){
-    printToken(token);
+Token *file_tokens;
+int file_size = 1;
+int file_max = 1;
+
+char *filename;
+int line = 0;
+
+int addToFile(Token *token, int line, int column){
+    if(file_size >= file_max){
+        Token *buffer = malloc((int) (sizeof(Token) * file_size * file_inc));
+        memmove(buffer, file_tokens, (sizeof(Token) * file_size) + 0);
+
+        free(file_tokens);
+        file_max *= file_inc;
+        file_tokens = buffer;
+    }
+
+    memmove(&file_tokens[file_size], token, sizeof(*token));
+    file_tokens[file_size].line = line;
+    file_tokens[file_size].column = column;
+    file_size++;
     return 0;
 }
 
-void sol(char *keyword, int length){
-    printf("Found a start of line token.\n");
+void resetFile(){
+    free(file_tokens);
+    file_size = file_max = 1;
+    file_tokens = malloc(0);
 }
 
-void plus(char *keyword, int length){
-    printf("Found a plus token.\n");
+void printToken(Token *token){        
+    printf("keyword: %s -- type: %d\n\tline: %d, column: %d\n",
+                    token -> keyword, token -> type, token -> line, token -> column);
 }
 
-void min(char *keyword, int length){
-    printf("Found a minus token.\n");
-}
-
-void mult(char *keyword, int length){
-    printf("Found a multiply token.\n");
-}
-
-void divide(char *keyword, int length){
-    printf("Found a divide token.\n");
-}
-
-void mod(char *keyword, int length){
-    printf("Found a modulus token.\n");
-}
-
-void inc(char *keyword, int length){
-    printf("Found an increment token.\n");
-}
-
-void dec(char *keyword, int length){
-    printf("Found a decrement token.\n");
-}
-
-void assn(char *keyword, int length){
-    printf("Found an assignment token.\n");
-}
-
-void eql(char *keyword, int length){
-    printf("Found an equals token.\n");
-}
-
-void noteql(char *keyword, int length){
-    printf("Found a not equals token.\n");
-}
-
-void ifs(char *keyword, int length){
-    printf("Found an if token.\n");
-}
-
-void thens(char *keyword, int length){
-    printf("Found a then token.\n");
-}
-
-void elses(char *keyword, int length){
-    printf("Found an else token.\n");
-}
-
-void define(char *keyword, int length){
-    printf("Found a define token.\n");
-}
-
-void print(char *keyword, int length){
-    printf("Found a print token.\n");
-}
-
-void run(char *keyword, int length){
-    printf("Found a run token.\n");
-}
-
-void eol(char *keyword, int length){
-    printf("Found an end of line token.\n");
-}
-
-void eof(char* keyword, int length){
-    printf("Found an end of file token.\n");
-}
-
-void exits(char* keyword, int length){
-    exit(0);
-}
-
-void variable(char* keyword, int length){
-    printf("Found a variable token.\n");
-}
-
-void printToken(Token token){        
-    printf("%s %d\n", token.keyword, token.type);
-    token.destination("", 0);
-}
-
-int matchStart(char *first, char *second, int first_length, int second_length){
+int matchStart(char *token, char *input, int token_length, int input_length){
     int bool_matches = true;
-    if(first_length == 0 && second != '\0'){
+    if(token_length == 0 && input != '\0'){
         return bool_matches;
-    }
-    if(first_length < second_length){
-        for(int i = 0; i < first_length; i++){
-            if(first[i] != second[i]){
-                bool_matches = false;
-            }
-        }
+    }else if(token_length > input_length){
+        bool_matches = false;
     }else{
-        for(int i = 0; i < second_length; i++){
-            if(first[i] != second[i]){
+        for(int i = 0; i < token_length; i++){
+            if(token[i] != input[i]){
                 bool_matches = false;
             }
         }
@@ -125,53 +72,136 @@ int matchStart(char *first, char *second, int first_length, int second_length){
 }
 
 // Just a high level wrapper for the matchStart function
-int matchToken(Token token, char *statement, int length){
-    if(matchStart(token.keyword, statement, strlen(token.keyword), length)){
+int matchToken(Token *token, char *statement, int length){
+    if(matchStart(token -> keyword, statement, strlen(token -> keyword), length)){
         return true;
     }else{
         return false;
     }
 }
 
-int lex(char *statement, int length){
-    for(int i = _SOL; i < __TOKENS_SIZE; i++){
-        if(matchToken(*tokens[i], statement, length)){
-            addToFile(*tokens[i]);
-            break;
+void slice_str(char *str, char *buffer, int start, int end){
+    memmove(buffer, str + start, end - start);
+    buffer[end-start] = '\0';
+}
+
+void replace(char* src, int src_length, char oldchar, char newchar){
+    for(int i = 0; i < src_length; i++){
+        if(src[i] == oldchar){
+            src[i] = newchar;
         }
     }
-    return 0;
+}
+
+void lex(char *statement, int length){
+    int current = 0;
+    char *buffer = malloc(MAX_INPUT_SIZE + 1);
+    int not_symbols = 0;
+    while(current < length){
+        if(statement[current] == ' ' || statement[current] == '\n'){
+            current++;
+        }else if((statement[current] > 64 && statement[current] < 91) ||
+                                    (statement[current] > 96 && statement[current] < 123)){
+            while((statement[current] > 47 && statement[current] < 58) ||
+                                    (statement[current] > 64 && statement[current] < 91) ||
+                                    (statement[current] > 96 && statement[current] < 123)){
+                not_symbols++;
+                current++;
+            }
+            slice_str(statement, buffer, current - not_symbols, current);
+
+            Token w_token;
+            memmove(&w_token.keyword, buffer, not_symbols+1);
+            w_token.type = -1;
+
+            addToFile(&w_token, line, current - not_symbols);
+            not_symbols = 0;
+        }else if(statement[current] > 47 && statement[current] < 58){
+            while(statement[current] > 47 && statement[current] < 58){
+                not_symbols++;
+                current++;
+            }
+            slice_str(statement, buffer, current - not_symbols, current);
+
+            Token n_token;
+            memmove(&n_token.keyword, buffer, not_symbols+1);
+            n_token.type = -2;
+
+            addToFile(&n_token, line, current - not_symbols);
+            not_symbols = 0;
+        }else{
+            int error = 1;
+            for(int i = _Com; i < __TOKENS_SIZE; i++){
+                slice_str(statement, buffer, current, length);
+                if(matchToken(token_symbols[i], buffer, length - current)){
+                    // if token is comment, ignore the rest of the line
+                    if(i == _Com){
+                        while(statement[current] != '\n'){
+                            current++;
+                        }
+                        error = 0;
+                    // if token is a string, save everything up to the next " as a type -3
+                    }else if(i == _Str){
+                        current++;
+                        slice_str(statement, buffer, current, length);
+                        int str_len = 0;
+                        while(!matchToken(&STR, buffer, length - current)){
+                            if(current == length){
+                                sprintf(buffer, "StringError: Unclosed string in statement: \"%s\"", statement);
+                                raise(buffer, filename, line, current);
+                            }
+                            current++;
+                            str_len++;
+                            slice_str(statement, buffer, current, length);
+                        }
+                        
+                        if(str_len == 0){
+                            Token str_token = {.keyword = "", .type = -3};
+                            addToFile(&str_token, line, current);
+                            error = 0;
+                        }else{
+                            Token str_token;
+                            str_token.type = -3;
+                            memmove(&str_token.keyword, statement + current - str_len, str_len);
+                            addToFile(&str_token, line, current - str_len);
+                            error = 0;
+                        }
+                    }else{
+                        addToFile(token_symbols[i], line, current);
+                        current += strlen(token_symbols[i] -> keyword) - 1;
+                        error = 0;
+                    }
+                    break;
+                }
+            }
+            if(error){
+                char* error_statement = (char *)malloc(MAX_INPUT_SIZE);
+                sprintf(error_statement, "TokenError: Unknown token in statement: \"%s\"",
+                                        statement);
+                raise(error_statement, filename, line, current);
+            }
+            current++;
+        }
+    }
+    free(buffer);
+}
+
+void lexfile(char *file_name){
+    filename = file_name;
+    FILE *file = fopen(file_name, "r");
+    if(file == NULL || file <= 0){
+        printf("FileNotFoundError: \"%s\"\n", file_name);
+        exit(1);
+    }
+    char *inputstr = (char *) malloc(MAX_INPUT_SIZE);
+    while(fgets(inputstr, MAX_INPUT_SIZE, file) != NULL){
+        line++;
+        printf(">> %s\n", inputstr);
+        lex(inputstr, strlen(inputstr));
+    }
+    addToFile(&EOFS, line, -1);
 }
 
 void createTokens(void){
-    char *keywords[] = {"(", // Start of Line
-                        "+", // Plus
-                        "-", // Minus
-                        "*", // Multiply
-                        "/", // Divide
-                        "\%", // Modulus
-                        "++", // Increment
-                        "--", // Decrement
-                        "==", // Is Equal To
-                        "!=", // Is Not Equal To
-                        "?", // If
-                        ":", // Then
-                        "::", // Else
-                        "define", // Define
-                        "print", // Print
-                        "run", // Run
-                        ")", // End of Line
-                        "exit", // Exit
-                        "", // Variables (matches everything else)
-                        "\0"}; // End of File
-        
-    destination_t destinations[] = {&sol, &plus, &min, &mult, &divide, &mod,
-        &inc, &dec, &assn, &noteql, &ifs, &thens, &elses, &define, &print,
-        &run, &eol, &exits, &variable, &eof};
-
-    for(int i = _SOL; i < __TOKENS_SIZE; i++){
-        strcpy(tokens[i] -> keyword, keywords[i]);
-        tokens[i] -> type = i;
-        tokens[i] -> destination = destinations[i];
-    }
+    file_tokens = malloc(0);
 }
