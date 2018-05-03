@@ -92,7 +92,7 @@ union __VARIABLE { // unions share memory space
 struct _variable {
     char name[MAX_INPUT_SIZE];
     short type;
-    union __VARIABLE value;
+    _VARIABLE value;
 };
 
 struct _function {

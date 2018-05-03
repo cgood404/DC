@@ -2,15 +2,20 @@
 
 Function *function_table;
 Variable *variable_table;
+unsigned long function_table_size;
+unsigned long function_table_max;
+
+unsigned long variable_table_size;
+unsigned long variable_table_max;
 
 int createTables(){
     function_table = malloc(sizeof(Variable));
     variable_table = malloc(sizeof(Function));
-    unsigned long function_table_size = 0;
-    unsigned long function_table_max = 1;
+    function_table_size = 0;
+    function_table_max = 1;
 
-    unsigned long variable_table_size = 0;
-    unsigned long variable_table_max = 1;
+    variable_table_size = 0;
+    variable_table_max = 1;
     return 1;
 }
 
