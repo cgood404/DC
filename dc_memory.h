@@ -11,7 +11,7 @@
 
 typedef struct _variable Variable;
 typedef struct _function Function;
-
+typedef union __VARIABLE  _VARIABLE;
 extern Function *function_table;
 extern Variable *variable_table;
 

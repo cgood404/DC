@@ -1,7 +1,5 @@
 #include "dc_parser.h"
 
-#define num_t long double
-
 
 unsigned int current = 0;
 unsigned int temp_current = 0;
