@@ -7,8 +7,6 @@
 #include "dc_memory.h"
 #include "dc_token.h"
 
-#define num_t long double
-
 int parseFile();
 int parse();
 void parserError(char *statement, int line, int column);

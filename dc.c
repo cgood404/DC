@@ -1,4 +1,4 @@
-#include "dc.h"
+#include "dc_main.h"
 
 void readfile(char *file_name){
     lexfile(file_name);

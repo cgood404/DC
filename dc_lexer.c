@@ -1,4 +1,4 @@
-#include "dc_lexer.h"
+#include "dc_main.h"
 #define file_inc 2
 
 Token COM = {.keyword = "#", .type = 0};

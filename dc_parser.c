@@ -1,4 +1,4 @@
-#include "dc_parser.h"
+#include "dc_main.h"
 
 
 unsigned int current = 0;
@@ -35,7 +35,7 @@ int eof(Token *token){
     return 0;
 }
 
-num_t plus(Token *token){
+Variable *plus(Token *token){
     if(file_tokens[current].type == 2){
         current++;
         num_t total;
@@ -66,6 +66,8 @@ num_t plus(Token *token){
                 raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
             }
             current++;
+            Variable *var = malloc(sizeof(Variable));
+            return var;
             printf("%LG\n", total);
         }else{
             char *buffer = malloc(67 + MAX_INPUT_SIZE);
@@ -73,10 +75,15 @@ num_t plus(Token *token){
             file_tokens[current].keyword);
             raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
         }
+    }else{
+        char *buffer = malloc(67 + MAX_INPUT_SIZE);
+        sprintf(buffer, "Expected at least two arguments in function \"+\", found:  %s",
+        file_tokens[current].keyword);
+        raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
     }
 }
 
-num_t min(Token *token){
+Variable *min(Token *token){
     if(file_tokens[current].type == 3){
         current++;
         num_t total;
@@ -101,7 +108,7 @@ num_t min(Token *token){
                 // variable stuff
                 total -= 0;
             }else{
-                char *buffer = malloc(67 + MAX_INPUT_SIZE);
+                char *buffer = malloc(89 + MAX_INPUT_SIZE);
                 sprintf(buffer, "Unexpected token in function \"-\", expected number or variable of type number, found:  %s",
                 file_tokens[current].keyword);
                 raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
@@ -117,7 +124,7 @@ num_t min(Token *token){
     }
 }
 
-num_t divs(Token *token){
+Variable *divs(Token *token){
     if(file_tokens[current].type == 3){
         current++;
         num_t total;
@@ -158,7 +165,7 @@ num_t divs(Token *token){
     }
 }
 
-num_t mult(Token *token){
+Variable *mult(Token *token){
     if(file_tokens[current].type == 3){
         current++;
         num_t total;
@@ -199,7 +206,7 @@ num_t mult(Token *token){
     }
 }
 
-num_t mod(Token *token){
+Variable *mod(Token *token){
     if(token -> type == 6){
         current++;
         printf("Modulus Function\n");
@@ -208,7 +215,7 @@ num_t mod(Token *token){
     return 0;
 }
 
-int eql(Token *token){
+Variable *eql(Token *token){
     if(token -> type == 7){
         current++;
         printf("End of file\n");
@@ -217,7 +224,7 @@ int eql(Token *token){
     return 0;
 }
 
-int noteql(Token *token){
+Variable *noteql(Token *token){
     if(token -> type == 8){
         current++;
         printf("End of file\n");
@@ -226,8 +233,8 @@ int noteql(Token *token){
     return 0;
 }
 
-num_t sol(Token *token){
-    if(token -> type == 1){
+Variable *sol(Token *token){
+    if(file_tokens[current].type == 1){
         current++;
         printf("Start of line\n");
 
