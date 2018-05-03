@@ -1,5 +1,4 @@
 #include "dc_main.h"
-#define file_inc 2
 
 Token COM = {.keyword = "#", .type = 0};
 Token SOL = {.keyword = "(", .type = 1};
@@ -29,11 +28,11 @@ int line = 0;
 
 int addToFile(Token *token, int line, int column){
     if(file_size >= file_max){
-        Token *buffer = malloc((int) (sizeof(Token) * file_size * file_inc));
+        Token *buffer = malloc((int) (sizeof(Token) * file_size * size_inc));
         memmove(buffer, file_tokens, (sizeof(Token) * file_size) + 0);
 
         free(file_tokens);
-        file_max *= file_inc;
+        file_max *= size_inc;
         file_tokens = buffer;
     }
 
@@ -204,4 +203,5 @@ void lexfile(char *file_name){
 
 void createTokens(void){
     file_tokens = malloc(0);
+    createTables();
 }

@@ -7,11 +7,15 @@
 #include <string.h>
 #include <stdint.h>
 
-
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
-
+#define MAX_FUNCTION_ARGS 16
+#define MAX_FUNCTION_SIZE 256
 #define MAX_INPUT_SIZE 255
+#define num_t long double
+#define size_inc 2
+
+// MAIN ///////////////////////////////////////////////////////////////////////////
 
 struct dc_file {
     char *__name__;
@@ -22,13 +26,17 @@ void readfile(char *file_name);
 void raise(char *exception, char *filename, int line, int column);
 
 
-///////////////////////////////////////////////////////////////////////////
+// TOKENS /////////////////////////////////////////////////////////////////////////
 
 
 /*
 WHEN CREATING NEW KEYWORDS:
+    IMPORTANT tokens of type:
+        -1: keywords, such as builtins, variables, or functions
+        -2: number variable type
+        -3: string variable type
     *) DO NOT ADD WORDS AS TOKENS, they are read by the parser. They will be declared
-        as their own tokens.
+        as their own tokens of type -1.
     **) Tokens should be 1-3 character symbols that have as little overlap as possible
         with other tokens, and that have as little letters and/or numbers as possible
     1) Add the keyword, Capitalized, with a leading _underscore, to the end of the 
@@ -63,19 +71,18 @@ extern Token COM, SOL, PLUS, MIN, MULT, DIV, MOD,
     EQL, NOTEQL, IF, THEN, ELSE, EOL, EOFS, STR;
 
 
-///////////////////////////////////////////////////////////////////////////
+// MEMORY /////////////////////////////////////////////////////////////////////////
 
-
-#define MAX_FUNCTION_ARGS 16
-#define MAX_FUNCTION_SIZE 256
-#define num_t long double
 
 typedef struct _variable Variable;
 typedef struct _function Function;
 typedef union __VARIABLE  _VARIABLE;
 extern Function *function_table;
+extern unsigned long function_table_size;
+extern unsigned long function_table_max;
 extern Variable *variable_table;
-extern unsigned long sizeofVariable;
+extern unsigned long variable_table_size;
+extern unsigned long variable_table_max;
 
 union __VARIABLE { // unions share memory space
     char string[MAX_INPUT_SIZE];
@@ -84,7 +91,7 @@ union __VARIABLE { // unions share memory space
 
 struct _variable {
     char name[MAX_INPUT_SIZE];
-    int type;
+    short type;
     union __VARIABLE value;
 };
 
@@ -94,8 +101,10 @@ struct _function {
     Token code[MAX_FUNCTION_SIZE];
 };
 
+int createTables();
 
-///////////////////////////////////////////////////////////////////////////
+
+// PARSER /////////////////////////////////////////////////////////////////////////
 
 
 int parseFile();
@@ -107,7 +116,7 @@ long double numGet();
 char *keywordGet();
 
 
-///////////////////////////////////////////////////////////////////////////
+// LEXER /////////////////////////////////////////////////////////////////////////
 
 
 extern Token *file_tokens;
@@ -124,30 +133,13 @@ int addToFile();
 void resetFile(void);
 
 
-///////////////////////////////////////////////////////////////////////////
-
-
-extern Token *file_tokens;
-extern char *filename;
-
-void createTokens(void);
-void printToken();
-void lex();
-void lexfile();
-int matchToken();
-void slice_str();
-int matchStart();
-int addToFile();
-void resetFile(void);
-
-
-///////////////////////////////////////////////////////////////////////////
+// BUILTINS /////////////////////////////////////////////////////////////////////////
 
 
 int define(int current);
 int lambda(int current);
-int print(int current);
-int run(int current);
-void exit(int current);
+int prints(int current);
+int runs(int current);
+void exits(int current);
 
 #endif
