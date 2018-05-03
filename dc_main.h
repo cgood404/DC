@@ -114,6 +114,7 @@ void parserError(char *statement, int line, int column);
 char *strGet();
 long double numGet();
 char *keywordGet();
+int eol(short raiseEx);
 
 
 // LEXER /////////////////////////////////////////////////////////////////////////

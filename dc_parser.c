@@ -41,6 +41,7 @@ int eol(short raiseEx){
             return 0;
         }
     }
+    return 0;
 }
 
 int eof(){
@@ -293,13 +294,13 @@ Variable *noteql(){
 
 Variable *callBuiltin(){
     if(strcmp(file_tokens[current].keyword, "define")){
-        define(current);
+        current = define(current);
     }else if(strcmp(file_tokens[current].keyword, "lambda")){
-        lambda(current);
+        current = lambda(current);
     }else if(strcmp(file_tokens[current].keyword, "print")){
-        prints(current);
+        current = prints(current);
     }else if(strcmp(file_tokens[current].keyword, "run")){
-        runs(current);
+        current = runs(current);
     }else if(strcmp(file_tokens[current].keyword, "exit")){
         exits(current);
     }
@@ -353,6 +354,7 @@ Variable *sol(){
                     SOL.keyword, file_tokens[current].keyword);
         raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
     }
+    return NULL;
 }
 
 int parseFile(){
