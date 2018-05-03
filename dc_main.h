@@ -77,12 +77,18 @@ extern Token COM, SOL, PLUS, MIN, MULT, DIV, MOD,
 typedef struct _variable Variable;
 typedef struct _function Function;
 typedef union __VARIABLE  _VARIABLE;
+
 extern Function *function_table;
 extern unsigned long function_table_size;
 extern unsigned long function_table_max;
+int addFunction(Function *function);
+
 extern Variable *variable_table;
 extern unsigned long variable_table_size;
 extern unsigned long variable_table_max;
+int addVariable(Variable *variable);
+
+int createTables();
 
 union __VARIABLE { // unions share memory space
     char string[MAX_INPUT_SIZE];
@@ -101,8 +107,7 @@ struct _function {
     Token code[MAX_FUNCTION_SIZE];
 };
 
-int createTables();
-
+extern Variable none;
 
 // PARSER /////////////////////////////////////////////////////////////////////////
 
@@ -111,10 +116,13 @@ int parseFile();
 int parse();
 void parserError(char *statement, int line, int column);
 
-char *strGet();
-long double numGet();
-char *keywordGet();
+char *strGet(Token *token);
+num_t numGet(Token *token);
+char *keywordGet(Token *token);
 int eol(short raiseEx);
+Variable *sol();
+
+extern unsigned int currentToken;
 
 
 // LEXER /////////////////////////////////////////////////////////////////////////
@@ -136,11 +144,10 @@ void resetFile(void);
 
 // BUILTINS /////////////////////////////////////////////////////////////////////////
 
-
-int define(int current);
-int lambda(int current);
-int prints(int current);
-int runs(int current);
-void exits(int current);
+Variable *define();
+Variable *lambda();
+Variable *prints();
+Variable *runs();
+void exits();
 
 #endif

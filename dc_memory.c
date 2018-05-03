@@ -8,6 +8,8 @@ unsigned long function_table_max;
 unsigned long variable_table_size;
 unsigned long variable_table_max;
 
+Variable none = {.name = "none", .type = 0, .value = {.num = 0}};
+
 int createTables(){
     function_table = malloc(sizeof(Variable));
     variable_table = malloc(sizeof(Function));

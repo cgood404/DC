@@ -1,8 +1,23 @@
-(+ 2 3)
-# 5
+(+ 2 5)
+# 7
 (- 5 4)
 # 1
 (* 2 4)
 # 8
 (/ 4 2)
 # 2
+
+(define x "Hello World!")
+(define y 30)
+(define z 205)
+
+(print x)
+(print (+ y z))
+
+(define x 3)
+(define y "Overwritten :)")
+
+(print (- z x))
+(print y)
+
+(exit 0)
