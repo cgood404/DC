@@ -315,14 +315,18 @@ Variable *define(){
                 Variable *var = malloc(sizeof(Variable));
                 strcpy(var -> name, name);
                 currentToken++;
-
-                if(file_tokens[currentToken].type == -2){
+                if(file_tokens[currentToken].type == -3){
+                    var -> type = 3;
+                    strcpy(var -> value.string, strGet(&file_tokens[currentToken]));
+                    currentToken++;
+                }else if(file_tokens[currentToken].type == -2){
                     var -> type = 2;
                     var -> value.num = numGet(&file_tokens[currentToken]);
                     currentToken++;
-                }else if(file_tokens[currentToken].type == -3){
-                    var -> type = 3;
-                    strcpy(var -> value.string, strGet(&file_tokens[currentToken]));
+                }else if(file_tokens[currentToken].type == -1){
+                    Variable *cpyvar = getVarByName(keywordGet(&file_tokens[currentToken]));
+                    var -> type = cpyvar -> type;
+                    memcpy(&(var -> value), &(cpyvar -> value), sizeof(_VARIABLE));
                     currentToken++;
                 }else if(file_tokens[currentToken].type == 1){
                     var = sol();
@@ -342,13 +346,18 @@ Variable *define(){
         Variable *var = malloc(sizeof(Variable));
         currentToken++;
 
-        if(file_tokens[currentToken].type == -2){
+        if(file_tokens[currentToken].type == -3){
+            var -> type = 3;
+            strcpy(var -> value.string, strGet(&file_tokens[currentToken]));
+            currentToken++;
+        }else if(file_tokens[currentToken].type == -2){
             var -> type = 2;
             var -> value.num = numGet(&file_tokens[currentToken]);
             currentToken++;
-        }else if(file_tokens[currentToken].type == -3){
-            var -> type = 3;
-            strcpy(var -> value.string, strGet(&file_tokens[currentToken]));
+        }else if(file_tokens[currentToken].type == -1){
+            Variable *cpyvar = getVarByName(keywordGet(&file_tokens[currentToken]));
+            var -> type = cpyvar -> type;
+            memcpy(&(var -> value), &(cpyvar -> value), sizeof(_VARIABLE));
             currentToken++;
         }else if(file_tokens[currentToken].type == 1){
             var = sol();
