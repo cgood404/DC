@@ -143,9 +143,11 @@ Variable *sol(){
 }
 
 int parseFile(){
-    currentToken++;
+    if(currentToken == 0){
+        currentToken++;
+    }
     while(true){
-        if(eof()){
+        if(eof() || file_size == currentToken){
             return EXIT_SUCCESS;
         }
         sol();

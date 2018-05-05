@@ -286,7 +286,7 @@ Variable *eql(){
     if(file_tokens[currentToken].type == 7){
         currentToken++;
         if(file_tokens[currentToken].type == 1){
-            
+
         }
         return &True;
     }
@@ -319,9 +319,13 @@ Variable *define(){
                 if(file_tokens[currentToken].type == -2){
                     var -> type = 2;
                     var -> value.num = numGet(&file_tokens[currentToken]);
+                    currentToken++;
                 }else if(file_tokens[currentToken].type == -3){
                     var -> type = 3;
                     strcpy(var -> value.string, strGet(&file_tokens[currentToken]));
+                    currentToken++;
+                }else if(file_tokens[currentToken].type == 1){
+                    var = sol();
                 }else{
                     char *buffer = malloc(53 + MAX_INPUT_SIZE);
                     sprintf(buffer, "SyntaxError: Expected String or Number, received \"%s\" of type %d",
@@ -330,22 +334,24 @@ Variable *define(){
                 }
 
                 variable_table[i] = *var;
-                currentToken++;
                 eol(1);
                 return var;
             }
         }
 
         Variable *var = malloc(sizeof(Variable));
-        strcpy(var -> name, name);
         currentToken++;
 
         if(file_tokens[currentToken].type == -2){
             var -> type = 2;
             var -> value.num = numGet(&file_tokens[currentToken]);
+            currentToken++;
         }else if(file_tokens[currentToken].type == -3){
             var -> type = 3;
             strcpy(var -> value.string, strGet(&file_tokens[currentToken]));
+            currentToken++;
+        }else if(file_tokens[currentToken].type == 1){
+            var = sol();
         }else{
             char *buffer = malloc(53 + MAX_INPUT_SIZE);
             sprintf(buffer, "SyntaxError: Expected String or Number, received \"%s\" of type %d",
@@ -353,8 +359,8 @@ Variable *define(){
             raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
         }
 
+        strcpy(var -> name, name);
         addVariable(var);
-        currentToken++;
         eol(1);
 
         return var;
