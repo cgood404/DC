@@ -108,7 +108,7 @@ struct _function {
     Token code[MAX_FUNCTION_SIZE];
 };
 
-extern Variable none;
+extern Variable none, True, False;
 
 // PARSER /////////////////////////////////////////////////////////////////////////
 
@@ -132,7 +132,7 @@ extern unsigned int currentToken;
 extern Token *file_tokens;
 extern char *filename;
 
-void createTokens(void);
+void _init_(void);
 void printToken();
 void lex();
 void lexfile();

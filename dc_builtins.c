@@ -285,10 +285,12 @@ Variable *mod(){
 Variable *eql(){
     if(file_tokens[currentToken].type == 7){
         currentToken++;
-        printf("Equals function\n");
-        return NULL;
+        if(file_tokens[currentToken].type == 1){
+            
+        }
+        return &True;
     }
-    return 0;
+    return &False;
 }
 
 Variable *noteql(){

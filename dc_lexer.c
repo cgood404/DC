@@ -204,8 +204,10 @@ void lexfile(char *file_name){
     addToFile(&EOFS, line, -1);
 }
 
-void createTokens(void){
+void _init_(void){
     file_tokens = malloc(0);
     createTables();
     addVariable(&none);
+    addVariable(&True);
+    addVariable(&False);
 }

@@ -2,3 +2,8 @@
 (define str2 " I am DC, a language")
 (define str3 " created for COSC 439 at Towson")
 (define str4 " University, by Chris Good and David Guare")
+(define str12 (+ str1 str2))
+(define str34 (+ str3 str4))
+(define str1234 (+ str12 str34))
+
+(print str1234)

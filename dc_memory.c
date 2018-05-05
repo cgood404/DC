@@ -9,6 +9,8 @@ unsigned long variable_table_size;
 unsigned long variable_table_max;
 
 Variable none = {.name = "none", .type = 0, .value = {.num = 0}};
+Variable True = {.name = "True", .type = 1, .value = {.num = 1}};
+Variable False = {.name = "False", .type = 1, .value = {.num = 0}};
 
 int createTables(){
     function_table = malloc(sizeof(Variable));
