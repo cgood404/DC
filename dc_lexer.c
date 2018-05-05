@@ -16,6 +16,7 @@ Token EOL = {.keyword = ")", .type = 12};
 Token EOFS = {.keyword = (char) EOF, .type = 13};
 Token STR = {.keyword = "\"", .type = 14};
 
+
 Token *token_symbols[] = {&COM, &SOL, &PLUS, &MIN, &MULT, &DIV,
         &MOD,  &EQL, &NOTEQL, &IF, &ELSE, &THEN, &EOL, &EOFS, &STR};
 

@@ -1,0 +1,4 @@
+(define str1 "Hello World!")
+(define str2 " I am DC, a language")
+(define str3 " created for COSC 439 at Towson")
+(define str4 " University, by Chris Good and David Guare")

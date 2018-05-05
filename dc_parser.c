@@ -74,7 +74,6 @@ int eol(short raiseEx){
 int eof(){
     if(file_tokens[currentToken].type == 13){
         currentToken++;
-        printf("End of file\n");
         return 1;
     }
     return 0;

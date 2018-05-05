@@ -1,0 +1,6 @@
+(define foo 6)
+(define bar 2)
+(print (+ foo bar))
+(print (- foo bar))
+(print (/ foo bar))
+(print (* foo bar))
