@@ -53,8 +53,13 @@ int addVariable(Variable *variable){
     return 1;
 }
 
-Variable getVarByName(char *name){
+Variable *getVarByName(char *name){
     for(int i = 0; i < variable_table_size; i++){
-        
+        if(strcmp(name, variable_table[i].name) == 0){
+            return &variable_table[i];
+        }
     }
+    char *buffer = malloc(47 + MAX_INPUT_SIZE);
+    sprintf(buffer, "VariableError: Variable with name: %s not defined", name);
+    raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
 }

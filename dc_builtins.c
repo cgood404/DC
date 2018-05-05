@@ -1,12 +1,11 @@
 #include "dc_main.h"
 
 Variable *define(){
-    printf("Define Function\n");
     if(file_tokens[currentToken].type == -1){
         currentToken++;
         char *name = keywordGet(&file_tokens[currentToken]);
         if(strcmp(name, "none") == 0){
-            raise("Cannot overwrite none variable", filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+            raise("NoneError: Cannot overwrite none variable", filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
         }
         // if variable is already declared, redefine it
         for(int i = 0; i < variable_table_size; i++){
@@ -23,7 +22,7 @@ Variable *define(){
                     strcpy(var -> value.string, strGet(&file_tokens[currentToken]));
                 }else{
                     char *buffer = malloc(53 + MAX_INPUT_SIZE);
-                    sprintf(buffer, "Expected String or Number, received \"%s\" of type %d",
+                    sprintf(buffer, "SyntaxError: Expected String or Number, received \"%s\" of type %d",
                     file_tokens[currentToken].keyword, file_tokens[currentToken].type);
                     raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
                 }
@@ -47,7 +46,7 @@ Variable *define(){
             strcpy(var -> value.string, strGet(&file_tokens[currentToken]));
         }else{
             char *buffer = malloc(53 + MAX_INPUT_SIZE);
-            sprintf(buffer, "Expected String or Number, received \"%s\" of type %d",
+            sprintf(buffer, "SyntaxError: Expected String or Number, received \"%s\" of type %d",
             file_tokens[currentToken].keyword, file_tokens[currentToken].type);
             raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
         }
@@ -55,6 +54,7 @@ Variable *define(){
         addVariable(var);
         currentToken++;
         eol(1);
+
         return var;
     }else{
         return &none;
@@ -82,9 +82,17 @@ Variable *prints(){
         if(file_tokens[currentToken].type == 1){
             printsVar(sol());
         }else if(file_tokens[currentToken].type == -1){
-
+            printsVar(getVarByName(keywordGet(&file_tokens[currentToken])));
+            currentToken++;
+        }else if(file_tokens[currentToken].type == -2){
+            printf("%Lg\n", numGet(&file_tokens[currentToken]));
+        }else if(file_tokens[currentToken].type == -3){
+            printf("%s\n", strGet(&file_tokens[currentToken]));
+        }else{
+            printf("error");
         }
     }
+    eol(1);
     return &none;
 }
 

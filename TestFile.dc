@@ -1,10 +1,10 @@
-(+ 2 5)
+(print (+ 2 5))
 # 7
-(- 5 4)
+(print (- 5 4))
 # 1
-(* 2 4)
+(print (* 2 4))
 # 8
-(/ 4 2)
+(print (/ 4 2))
 # 2
 
 (define  x "Hello World!")
@@ -15,7 +15,6 @@
 (print (+ y z))
 
 (define x 3)
-(define y "Overwritten :)")
 
 (print (- z x))
 (print y)

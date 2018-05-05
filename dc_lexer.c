@@ -195,7 +195,6 @@ void lexfile(char *file_name){
     char *inputstr = (char *) malloc(MAX_INPUT_SIZE);
     while(fgets(inputstr, MAX_INPUT_SIZE, file) != NULL){
         line++;
-        printf(">> %s\n", inputstr);
         lex(inputstr, strlen(inputstr));
     }
     addToFile(&EOFS, line, -1);

@@ -87,6 +87,7 @@ extern Variable *variable_table;
 extern unsigned long variable_table_size;
 extern unsigned long variable_table_max;
 int addVariable(Variable *variable);
+Variable *getVarByName(char *name);
 
 int createTables();
 
