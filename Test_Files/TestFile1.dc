@@ -1,0 +1,12 @@
+(print (+ 2 5))
+# 7
+(print (- 5 4))
+# 1
+(print (* 2 4))
+# 8
+(print (/ 4 2))
+# 2
+
+(define x 3)
+(define y 4)
+(define z (* x y))

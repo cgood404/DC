@@ -149,6 +149,13 @@ Variable *define();
 Variable *lambda();
 Variable *prints();
 Variable *runs();
+Variable *plus();
+Variable *min();
+Variable *divs();
+Variable *mult();
+Variable *mod();
+Variable *eql();
+Variable *noteql();
 void exits();
 
 #endif

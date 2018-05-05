@@ -159,10 +159,13 @@ void lex(char *statement, int length){
                             addToFile(&str_token, line, current);
                             error = 0;
                         }else{
-                            Token str_token;
-                            str_token.type = -3;
-                            memmove(&str_token.keyword, statement + current - str_len, str_len);
-                            addToFile(&str_token, line, current - str_len);
+                            Token *str_token = malloc(sizeof(Token));
+                            str_token -> type = -3;
+
+                            strcpy(str_token -> keyword, &statement[current - str_len]);
+                            str_token -> keyword[str_len] = '\0';
+                            
+                            addToFile(str_token, line, current - str_len);
                             error = 0;
                         }
                     }else{
