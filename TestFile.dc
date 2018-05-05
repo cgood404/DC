@@ -7,7 +7,7 @@
 (/ 4 2)
 # 2
 
-(define x "Hello World!")
+(define  x "Hello World!")
 (define y 30)
 (define z 205)
 

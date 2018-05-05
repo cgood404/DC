@@ -306,18 +306,15 @@ Variable *noteql(){
 }
 
 Variable *callBuiltin(){
-    printf("test\n");
-    printf("%d\n", strcmp(file_tokens[currentToken].keyword, "define"));
-    if(strcmp(file_tokens[currentToken].keyword, "define")){
-        printf("test\n");
+    if(strcmp(file_tokens[currentToken].keyword, "define") == 0){
         return define();
-    }else if(strcmp(file_tokens[currentToken].keyword, "lambda")){
+    }else if(strcmp(file_tokens[currentToken].keyword, "lambda") == 0){
         return lambda();
-    }else if(strcmp(file_tokens[currentToken].keyword, "print")){
+    }else if(strcmp(file_tokens[currentToken].keyword, "print") == 0){
         return prints();
-    }else if(strcmp(file_tokens[currentToken].keyword, "run")){
+    }else if(strcmp(file_tokens[currentToken].keyword, "run") == 0){
         return runs();
-    }else if(strcmp(file_tokens[currentToken].keyword, "exit")){
+    }else if(strcmp(file_tokens[currentToken].keyword, "exit") == 0){
         exits();
     }
     return 0;
@@ -335,7 +332,6 @@ Variable *sol(){
     if(file_tokens[currentToken].type == 1){
         currentToken++;
         printf("Start of line\n");
-        printf("%s\n", file_tokens[currentToken].keyword);
         if(file_tokens[currentToken].type == -1){
             return functioncall();
         }else if(file_tokens[currentToken].type == 1){
@@ -377,7 +373,7 @@ int parseFile(){
         if(eof()){
             return EXIT_SUCCESS;
         }
-        printf("%Lg\n", (sol())->value.num);
+        sol();
     };
     return EXIT_SUCCESS;
 }

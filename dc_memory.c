@@ -52,3 +52,9 @@ int addVariable(Variable *variable){
     variable_table_size++;
     return 1;
 }
+
+Variable getVarByName(char *name){
+    for(int i = 0; i < variable_table_size; i++){
+        
+    }
+}

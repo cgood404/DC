@@ -1,13 +1,16 @@
 #include "dc_main.h"
 
 Variable *define(){
+    printf("Define Function\n");
     if(file_tokens[currentToken].type == -1){
         currentToken++;
         char *name = keywordGet(&file_tokens[currentToken]);
-
+        if(strcmp(name, "none") == 0){
+            raise("Cannot overwrite none variable", filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+        }
         // if variable is already declared, redefine it
         for(int i = 0; i < variable_table_size; i++){
-            if(strcmp(variable_table[i].name, name)){
+            if(strcmp(variable_table[i].name, name) == 0){
                 Variable *var = malloc(sizeof(Variable));
                 strcpy(var -> name, name);
                 currentToken++;
@@ -26,8 +29,9 @@ Variable *define(){
                 }
 
                 variable_table[i] = *var;
+                currentToken++;
                 eol(1);
-                return 1;
+                return var;
             }
         }
 
@@ -49,10 +53,11 @@ Variable *define(){
         }
 
         addVariable(var);
+        currentToken++;
         eol(1);
-        return 1;
+        return var;
     }else{
-        return 0;
+        return &none;
     }
 }
 
@@ -60,11 +65,15 @@ Variable *lambda(){
     if(file_tokens[currentToken].type == -1){
 
     }
-    return 1;
+    return &none;
 }
 
-Variable printsVar(Variable *variable){
-    
+void printsVar(Variable *var){
+    if(var -> type == 2){
+        printf("%Lg\n", var->value.num);
+    }if(var -> type == 3){
+        printf("%s\n", var->value.string);
+    }
 }
 
 Variable *prints(){
@@ -72,23 +81,24 @@ Variable *prints(){
         currentToken++;
         if(file_tokens[currentToken].type == 1){
             printsVar(sol());
+        }else if(file_tokens[currentToken].type == -1){
+
         }
     }
-    return 1;
+    return &none;
 }
 
 Variable *runs(){
     if(file_tokens[currentToken].type == -1){
         
     }
-    return 1;
+    return &none;
 }
 
 void exits(){
     // free all malloc'd memory and exit using given exit status, if any
-    if(file_tokens[currentToken].type == -1 && strcmp(file_tokens[currentToken].keyword, "exit")){
+    if(strcmp(file_tokens[currentToken].keyword, "exit") == 0){
         currentToken++;
-        eol(1);
         if(file_tokens[currentToken].type == -2){
             int status = (int) numGet(&file_tokens[currentToken]);
 
@@ -98,6 +108,8 @@ void exits(){
 
             exit(status);
         }else{
+            eol(1);
+
             free(file_tokens);
             free(function_table);
             free(variable_table);
