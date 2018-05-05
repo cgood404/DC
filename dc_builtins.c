@@ -1,6 +1,6 @@
 #include "dc_main.h"
 
-int define(){
+Variable *define(){
     if(file_tokens[currentToken].type == -1){
         currentToken++;
         char *name = keywordGet(&file_tokens[currentToken]);
@@ -56,18 +56,18 @@ int define(){
     }
 }
 
-int lambda(){
+Variable *lambda(){
     if(file_tokens[currentToken].type == -1){
 
     }
     return 1;
 }
 
-int printsVar(Variable *variable){
+Variable printsVar(Variable *variable){
     
 }
 
-int prints(){
+Variable *prints(){
     if(file_tokens[currentToken].type == -1){
         currentToken++;
         if(file_tokens[currentToken].type == 1){
@@ -77,7 +77,7 @@ int prints(){
     return 1;
 }
 
-int runs(){
+Variable *runs(){
     if(file_tokens[currentToken].type == -1){
         
     }

@@ -306,7 +306,10 @@ Variable *noteql(){
 }
 
 Variable *callBuiltin(){
+    printf("test\n");
+    printf("%d\n", strcmp(file_tokens[currentToken].keyword, "define"));
     if(strcmp(file_tokens[currentToken].keyword, "define")){
+        printf("test\n");
         return define();
     }else if(strcmp(file_tokens[currentToken].keyword, "lambda")){
         return lambda();
@@ -317,18 +320,13 @@ Variable *callBuiltin(){
     }else if(strcmp(file_tokens[currentToken].keyword, "exit")){
         exits();
     }
-    return NULL;
+    return 0;
 }
 
 Variable *functioncall(){
     if(file_tokens[currentToken].type == -1){
         printf("Function call\n");
-        Variable *var = malloc(sizeof(Variable));
-        if((var = callBuiltin()) != NULL){
-
-        }else{
-
-        }
+        return callBuiltin();
     }
     return 0;
 }
@@ -367,7 +365,10 @@ Variable *sol(){
                     SOL.keyword, file_tokens[currentToken].keyword);
         raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
     }
-    return NULL;
+    char *buffer = malloc(40 + MAX_INPUT_SIZE);
+    sprintf(buffer, "Expected start of line token: \"%s\", found: \"%s\"",
+                SOL.keyword, file_tokens[currentToken].keyword);
+    raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
 }
 
 int parseFile(){
