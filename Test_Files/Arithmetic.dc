@@ -1,0 +1,18 @@
+(define foo 6)
+(define bar -2)
+
+(define foobar (+ foo bar))
+(print foobar)
+
+(print (+ foo bar))
+(print (- foo bar))
+(print (/ foo bar))
+(print (* foo bar))
+
+(define x 1.2)
+(define y -.4)
+
+(print (+ x y))
+(print (- x y))
+(print (/ x y))
+(print (* x y))

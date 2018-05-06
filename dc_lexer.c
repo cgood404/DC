@@ -1,5 +1,4 @@
-#include "dc_lexer.h"
-#define file_inc 2
+#include "dc_main.h"
 
 Token COM = {.keyword = "#", .type = 0};
 Token SOL = {.keyword = "(", .type = 1};
@@ -9,16 +8,21 @@ Token MULT = {.keyword = "*", .type = 4};
 Token DIV = {.keyword = "/", .type = 5};
 Token MOD = {.keyword = "\%", .type = 6};
 Token EQL = {.keyword = "==", .type = 7};
-Token NOTEQL = {.keyword = "!=", .type = 8};
+Token NOT = {.keyword = "!", .type = 8};
 Token IF = {.keyword = "?", .type = 9};
 Token THEN = {.keyword = ":", .type = 10};
 Token ELSE = {.keyword = "::", .type = 11};
 Token EOL = {.keyword = ")", .type = 12};
 Token EOFS = {.keyword = (char) EOF, .type = 13};
 Token STR = {.keyword = "\"", .type = 14};
+Token LESSEQL = {.keyword = "<=", .type = 15};
+Token GRTREQL = {.keyword = ">=", .type = 16};
+Token LESS = {.keyword = "<", .type = 17};
+Token GRTR = {.keyword = ">", .type = 18};
 
 Token *token_symbols[] = {&COM, &SOL, &PLUS, &MIN, &MULT, &DIV,
-        &MOD,  &EQL, &NOTEQL, &IF, &ELSE, &THEN, &EOL, &EOFS, &STR};
+        &MOD,  &EQL, &NOT, &IF, &ELSE, &THEN, &EOL, &EOFS, &STR,
+        &LESSEQL, &GRTREQL, &LESS, &GRTR};
 
 Token *file_tokens;
 int file_size = 1;
@@ -29,11 +33,11 @@ int line = 0;
 
 int addToFile(Token *token, int line, int column){
     if(file_size >= file_max){
-        Token *buffer = malloc((int) (sizeof(Token) * file_size * file_inc));
+        Token *buffer = malloc((int) (sizeof(Token) * file_size * size_inc));
         memmove(buffer, file_tokens, (sizeof(Token) * file_size) + 0);
 
         free(file_tokens);
-        file_max *= file_inc;
+        file_max *= size_inc;
         file_tokens = buffer;
     }
 
@@ -116,19 +120,28 @@ void lex(char *statement, int length){
 
             addToFile(&w_token, line, current - not_symbols);
             not_symbols = 0;
-        }else if(statement[current] > 47 && statement[current] < 58){
-            while(statement[current] > 47 && statement[current] < 58){
+        }else if((statement[current] > 47 && statement[current] < 58) ||
+                statement[current] == 46 || statement[current] == 45){
+            if(matchToken(&MIN, &statement[current], strlen(MIN.keyword)) &&
+                    file_tokens[file_size - 1].type == _SOL){
+                addToFile(&MIN, line, current);
+                current += strlen(MIN.keyword);
+            }else{
                 not_symbols++;
                 current++;
+                while((statement[current] > 47 && statement[current] < 58) || statement[current] == 46){
+                    not_symbols++;
+                    current++;
+                }
+                slice_str(statement, buffer, current - not_symbols, current);
+
+                Token n_token;
+                memmove(&n_token.keyword, buffer, not_symbols+1);
+                n_token.type = -2;
+
+                addToFile(&n_token, line, current - not_symbols);
+                not_symbols = 0;
             }
-            slice_str(statement, buffer, current - not_symbols, current);
-
-            Token n_token;
-            memmove(&n_token.keyword, buffer, not_symbols+1);
-            n_token.type = -2;
-
-            addToFile(&n_token, line, current - not_symbols);
-            not_symbols = 0;
         }else{
             int error = 1;
             for(int i = _Com; i < __TOKENS_SIZE; i++){
@@ -160,10 +173,13 @@ void lex(char *statement, int length){
                             addToFile(&str_token, line, current);
                             error = 0;
                         }else{
-                            Token str_token;
-                            str_token.type = -3;
-                            memmove(&str_token.keyword, statement + current - str_len, str_len);
-                            addToFile(&str_token, line, current - str_len);
+                            Token *str_token = malloc(sizeof(Token));
+                            str_token -> type = -3;
+
+                            strcpy(str_token -> keyword, &statement[current - str_len]);
+                            str_token -> keyword[str_len] = '\0';
+                            
+                            addToFile(str_token, line, current - str_len);
                             error = 0;
                         }
                     }else{
@@ -196,12 +212,15 @@ void lexfile(char *file_name){
     char *inputstr = (char *) malloc(MAX_INPUT_SIZE);
     while(fgets(inputstr, MAX_INPUT_SIZE, file) != NULL){
         line++;
-        printf(">> %s\n", inputstr);
         lex(inputstr, strlen(inputstr));
     }
     addToFile(&EOFS, line, -1);
 }
 
-void createTokens(void){
+void _init_(void){
     file_tokens = malloc(0);
+    createTables();
+    addVariable(&none);
+    addVariable(&True);
+    addVariable(&False);
 }

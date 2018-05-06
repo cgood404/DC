@@ -1,0 +1,27 @@
+(define x 2)
+(define y 2)
+(define z 6)
+
+(define a (== x y))
+(define b (== x z))
+(define c (! == x y))
+(define d (! == x z))
+(define e ())
+(define notNone (! ()))
+
+(print x " is equal to " y "? " a)
+(print x " is equal to " z "? " b)
+(print x " is not equal to " y "? " c)
+(print x " is not equal to " z "? " d)
+
+(print "Two ways to write none: () or 'none': " (== () none))
+(print "(! none) evaluates to true: " (! none))
+
+(define x "Hello!")
+(define y "hello")
+(print "Variable x is: " x)
+(print "Variable y is: "y)
+(print (== x y))
+
+(define y "Hello!")
+(print (== x y))
