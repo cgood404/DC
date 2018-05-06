@@ -63,6 +63,13 @@ char *varTypeGet(Variable *var){
     }else if(var -> type == _String){
         return "String";
     }
+
+    char *buffer = malloc(54 + MAX_INPUT_SIZE);
+    sprintf(buffer, "TypeError: No variable of type %d exists",
+        var -> type);
+    raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+
+    return NULL;
 }
 
 
@@ -160,6 +167,8 @@ Variable *sol(){
     sprintf(buffer, "SyntaxError: Expected start of line token: \"%s\", found: \"%s\"",
                 SOL.keyword, file_tokens[currentToken].keyword);
     raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+
+    return NULL;
 }
 
 int parseFile(){

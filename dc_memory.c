@@ -64,4 +64,6 @@ Variable *getVarByName(char *name){
     char *buffer = malloc(47 + MAX_INPUT_SIZE);
     sprintf(buffer, "VariableError: Variable with name: %s not defined", name);
     raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+
+    return NULL;
 }

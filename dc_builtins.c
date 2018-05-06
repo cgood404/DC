@@ -366,6 +366,8 @@ Variable *eql(){
     sprintf(buffer, "SyntaxError: Expected Equals Function, received \"%s\"",
     file_tokens[currentToken].keyword);
     raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+
+    return NULL;
 }
 
 Variable *nots(){
@@ -410,6 +412,8 @@ Variable *nots(){
         file_tokens[currentToken].keyword);
         raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
     }
+
+    return NULL;
 }
 
 Variable *lessEql(){
@@ -496,6 +500,8 @@ Variable *lessEql(){
     sprintf(buffer, "SyntaxError: Expected LessEquals Function, received \"%s\"",
     file_tokens[currentToken].keyword);
     raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+
+    return NULL;
 }
 
 Variable *grtrEql(){
@@ -582,6 +588,8 @@ Variable *grtrEql(){
     sprintf(buffer, "SyntaxError: Expected GrtrEquals Function, received \"%s\"",
     file_tokens[currentToken].keyword);
     raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+
+    return NULL;
 }
 
 Variable *less(){
@@ -668,6 +676,8 @@ Variable *less(){
     sprintf(buffer, "SyntaxError: Expected Less Than Function, received \"%s\"",
     file_tokens[currentToken].keyword);
     raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+
+    return NULL;
 }
 
 Variable *grtr(){
@@ -754,6 +764,8 @@ Variable *grtr(){
     sprintf(buffer, "SyntaxError: Expected Greater Than Function, received \"%s\"",
     file_tokens[currentToken].keyword);
     raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+
+    return NULL;
 }
 
 Variable *define(){
