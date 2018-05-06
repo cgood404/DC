@@ -6,10 +6,13 @@ Variable *plus(){
         num_t total;
         if(file_tokens[currentToken].type == _NumberToken){
             total = numGet(&file_tokens[currentToken]);
+            currentToken++;
         }else if(file_tokens[currentToken].type == _VarToken){
             Variable *var = getVarByName(keywordGet(&file_tokens[currentToken]));
             if(var -> type == _Number){
                 total = var -> value.num;
+                free(var);
+                currentToken++;
             }else{
                 char *buffer = malloc(65 + MAX_INPUT_SIZE);
                 sprintf(buffer, "ArithmeticError: Variable \"%s\" is of type: %s, expected: Number",
@@ -18,8 +21,10 @@ Variable *plus(){
             }
         }else if(file_tokens[currentToken].type == _SOL){
             Variable *t_var = sol();
+             
             if(t_var -> type == _Number){
                 total = t_var -> value.num;
+                free(t_var);
             }else{
                 char *buffer = malloc(107 + MAX_INPUT_SIZE);
                 sprintf(buffer, "ArithmeticError: Unexpected token in function \"+\", expected Number or variable of type Number, found:  %s",
@@ -33,13 +38,15 @@ Variable *plus(){
             raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
         }
 
-        currentToken++;
         if(file_tokens[currentToken].type == _NumberToken){
             total += numGet(&file_tokens[currentToken]);
+            currentToken++;
         }else if(file_tokens[currentToken].type == _VarToken){
             Variable *var = getVarByName(keywordGet(&file_tokens[currentToken]));
             if(var -> type == _Number){
                 total += var -> value.num;
+                free(var);
+                currentToken++;
             }else{
                 char *buffer = malloc(65 + MAX_INPUT_SIZE);
                 sprintf(buffer, "ArithmeticError: Variable \"%s\" is of type: %s, expected: Number",
@@ -48,8 +55,10 @@ Variable *plus(){
             }
         }else if(file_tokens[currentToken].type == _SOL){
             Variable *t_var = sol();
+             
             if(t_var -> type == _Number){
-                total = t_var -> value.num;
+                total += t_var -> value.num;
+                free(t_var);
             }else{
                 char *buffer = malloc(107 + MAX_INPUT_SIZE);
                 sprintf(buffer, "ArithmeticError: Unexpected token in function \"+\", expected Number or variable of type Number, found:  %s",
@@ -62,12 +71,11 @@ Variable *plus(){
             file_tokens[currentToken].keyword);
             raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
         }
-        currentToken++;
 
         Variable *var = malloc(sizeof(Variable));
         var -> value.num = total;
         var -> type = _Number;
-        eol(1);
+         
 
         return var;
     }else{
@@ -85,14 +93,63 @@ Variable *min(){
         num_t total;
         if(file_tokens[currentToken].type == _NumberToken){
             total = numGet(&file_tokens[currentToken]);
+            currentToken++;
         }else if(file_tokens[currentToken].type == _VarToken){
             Variable *var = getVarByName(keywordGet(&file_tokens[currentToken]));
             if(var -> type == _Number){
                 total = var -> value.num;
+                free(var);
+                currentToken++;
             }else{
                 char *buffer = malloc(65 + MAX_INPUT_SIZE);
                 sprintf(buffer, "ArithmeticError: Variable \"%s\" is of type: %s, expected: Number",
                     var -> name, varTypeGet(var));
+                raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+            }
+        }else if(file_tokens[currentToken].type == _SOL){
+            Variable *t_var = sol();
+             
+            if(t_var -> type == _Number){
+                total = t_var -> value.num;
+                free(t_var);
+            }else{
+                char *buffer = malloc(107 + MAX_INPUT_SIZE);
+                sprintf(buffer, "ArithmeticError: Unexpected token in function \"-\", expected Number or variable of type Number, found:  %s",
+                    file_tokens[currentToken].keyword);
+                raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+            }
+        }else{
+            char *buffer = malloc(107 + MAX_INPUT_SIZE);
+            sprintf(buffer, "ArithmeticError: Unexpected token in function \"-\", expected Number or variable of type Number, found:  %s",
+                file_tokens[currentToken].keyword);
+            raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+        }
+
+        if(file_tokens[currentToken].type == _NumberToken){
+            total -= numGet(&file_tokens[currentToken]);
+            currentToken++;
+        }else if(file_tokens[currentToken].type == _VarToken){
+            Variable *var = getVarByName(keywordGet(&file_tokens[currentToken]));
+            if(var -> type == _Number){
+                total -= var -> value.num;
+                free(var);
+                currentToken++;
+            }else{
+                char *buffer = malloc(65 + MAX_INPUT_SIZE);
+                sprintf(buffer, "ArithmeticError: Variable \"%s\" is of type: %s, expected: Number",
+                    var -> name, varTypeGet(var));
+                raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+            }
+        }else if(file_tokens[currentToken].type == _SOL){
+            Variable *t_var = sol();
+             
+            if(t_var -> type == _Number){
+                total -= t_var -> value.num;
+                free(t_var);
+            }else{
+                char *buffer = malloc(107 + MAX_INPUT_SIZE);
+                sprintf(buffer, "ArithmeticError: Unexpected token in function \"-\", expected Number or variable of type Number, found:  %s",
+                    file_tokens[currentToken].keyword);
                 raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
             }
         }else{
@@ -102,40 +159,13 @@ Variable *min(){
             raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
         }
 
-        currentToken++;
-        if(file_tokens[currentToken].type == _VarToken || file_tokens[currentToken].type == _NumberToken){
-            if(file_tokens[currentToken].type == _NumberToken){
-                total -= numGet(&file_tokens[currentToken]);
-            }else if(file_tokens[currentToken].type == _VarToken){
-                Variable *var = getVarByName(keywordGet(&file_tokens[currentToken]));
-                if(var -> type == _Number){
-                    total -= var -> value.num;
-                }else{
-                    char *buffer = malloc(65 + MAX_INPUT_SIZE);
-                    sprintf(buffer, "ArithmeticError: Variable \"%s\" is of type: %s, expected: Number",
-                        var -> name, varTypeGet(var));
-                    raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
-                }
-            }else{
-                char *buffer = malloc(107 + MAX_INPUT_SIZE);
-                sprintf(buffer, "ArithmeticError: Unexpected token in function \"-\", expected Number or variable of type Number, found:  %s",
-                file_tokens[currentToken].keyword);
-                raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
-            }
-            currentToken++;
+        Variable *var = malloc(sizeof(Variable));
+        var -> value.num = total;
+        var -> type = _Number;
+         
 
-            Variable *var = malloc(sizeof(Variable));
-            var -> value.num = total;
-            var -> type = _Number;
-            eol(1);
-
-            return var;
-        }else{
-            char *buffer = malloc(69 + MAX_INPUT_SIZE);
-            sprintf(buffer, "ArithmeticError: Expected two arguments in function \"-\", found:  %s",
-            file_tokens[currentToken].keyword);
-            raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
-        }
+        return var;
+    
     }else{
         char *buffer = malloc(52 + MAX_INPUT_SIZE);
         sprintf(buffer, "ArithmeticError: Expected function \"-\", found:  %s",
@@ -151,14 +181,28 @@ Variable *divs(){
         num_t total;
         if(file_tokens[currentToken].type == _NumberToken){
             total = numGet(&file_tokens[currentToken]);
+            currentToken++;
         }else if(file_tokens[currentToken].type == _VarToken){
             Variable *var = getVarByName(keywordGet(&file_tokens[currentToken]));
             if(var -> type == _Number){
                 total = var -> value.num;
+                free(var);
+                currentToken++;
             }else{
                 char *buffer = malloc(65 + MAX_INPUT_SIZE);
                 sprintf(buffer, "ArithmeticError: Variable \"%s\" is of type: %s, expected: Number",
                     var -> name, varTypeGet(var));
+                raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+            }
+        }else if(file_tokens[currentToken].type == _SOL){
+            Variable *t_var = sol();
+            if(t_var -> type == _Number){
+                total = t_var -> value.num;
+                free(t_var);
+            }else{
+                char *buffer = malloc(107 + MAX_INPUT_SIZE);
+                sprintf(buffer, "ArithmeticError: Unexpected token in function \"/\", expected Number or variable of type Number, found:  %s",
+                    file_tokens[currentToken].keyword);
                 raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
             }
         }else{
@@ -168,45 +212,65 @@ Variable *divs(){
             raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
         }
 
-        currentToken++;
-        if(file_tokens[currentToken].type == _VarToken || file_tokens[currentToken].type == _NumberToken){
-            if(file_tokens[currentToken].type == _NumberToken){
+        if(file_tokens[currentToken].type == _NumberToken){
+            if(numGet(&file_tokens[currentToken]) != 0){
                 total /= numGet(&file_tokens[currentToken]);
-            }else if(file_tokens[currentToken].type == _VarToken){
-                Variable *var = getVarByName(keywordGet(&file_tokens[currentToken]));
-                if(var -> type == _Number){
-                    if(var -> value.num == 0){
-                        char *buffer = malloc(55 + MAX_INPUT_SIZE);
-                        sprintf(buffer, "ArithmeticError: Division by zero with variable \"%s\"", var -> name);
-                        raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
-                    }
+                currentToken++;
+            }else{
+                char *buffer = malloc(55 + MAX_INPUT_SIZE);
+                sprintf(buffer, "ArithmeticError: Division by zero");
+                raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+            }
+        }else if(file_tokens[currentToken].type == _VarToken){
+            Variable *var = getVarByName(keywordGet(&file_tokens[currentToken]));
+            if(var -> type == _Number){
+                if(var -> value.num != 0){
                     total /= var -> value.num;
+                    free(var);
+                    currentToken++;
                 }else{
-                    char *buffer = malloc(65 + MAX_INPUT_SIZE);
-                    sprintf(buffer, "ArithmeticError: Variable \"%s\" is of type: %s, expected: Number",
-                        var -> name, varTypeGet(var));
+                    char *buffer = malloc(55 + MAX_INPUT_SIZE);
+                    sprintf(buffer, "ArithmeticError: Division by zero with variable \"%s\"", var -> name);
+                    raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+                }
+            }else{
+                char *buffer = malloc(65 + MAX_INPUT_SIZE);
+                sprintf(buffer, "ArithmeticError: Variable \"%s\" is of type: %s, expected: Number",
+                    var -> name, varTypeGet(var));
+                raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+            }
+        }else if(file_tokens[currentToken].type == _SOL){
+            Variable *t_var = sol();
+             
+            if(t_var -> type == _Number){
+                if(t_var -> value.num != 0){
+                    total /= t_var -> value.num;
+                    free(t_var);
+                }else{
+                    char *buffer = malloc(55 + MAX_INPUT_SIZE);
+                    sprintf(buffer, "ArithmeticError: Division by zero with variable \"%s\"", t_var -> name);
                     raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
                 }
             }else{
                 char *buffer = malloc(107 + MAX_INPUT_SIZE);
                 sprintf(buffer, "ArithmeticError: Unexpected token in function \"/\", expected Number or variable of type Number, found:  %s",
-                file_tokens[currentToken].keyword);
+                    file_tokens[currentToken].keyword);
                 raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
             }
-            currentToken++;
-
-            Variable *var = malloc(sizeof(Variable));
-            var -> value.num = total;
-            var -> type = _Number;
-            eol(1);
-
-            return var;
         }else{
-            char *buffer = malloc(69 + MAX_INPUT_SIZE);
-            sprintf(buffer, "ArithmeticError: Expected two arguments in function \"/\", found:  %s",
+            char *buffer = malloc(107 + MAX_INPUT_SIZE);
+            sprintf(buffer, "ArithmeticError: Unexpected token in function \"/\", expected Number or variable of type Number, found:  %s",
             file_tokens[currentToken].keyword);
             raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
         }
+
+        Variable *var = malloc(sizeof(Variable));
+        var -> value.num = total;
+        var -> type = _Number;
+         
+
+        return var;
+        
     }else{
         char *buffer = malloc(52 + MAX_INPUT_SIZE);
         sprintf(buffer, "ArithmeticError: Expected function \"/\", found:  %s",
@@ -222,14 +286,29 @@ Variable *mult(){
         num_t total;
         if(file_tokens[currentToken].type == _NumberToken){
             total = numGet(&file_tokens[currentToken]);
+            currentToken++;
         }else if(file_tokens[currentToken].type == _VarToken){
             Variable *var = getVarByName(keywordGet(&file_tokens[currentToken]));
             if(var -> type == _Number){
                 total = var -> value.num;
+                free(var);
+                currentToken++;
             }else{
                 char *buffer = malloc(65 + MAX_INPUT_SIZE);
                 sprintf(buffer, "ArithmeticError: Variable \"%s\" is of type: %s, expected: Number",
                     var -> name, varTypeGet(var));
+                raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+            }
+        }else if(file_tokens[currentToken].type == _SOL){
+            Variable *t_var = sol();
+             
+            if(t_var -> type == _Number){
+                total = t_var -> value.num;
+                free(t_var);
+            }else{
+                char *buffer = malloc(107 + MAX_INPUT_SIZE);
+                sprintf(buffer, "ArithmeticError: Unexpected token in function \"*\", expected Number or variable of type Number, found:  %s",
+                    file_tokens[currentToken].keyword);
                 raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
             }
         }else{
@@ -239,40 +318,47 @@ Variable *mult(){
             raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
         }
 
-        currentToken++;
-        if(file_tokens[currentToken].type == _VarToken || file_tokens[currentToken].type == _NumberToken){
-            if(file_tokens[currentToken].type == _NumberToken){
-                total *= numGet(&file_tokens[currentToken]);
-            }else if(file_tokens[currentToken].type == _VarToken){
-                Variable *var = getVarByName(keywordGet(&file_tokens[currentToken]));
-                if(var -> type == _Number){
-                    total *= var -> value.num;
-                }else{
-                    char *buffer = malloc(65 + MAX_INPUT_SIZE);
-                    sprintf(buffer, "ArithmeticError: Variable \"%s\" is of type: %s, expected: Number",
-                        var -> name, varTypeGet(var));
-                    raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
-                }
+        if(file_tokens[currentToken].type == _NumberToken){
+            total *= numGet(&file_tokens[currentToken]);
+            currentToken++;
+        }else if(file_tokens[currentToken].type == _VarToken){
+            Variable *var = getVarByName(keywordGet(&file_tokens[currentToken]));
+            if(var -> type == _Number){
+                total *= var -> value.num;
+                free(var);
+                currentToken++;
+            }else{
+                char *buffer = malloc(65 + MAX_INPUT_SIZE);
+                sprintf(buffer, "ArithmeticError: Variable \"%s\" is of type: %s, expected: Number",
+                    var -> name, varTypeGet(var));
+                raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+            }
+        }else if(file_tokens[currentToken].type == _SOL){
+            Variable *t_var = sol();
+             
+            if(t_var -> type == _Number){
+                total *= t_var -> value.num;
+                free(t_var);
             }else{
                 char *buffer = malloc(107 + MAX_INPUT_SIZE);
                 sprintf(buffer, "ArithmeticError: Unexpected token in function \"*\", expected Number or variable of type Number, found:  %s",
-                file_tokens[currentToken].keyword);
+                    file_tokens[currentToken].keyword);
                 raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
             }
-            currentToken++;
-
-            Variable *var = malloc(sizeof(Variable));
-            var -> value.num = total;
-            var -> type = _Number;
-            eol(1);
-
-            return var;
         }else{
-            char *buffer = malloc(69 + MAX_INPUT_SIZE);
-            sprintf(buffer, "ArithmeticError: Expected two arguments in function \"*\", found:  %s",
+            char *buffer = malloc(107 + MAX_INPUT_SIZE);
+            sprintf(buffer, "ArithmeticError: Unexpected token in function \"*\", expected Number or variable of type Number, found:  %s",
             file_tokens[currentToken].keyword);
             raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
         }
+
+        Variable *var = malloc(sizeof(Variable));
+        var -> value.num = total;
+        var -> type = _Number;
+         
+
+        return var;
+
     }else{
         char *buffer = malloc(52 + MAX_INPUT_SIZE);
         sprintf(buffer, "ArithmeticError: Expected function \"*\", found:  %s",
@@ -334,7 +420,7 @@ Variable *eql(){
             raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
         }
 
-        eol(1);
+         
         if(var1 -> type == var2 -> type){
             if(var1 -> type == _none){
                 return &True;
@@ -377,10 +463,10 @@ Variable *nots(){
         if(file_tokens[currentToken].type == -_SOL){
             var = getVarByName(keywordGet(&file_tokens[currentToken]));
             currentToken++;
-            eol(1);
+             
         }else if(file_tokens[currentToken].type == _SOL){
             var = sol();
-            eol(1);
+             
         }else if(file_tokens[currentToken].type == _Eql){
             var = eql();
         }else if(file_tokens[currentToken].type == _Not){
@@ -461,7 +547,7 @@ Variable *lessEql(){
             raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
         }
 
-        eol(1);
+         
         if(var1 -> type == _none && var2 -> type != _none){
             return &True;
         }else if(var1 -> type != _none && var2 -> type == _none){
@@ -549,7 +635,7 @@ Variable *grtrEql(){
             raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
         }
 
-        eol(1);
+         
         if(var1 -> type != _none && var2 -> type == _none){
             return &True;
         }else if(var1 -> type == _none && var2 -> type != _none){
@@ -637,7 +723,7 @@ Variable *less(){
             raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
         }
 
-        eol(1);
+         
         if(var1 -> type != _none && var2 -> type == _none){
             return &False;
         }else if(var1 -> type == _none && var2 -> type != _none){
@@ -725,7 +811,7 @@ Variable *grtr(){
             raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
         }
 
-        eol(1);
+         
         if(var1 -> type != _none && var2 -> type == _none){
             return &True;
         }else if(var1 -> type == _none && var2 -> type != _none){
@@ -806,7 +892,7 @@ Variable *define(){
                 }
 
                 variable_table[i] = *var;
-                eol(1);
+                 
                 return var;
             }
         }
@@ -838,7 +924,6 @@ Variable *define(){
 
         strcpy(var -> name, name);
         addVariable(var);
-        eol(1);
 
         return var;
     }else{
@@ -914,6 +999,8 @@ void exits(){
         currentToken++;
         if(file_tokens[currentToken].type == _NumberToken){
             int status = (int) numGet(&file_tokens[currentToken]);
+            currentToken++;
+            eol(1);
 
             free(file_tokens);
             free(function_table);

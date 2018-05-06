@@ -16,3 +16,6 @@
 (print (- x y))
 (print (/ x y))
 (print (* x y))
+
+(print (/ 10 (- 10 (* 2 (+ 1 1)))))
+(print (/ x (- y (* foo (+ bar 1)))))
