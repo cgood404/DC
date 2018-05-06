@@ -498,6 +498,7 @@ Variable *thens(short runs){
         file_tokens[currentToken].keyword);
         raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
     }
+    return NULL;
 }
 
 Variable *elses(short runs){
@@ -546,6 +547,7 @@ Variable *elses(short runs){
         file_tokens[currentToken].keyword);
         raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
     }
+    return NULL;
 }
 
 Variable *eql(){
