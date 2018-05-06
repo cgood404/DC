@@ -120,8 +120,8 @@ void lex(char *statement, int length){
 
             addToFile(&w_token, line, current - not_symbols);
             not_symbols = 0;
-        }else if(statement[current] > 47 && statement[current] < 58){
-            while(statement[current] > 47 && statement[current] < 58){
+        }else if((statement[current] > 47 && statement[current] < 58) || statement[current] == 46){
+            while((statement[current] > 47 && statement[current] < 58) || statement[current] == 46){
                 not_symbols++;
                 current++;
             }
