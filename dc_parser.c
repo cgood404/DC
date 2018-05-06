@@ -10,7 +10,7 @@ void parserError(char *statement, int line, int column){
 
 // returns string (type -3), can be formatted in the future with escape characters
 char *strGet(Token *token){
-    if(token -> type == -3){
+    if(token -> type == _StringToken){
         return token -> keyword;
     }else{
         char *buffer = malloc(47 + MAX_INPUT_SIZE);
@@ -24,7 +24,7 @@ char *strGet(Token *token){
 
 // returns number (type -2), can be added to in order to prevent overflow, improper tokens, etc
 num_t numGet(Token *token){
-    if(token -> type == -2){
+    if(token -> type == _NumberToken){
         long double num = 0;
         num = strtold(token -> keyword, NULL);
         return num;
@@ -41,7 +41,7 @@ num_t numGet(Token *token){
 // returns keyword (type -1), reserved words such as "define", "lambda", etc. OR
 // user defined functions and/or variables
 char *keywordGet(Token *token){
-    if(token -> type == -1){
+    if(token -> type == _VarToken){
         return token -> keyword;
     }else{
         char *buffer = malloc(63 + MAX_INPUT_SIZE);
@@ -54,20 +54,20 @@ char *keywordGet(Token *token){
 }
 
 char *varTypeGet(Variable *var){
-    if(var -> type == 0){
+    if(var -> type == _none){
         return "none";
-    }else if(var -> type == 1){
+    }else if(var -> type == _Boolean){
         return "Boolean";
-    }else if(var -> type == 2){
+    }else if(var -> type == _Number){
         return "Number";
-    }else if(var -> type == 3){
+    }else if(var -> type == _String){
         return "String";
     }
 }
 
 
 int eol(short raiseEx){
-    if(file_tokens[currentToken].type == 12){
+    if(file_tokens[currentToken].type == _EOL){
         currentToken++;
         return 1;
     }else{
@@ -84,7 +84,7 @@ int eol(short raiseEx){
 }
 
 int eof(){
-    if(file_tokens[currentToken].type == 13){
+    if(file_tokens[currentToken].type == _EOF){
         currentToken++;
         return 1;
     }
@@ -107,42 +107,42 @@ Variable *callBuiltin(){
 }
 
 Variable *functioncall(){
-    if(file_tokens[currentToken].type == -1){
+    if(file_tokens[currentToken].type == _VarToken){
         return callBuiltin();
     }
     return 0;
 }
 
 Variable *sol(){
-    if(file_tokens[currentToken].type == 1){
+    if(file_tokens[currentToken].type == _SOL){
         currentToken++;
-        if(file_tokens[currentToken].type == -1){
+        if(file_tokens[currentToken].type == _VarToken){
             return functioncall();
-        }else if(file_tokens[currentToken].type == 1){
+        }else if(file_tokens[currentToken].type == _SOL){
             return sol();
-        }else if(file_tokens[currentToken].type == 2){
+        }else if(file_tokens[currentToken].type == _Plus){
             return plus();
-        }else if(file_tokens[currentToken].type == 3){
+        }else if(file_tokens[currentToken].type == _Min){
             return min();
-        }else if(file_tokens[currentToken].type == 4){
+        }else if(file_tokens[currentToken].type == _Mult){
             return mult();
-        }else if(file_tokens[currentToken].type == 5){
+        }else if(file_tokens[currentToken].type == _Div){
             return divs();
-        }else if(file_tokens[currentToken].type == 6){
+        }else if(file_tokens[currentToken].type == _Mod){
             return mod();
-        }else if(file_tokens[currentToken].type == 7){
+        }else if(file_tokens[currentToken].type == _Eql){
             return eql();
-        }else if(file_tokens[currentToken].type == 8){
+        }else if(file_tokens[currentToken].type == _Not){
             return nots();
-        }else if(file_tokens[currentToken].type == 15){
+        }else if(file_tokens[currentToken].type == _LessEql){
             return lessEql();
-        }else if(file_tokens[currentToken].type == 16){
+        }else if(file_tokens[currentToken].type == _GrtrEql){
             return grtrEql();
-        }else if(file_tokens[currentToken].type == 17){
+        }else if(file_tokens[currentToken].type == _Less){
             return less();
-        }else if(file_tokens[currentToken].type == 18){
+        }else if(file_tokens[currentToken].type == _Grtr){
             return grtr();
-        }else if(file_tokens[currentToken].type == 12){
+        }else if(file_tokens[currentToken].type == _EOL){
             eol(1);
             return &none;
         }else{
