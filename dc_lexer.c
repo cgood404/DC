@@ -120,19 +120,28 @@ void lex(char *statement, int length){
 
             addToFile(&w_token, line, current - not_symbols);
             not_symbols = 0;
-        }else if((statement[current] > 47 && statement[current] < 58) || statement[current] == 46){
-            while((statement[current] > 47 && statement[current] < 58) || statement[current] == 46){
+        }else if((statement[current] > 47 && statement[current] < 58) ||
+                statement[current] == 46 || statement[current] == 45){
+            if(matchToken(&MIN, &statement[current], strlen(MIN.keyword)) &&
+                    file_tokens[file_size - 1].type == _SOL){
+                addToFile(&MIN, line, current);
+                current += strlen(MIN.keyword);
+            }else{
                 not_symbols++;
                 current++;
+                while((statement[current] > 47 && statement[current] < 58) || statement[current] == 46){
+                    not_symbols++;
+                    current++;
+                }
+                slice_str(statement, buffer, current - not_symbols, current);
+
+                Token n_token;
+                memmove(&n_token.keyword, buffer, not_symbols+1);
+                n_token.type = -2;
+
+                addToFile(&n_token, line, current - not_symbols);
+                not_symbols = 0;
             }
-            slice_str(statement, buffer, current - not_symbols, current);
-
-            Token n_token;
-            memmove(&n_token.keyword, buffer, not_symbols+1);
-            n_token.type = -2;
-
-            addToFile(&n_token, line, current - not_symbols);
-            not_symbols = 0;
         }else{
             int error = 1;
             for(int i = _Com; i < __TOKENS_SIZE; i++){

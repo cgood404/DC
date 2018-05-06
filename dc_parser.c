@@ -57,7 +57,7 @@ char *varTypeGet(Variable *var){
     if(var -> type == 0){
         return "none";
     }else if(var -> type == 1){
-        return "Bool";
+        return "Boolean";
     }else if(var -> type == 2){
         return "Number";
     }else if(var -> type == 3){

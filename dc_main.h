@@ -67,7 +67,10 @@ typedef struct Token {
     int column;
 } Token;
 
-enum token_types {
+enum var_tokens {
+    _StringToken = -3, _NumberToken = -2, _VarToken = -1
+};
+enum _token_types {
     _Com, _SOL, _Plus, _Min, _Mult, _Div, _Mod, _Eql, _Not, _If, _Then, _Else,
     _EOL, _EOF, _Str, _LessEql, _GrtrEql, _Less, _Grtr, __TOKENS_SIZE
 };
@@ -102,6 +105,7 @@ int createTables();
 union __VARIABLE { // unions share memory space
     char string[MAX_INPUT_SIZE];
     num_t num;
+    short boolean;
 };
 
 struct _variable {
@@ -117,6 +121,9 @@ struct _function {
 };
 
 extern Variable none, True, False;
+enum _variable_vypes {
+    _none, _Boolean, _Number, _String
+};
 
 // PARSER /////////////////////////////////////////////////////////////////////////
 
