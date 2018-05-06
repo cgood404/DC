@@ -63,13 +63,24 @@ char *varTypeGet(Variable *var){
     }else if(var -> type == _String){
         return "String";
     }
+
+    char *buffer = malloc(54 + MAX_INPUT_SIZE);
+    sprintf(buffer, "TypeError: No variable of type %d exists",
+        var -> type);
+    raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+
+    return NULL;
 }
 
 
 int eol(short raiseEx){
     if(file_tokens[currentToken].type == _EOL){
-        currentToken++;
-        return 1;
+        if(raiseEx){
+            currentToken++;
+            return 1;
+        }else{
+            return 1;
+        }
     }else{
         if(raiseEx){
             char *buffer = malloc(54 + MAX_INPUT_SIZE);
@@ -103,7 +114,7 @@ Variable *callBuiltin(){
     }else if(strcmp(file_tokens[currentToken].keyword, "exit") == 0){
         exits();
     }
-    return 0;
+    return NULL;
 }
 
 Variable *functioncall(){
@@ -117,31 +128,61 @@ Variable *sol(){
     if(file_tokens[currentToken].type == _SOL){
         currentToken++;
         if(file_tokens[currentToken].type == _VarToken){
-            return functioncall();
+            Variable *var = functioncall();
+            eol(1);
+            return var;
         }else if(file_tokens[currentToken].type == _SOL){
-            return sol();
+            Variable *var = sol();
+            eol(1);
+            return var;
         }else if(file_tokens[currentToken].type == _Plus){
-            return plus();
+            Variable *var = plus();
+            eol(1);
+            return var;
         }else if(file_tokens[currentToken].type == _Min){
-            return min();
+            Variable *var = min();
+            eol(1);
+            return var;
         }else if(file_tokens[currentToken].type == _Mult){
-            return mult();
+            Variable *var = mult();
+            eol(1);
+            return var;
         }else if(file_tokens[currentToken].type == _Div){
-            return divs();
+            Variable *var = divs();
+            eol(1);
+            return var;
         }else if(file_tokens[currentToken].type == _Mod){
-            return mod();
+            Variable *var = mod();
+            eol(1);
+            return var;
+        }else if(file_tokens[currentToken].type == _If){
+            Variable *var = ifs();
+            eol(1);
+            return var;
         }else if(file_tokens[currentToken].type == _Eql){
-            return eql();
+            Variable *var = eql();
+            eol(1);
+            return var;
         }else if(file_tokens[currentToken].type == _Not){
-            return nots();
+            Variable *var = nots();
+            eol(1);
+            return var;
         }else if(file_tokens[currentToken].type == _LessEql){
-            return lessEql();
+            Variable *var = lessEql();
+            eol(1);
+            return var;
         }else if(file_tokens[currentToken].type == _GrtrEql){
-            return grtrEql();
+            Variable *var = grtrEql();
+            eol(1);
+            return var;
         }else if(file_tokens[currentToken].type == _Less){
-            return less();
+            Variable *var = less();
+            eol(1);
+            return var;
         }else if(file_tokens[currentToken].type == _Grtr){
-            return grtr();
+            Variable *var = grtr();
+            eol(1);
+            return var;
         }else if(file_tokens[currentToken].type == _EOL){
             eol(1);
             return &none;
@@ -160,6 +201,8 @@ Variable *sol(){
     sprintf(buffer, "SyntaxError: Expected start of line token: \"%s\", found: \"%s\"",
                 SOL.keyword, file_tokens[currentToken].keyword);
     raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+
+    return NULL;
 }
 
 int parseFile(){

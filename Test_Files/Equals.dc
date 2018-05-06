@@ -15,13 +15,47 @@
 (print x " is not equal to " z "? " d)
 
 (print "Two ways to write none: () or 'none': " (== () none))
-(print "(! none) evaluates to true: " (! none))
+(print "(! none) evaluates to True: " (! none))
+(print "But (! True) evaluates to False: " (! True))
 
 (define x "Hello!")
 (define y "hello")
 (print "Variable x is: " x)
 (print "Variable y is: "y)
-(print (== x y))
+(print x " is equal to " y " ? " (== x y))
 
 (define y "Hello!")
-(print (== x y))
+(print x " is equal to " y " ? " (== x y))
+
+# Everything returns something, even if it's none
+(print "Functions that return none: ")
+(print "    define: " (define x 3))
+(print "    print: " (print "test"))
+(print "    run: " ) # Not Implemented
+(print "    lambda: " ) # Not Implemented
+
+(print "2 is less than 3: " (< 2 3))
+(print "2 is less than or equal to 3: " (<= 2 3))
+(print "2 is greater than 3: " (> 2 3))
+(print "2 is greater than or equal to 3: " (>= 2 3))
+
+(print "2 is less than 2: " (< 2 2))
+(print "2 is less than or equal to 2: " (<= 2 2))
+(print "2 is greater than 2: " (> 2 2))
+(print "2 is greater than or equal to 2: " (>= 2 2))
+
+(print "2 is not less than 3: " (!< 2 3))
+(print "2 is not less than or equal to 3: " (!<= 2 3))
+(print "2 is not greater than 3: " (!> 2 3))
+(print "2 is not greater than or equal to 3: " (!>= 2 3))
+
+# the "not" ! token is its own token
+(print "2 is not less than 2: " (! < 2 2))
+(print "2 is not less than or equal to 2: " (! <= 2 2))
+(print "2 is not greater than 2: " (! > 2 2))
+(print "2 is not greater than or equal to 2: " (! >= 2 2))
+
+(print "Nothing is less than none: " (< none True) " " (< none False) " " (< none 0) " " (< none "none"))
+(print "Anything is greater than none: " (> True none) " " (> False none) " " (> 0 none) " " (> "none" none))
+
+(print "Comparing strings will compare their lengths: " (> "hello" "helloooo") " " (> "long string------" "short string"))
