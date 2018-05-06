@@ -121,7 +121,15 @@ Variable *sol(){
         }else if(file_tokens[currentToken].type == 7){
             return eql();
         }else if(file_tokens[currentToken].type == 8){
-            return noteql();
+            return nots();
+        }else if(file_tokens[currentToken].type == 15){
+            return lessEql();
+        }else if(file_tokens[currentToken].type == 16){
+            return grtrEql();
+        }else if(file_tokens[currentToken].type == 17){
+            return less();
+        }else if(file_tokens[currentToken].type == 18){
+            return grtr();
         }else if(file_tokens[currentToken].type == 12){
             eol(1);
             return &none;

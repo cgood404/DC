@@ -15,6 +15,13 @@
 #define num_t long double
 #define size_inc 2
 
+// VARIABLE TYPES /////////////////////////////////////////////////////////////////
+
+// 0) the none type, global variable "none" defined in dc_memory.c
+// 1) boolean type, global variables "True" and "False" defined in dc_memory.c
+// 2) number type, 90 bit floating point numbers using "long double" data type
+// 3) string type, maximum length == MAX_INPUT_SIZE
+
 // MAIN ///////////////////////////////////////////////////////////////////////////
 
 struct dc_file {
@@ -61,14 +68,15 @@ typedef struct Token {
 } Token;
 
 enum token_types {
-    _Com, _SOL, _Plus, _Min, _Mult, _Div, _Mod, _Eql, _NotEql, _If, _Then, _Else,
-    _EOL, _EOF, _Str, __TOKENS_SIZE
+    _Com, _SOL, _Plus, _Min, _Mult, _Div, _Mod, _Eql, _Not, _If, _Then, _Else,
+    _EOL, _EOF, _Str, _LessEql, _GrtrEql, _Less, _Grtr, __TOKENS_SIZE
 };
 
 extern int file_size, file_max;
 
 extern Token COM, SOL, PLUS, MIN, MULT, DIV, MOD,
-    EQL, NOTEQL, IF, THEN, ELSE, EOL, EOFS, STR;
+    EQL, NOTEQL, IF, THEN, ELSE, EOL, EOFS, STR,
+    LESSEQL, GRTREQL, LESS, GRTR;
 
 
 // MEMORY /////////////////////////////////////////////////////////////////////////
@@ -155,7 +163,12 @@ Variable *divs();
 Variable *mult();
 Variable *mod();
 Variable *eql();
-Variable *noteql();
+Variable *nots();
+Variable *lessEql();
+Variable *grtrEql();
+Variable *less();
+Variable *grtr();
+
 void exits();
 
 #endif

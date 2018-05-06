@@ -8,17 +8,21 @@ Token MULT = {.keyword = "*", .type = 4};
 Token DIV = {.keyword = "/", .type = 5};
 Token MOD = {.keyword = "\%", .type = 6};
 Token EQL = {.keyword = "==", .type = 7};
-Token NOTEQL = {.keyword = "!=", .type = 8};
+Token NOT = {.keyword = "!", .type = 8};
 Token IF = {.keyword = "?", .type = 9};
 Token THEN = {.keyword = ":", .type = 10};
 Token ELSE = {.keyword = "::", .type = 11};
 Token EOL = {.keyword = ")", .type = 12};
 Token EOFS = {.keyword = (char) EOF, .type = 13};
 Token STR = {.keyword = "\"", .type = 14};
-
+Token LESSEQL = {.keyword = "<=", .type = 15};
+Token GRTREQL = {.keyword = ">=", .type = 16};
+Token LESS = {.keyword = "<", .type = 17};
+Token GRTR = {.keyword = ">", .type = 18};
 
 Token *token_symbols[] = {&COM, &SOL, &PLUS, &MIN, &MULT, &DIV,
-        &MOD,  &EQL, &NOTEQL, &IF, &ELSE, &THEN, &EOL, &EOFS, &STR};
+        &MOD,  &EQL, &NOT, &IF, &ELSE, &THEN, &EOL, &EOFS, &STR,
+        &LESSEQL, &GRTREQL, &LESS, &GRTR};
 
 Token *file_tokens;
 int file_size = 1;

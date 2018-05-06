@@ -276,30 +276,148 @@ Variable *mult(){
 
 Variable *mod(){
     if(file_tokens[currentToken].type == 6){
-        currentToken++;
-        return NULL;
+        raise("NotImplementedError", filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
     }
-    return 0;
+    return &none;
 }
 
 Variable *eql(){
     if(file_tokens[currentToken].type == 7){
         currentToken++;
+        Variable *var1 = malloc(sizeof(Variable)),
+                 *var2 = malloc(sizeof(Variable));
         if(file_tokens[currentToken].type == 1){
-
+            var1 = sol();
+        }else if(file_tokens[currentToken].type == -1){
+            var1 = getVarByName(keywordGet(&file_tokens[currentToken]));
+            currentToken++;
+        }else if(file_tokens[currentToken].type == -2){
+            var1 -> value.num = numGet(&file_tokens[currentToken]);
+            var1 -> type = 2;
+            currentToken++;
+        }else if(file_tokens[currentToken].type == -3){
+            strcpy(var1 -> value.string, strGet(&file_tokens[currentToken]));
+            var1 -> type = 3;
+            currentToken++;
+        }else{
+            char *buffer = malloc(72 + MAX_INPUT_SIZE);
+            sprintf(buffer, "SyntaxError: Expected expression evaluating to variable, received \"%s\"",
+            file_tokens[currentToken].keyword);
+            raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
         }
-        return &True;
+
+        if(file_tokens[currentToken].type == 1){
+            var2 = sol();
+        }else if(file_tokens[currentToken].type == -1){
+            var2 = getVarByName(keywordGet(&file_tokens[currentToken]));
+            currentToken++;
+        }else if(file_tokens[currentToken].type == -2){
+            var2 -> value.num = numGet(&file_tokens[currentToken]);
+            var2 -> type = 2;
+            currentToken++;
+        }else if(file_tokens[currentToken].type == -3){
+            strcpy(var1 -> value.string, strGet(&file_tokens[currentToken]));
+            var2 -> type = 3;
+            currentToken++;
+        }else{
+            char *buffer = malloc(72 + MAX_INPUT_SIZE);
+            sprintf(buffer, "SyntaxError: Expected expression evaluating to variable, received \"%s\"",
+            file_tokens[currentToken].keyword);
+            raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+        }
+
+        eol(1);
+        if(var1 -> type == var2 -> type){
+            if(var1 -> type == 0){
+                return &True;
+            }else if(var1 -> type == 1){
+                if(var1 -> value.num == var2 -> value.num){
+                    return &True;
+                }else{
+                    return &False;
+                }
+            }else if(var1 -> type == 2){
+                if(var1 -> value.num == var2 -> value.num){
+                    return &True;
+                }else{
+                    return &False;
+                }
+            }else if(var1 -> type == 3){
+                if(strcmp(var1 -> value.string, var2 -> value.string) == 0){
+                    return &True;
+                }else{
+                    return &False;
+                }
+            }
+        }else{
+            return &False;
+        }
+        
     }
-    return &False;
+    char *buffer = malloc(54 + MAX_INPUT_SIZE);
+    sprintf(buffer, "SyntaxError: Expected Equals Function, received \"%s\"",
+    file_tokens[currentToken].keyword);
+    raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
 }
 
-Variable *noteql(){
+Variable *nots(){
     if(file_tokens[currentToken].type == 8){
         currentToken++;
-        printf("NotEquals Function\n");
-        return NULL;
+        Variable *var;
+        if(file_tokens[currentToken].type == -1){
+            var = getVarByName(keywordGet(&file_tokens[currentToken]));
+            currentToken++;
+            eol(1);
+        }else if(file_tokens[currentToken].type == 1){
+            var = sol();
+            eol(1);
+        }else if(file_tokens[currentToken].type == 7){
+            var = eql();
+        }else if(file_tokens[currentToken].type == 8){
+            var = nots();
+        }else if(file_tokens[currentToken].type == 15){
+            var = lessEql();
+        }else if(file_tokens[currentToken].type == 16){
+            var = grtrEql();
+        }else if(file_tokens[currentToken].type == 17){
+            var = less();
+        }else if(file_tokens[currentToken].type == 18){
+            var = grtr();
+        }
+
+        if(var -> type == 0){
+            return &True;
+        }else if(var -> type == 1){
+            if(var -> value.num == 1){
+                return &False;
+            }else if(var -> value.num == 0){
+                return &True;
+            }
+        }else{
+            return &False;
+        }
+    }else{
+        char *buffer = malloc(57 + MAX_INPUT_SIZE);
+        sprintf(buffer, "SyntaxError: Expected not statement, received token: \"%s\"",
+        file_tokens[currentToken].keyword);
+        raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
     }
-    return 0;
+}
+
+Variable *lessEql(){
+    return &none;
+}
+
+Variable *grtrEql(){
+    return &none;
+}
+
+Variable *less(){
+    return &none;
+}
+
+Variable *grtr(){
+    return &none;
 }
 
 Variable *define(){
@@ -307,7 +425,9 @@ Variable *define(){
         currentToken++;
         char *name = keywordGet(&file_tokens[currentToken]);
         if(strcmp(name, "none") == 0){
-            raise("NoneError: Cannot overwrite none variable", filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+            raise("OverwriteError: Cannot overwrite none variable", filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+        }else if(strcmp(name, "True") == 0 || strcmp(name, "False") == 0){
+            raise("OverwriteError: Cannot overwrite Boolean variable", filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
         }
         // if variable is already declared, redefine it
         for(int i = 0; i < variable_table_size; i++){
@@ -379,39 +499,57 @@ Variable *define(){
 }
 
 Variable *lambda(){
-    if(file_tokens[currentToken].type == -1){
-
+    if(file_tokens[currentToken].type == 6){
+        raise("NotImplementedError", filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
     }
     return &none;
 }
 
 void printsVar(Variable *var){
-    if(var -> type == 2){
-        printf("%Lg\n", var->value.num);
-    }if(var -> type == 3){
-        printf("%s\n", var->value.string);
+    if(var -> type == 0){
+        printf("none");
+    }else if(var -> type == 1){
+        if(var -> value.num == 0){
+            printf("False");
+        }else if(var -> value.num == 1){
+            printf("True");
+        }
+    }else if(var -> type == 2){
+        printf("%Lg", var->value.num);
+    }else if(var -> type == 3){
+        printf("%s", var->value.string);
     }
 }
 
 Variable *prints(){
-    if(file_tokens[currentToken].type == -1){
+    if(file_tokens[currentToken].type == -1 && strcmp(file_tokens[currentToken].keyword, "print") == 0){
         currentToken++;
-        if(file_tokens[currentToken].type == 1){
-            printsVar(sol());
-        }else if(file_tokens[currentToken].type == -1){
-            printsVar(getVarByName(keywordGet(&file_tokens[currentToken])));
-            currentToken++;
-        }else if(file_tokens[currentToken].type == -2){
-            printf("%Lg\n", numGet(&file_tokens[currentToken]));
-            currentToken++;
-        }else if(file_tokens[currentToken].type == -3){
-            printf("%s\n", strGet(&file_tokens[currentToken]));
-            currentToken++;
-        }else{
-            printf("error");
+        while(!eol(0)){
+            if(file_tokens[currentToken].type == 1){
+                printsVar(sol());
+            }else if(file_tokens[currentToken].type == -1){
+                printsVar(getVarByName(keywordGet(&file_tokens[currentToken])));
+                currentToken++;
+            }else if(file_tokens[currentToken].type == -2){
+                printf("%Lg", numGet(&file_tokens[currentToken]));
+                currentToken++;
+            }else if(file_tokens[currentToken].type == -3){
+                printf("%s", strGet(&file_tokens[currentToken]));
+                currentToken++;
+            }else{
+                char *buffer = malloc(57 + MAX_INPUT_SIZE);
+                sprintf(buffer, "SyntaxError: Unprintable statement, received token: \"%s\"",
+                file_tokens[currentToken].keyword);
+                raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+            }
         }
+    }else{
+        char *buffer = malloc(61 + MAX_INPUT_SIZE);
+        sprintf(buffer, "SyntaxError: Expected print statement, received token: \"%s\"",
+        file_tokens[currentToken].keyword);
+        raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
     }
-    eol(1);
+    printf("\n");
     return &none;
 }
 
