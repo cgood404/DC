@@ -155,6 +155,10 @@ Variable *sol(){
             Variable *var = mod();
             eol(1);
             return var;
+        }else if(file_tokens[currentToken].type == _If){
+            Variable *var = ifs();
+            eol(1);
+            return var;
         }else if(file_tokens[currentToken].type == _Eql){
             Variable *var = eql();
             eol(1);
