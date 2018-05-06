@@ -13,7 +13,13 @@
 (print "2 is not greater than 3: " (!> 2 3))
 (print "2 is not greater than or equal to 3: " (!>= 2 3))
 
+# the "not" ! token is its own token
 (print "2 is not less than 2: " (! < 2 2))
 (print "2 is not less than or equal to 2: " (! <= 2 2))
 (print "2 is not greater than 2: " (! > 2 2))
 (print "2 is not greater than or equal to 2: " (! >= 2 2))
+
+(print "Nothing is less than none: " (< none True) " " (< none False) " " (< none 0) " " (< none "none"))
+(print "Anything is greater than none: " (> True none) " " (> False none) " " (> 0 none) " " (> "none" none))
+
+(print "Comparing strings will compare their lengths: " (> "hello" "helloooo") " " (> "long string------" "short string"))

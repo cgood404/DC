@@ -128,6 +128,7 @@ void parserError(char *statement, int line, int column);
 char *strGet(Token *token);
 num_t numGet(Token *token);
 char *keywordGet(Token *token);
+char *varTypeGet(Variable *var);
 int eol(short raiseEx);
 Variable *sol();
 
