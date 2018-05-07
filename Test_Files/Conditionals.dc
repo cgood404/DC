@@ -1,9 +1,72 @@
 (define x 2)
 (define y 3)
 
+# A basic if statement. the else (::) token is required, but the statement after can be empty
+(? (< x y): (println x " is less than " y):: )
+
+# The same aplies to then (:) tokens, however a space is required
+(? (< y x): :: (println y " is not less than " x))
+
+
+# For readability, consider the following...
+(? (== 3 3):
+    (println "3 is equal to 3")
+::
+    (println "3 is not equal to 3")
+)
+
+
+# none evaluates to the same as False
+(? none:
+    (println "This will not run")
+::
+    (println "This will run because 'none' evaluates to the same as False")
+)
+
+# Anything else other than none or False is equivalent to True
+(? 1:
+    (println "The number 1 made this run!")
+::
+    (println "This will not run")
+)
+
+(? 0:
+    (println "The number 0 made this run!")
+::
+    (println "This will not run")
+)
+
+(? "hello!":
+    (println "The string 'hello!' made this run!")
+::
+    (println "This will not run")
+)
+
+(? "":
+    (println "An empty string made this run!")
+::
+    (println "This will not run")
+)
+
+# else if statements are supported
 (? (== x y):
-        (print x " == " y)
-    ::? (== y (+ x 1)):
-        (print x " + 1 == " y)
+    (println x " == " y)
+::? (== y (+ x 1)):
+    (println x " + 1 == " y)
+::
+    (println "neither " x " nor " x " + 1 == " y)
+)
+
+# then statements can be nested with ifs
+(? (== (+ x 1) y):
+    ? (< x y):
+        (println "then statements can be nested too.")
     ::
-        (print "neither " x " nor " x " + 1 == " y))
+::
+)
+
+# If statements evaluate to whatever the expression in the correct case evaluates to.
+
+# Consider the following:
+(define x (? (< x y): 5:: 4))
+(println x)

@@ -163,7 +163,7 @@ void resetFile(void);
 
 Variable *define();
 Variable *lambda();
-Variable *prints();
+Variable *prints(short newline);
 Variable *runs();
 Variable *plus();
 Variable *min();

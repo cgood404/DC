@@ -428,6 +428,10 @@ Variable *ifs(){
             }else{
                 runs = 1;
             }
+        }else if(file_tokens[currentToken].type == _NumberToken ||
+                file_tokens[currentToken].type == _StringToken){
+            runs = 1;
+            currentToken++;
         }else{
             char *buffer = malloc(52 + MAX_INPUT_SIZE);
             sprintf(buffer, "ConditionalError: Expected variable or function, found:  %s",
@@ -457,15 +461,19 @@ Variable *thens(short runs){
                 Variable *var = malloc(sizeof(Variable));
                 var -> type = _String;
                 strcpy(var -> value.string, strGet(&file_tokens[currentToken]));
+                currentToken++;
                 elses(0);
                 return var;
             }else if(file_tokens[currentToken].type == _NumberToken){
                 Variable *var = malloc(sizeof(Variable));
                 var -> type = _Number;
                 var -> value.num = numGet(&file_tokens[currentToken]);
+                currentToken++;
+                elses(0);
                 return var;
             }else if(file_tokens[currentToken].type == _VarToken){
                 Variable *var = getVarByName(keywordGet(&file_tokens[currentToken]));
+                currentToken++;
                 elses(0);
                 return var;
             }else if(file_tokens[currentToken].type == _SOL){
@@ -476,6 +484,9 @@ Variable *thens(short runs){
                 Variable *var = ifs();
                 elses(0);
                 return var;
+            }else if(file_tokens[currentToken].type == _Else){
+                elses(0);
+                return &none;
             }else{
                 char *buffer = malloc(52 + MAX_INPUT_SIZE);
                 sprintf(buffer, "ConditionalError: Expected variable or expression, found:  %s",
@@ -509,14 +520,17 @@ Variable *elses(short runs){
                 Variable *var = malloc(sizeof(Variable));
                 var -> type = _String;
                 strcpy(var -> value.string, strGet(&file_tokens[currentToken]));
+                currentToken++;
                 return var;
             }else if(file_tokens[currentToken].type == _NumberToken){
                 Variable *var = malloc(sizeof(Variable));
                 var -> type = _Number;
                 var -> value.num = numGet(&file_tokens[currentToken]);
+                currentToken++;
                 return var;
             }else if(file_tokens[currentToken].type == _VarToken){
                 Variable *var = getVarByName(keywordGet(&file_tokens[currentToken]));
+                currentToken++;
                 return var;
             }else if(file_tokens[currentToken].type == _SOL){
                 Variable *var = sol();
@@ -524,6 +538,9 @@ Variable *elses(short runs){
             }else if(file_tokens[currentToken].type == _If){
                 Variable *var = ifs();
                 return var; 
+            }else if(file_tokens[currentToken].type == _EOL ||
+                    file_tokens[currentToken].type == _Else){
+                return &none;
             }else{
                 char *buffer = malloc(52 + MAX_INPUT_SIZE);
                 sprintf(buffer, "ConditionalError: Expected variable or expression, found:  %s",
@@ -542,10 +559,22 @@ Variable *elses(short runs){
             }
         }
     }else{
-        char *buffer = malloc(52 + MAX_INPUT_SIZE);
-        sprintf(buffer, "ConditionalError: Expected function \"Else (::)\", found:  %s",
-        file_tokens[currentToken].keyword);
-        raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+        if(runs){
+            char *buffer = malloc(52 + MAX_INPUT_SIZE);
+            sprintf(buffer, "ConditionalError: Expected function \"Else (::)\", found:  %s",
+            file_tokens[currentToken].keyword);
+            raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+        }else{
+            while(!eol(0)){
+                if(file_tokens[currentToken].type == _SOL){
+                    consumeSOL();
+                }else if(file_tokens[currentToken].type == _Else){
+                    elses(0);
+                }else{
+                    currentToken++;
+                }
+            }
+        }
     }
     return NULL;
 }
@@ -1057,6 +1086,7 @@ Variable *define(){
                     currentToken++;
                 }else if(file_tokens[currentToken].type == _SOL){
                     var = sol();
+                    strcpy(var -> name, name);
                 }else{
                     char *buffer = malloc(53 + MAX_INPUT_SIZE);
                     sprintf(buffer, "SyntaxError: Expected String or Number, received \"%s\" of type %d",
@@ -1065,7 +1095,7 @@ Variable *define(){
                 }
 
                 variable_table[i] = *var;
-                
+
                 return &none;
             }
         }
@@ -1112,8 +1142,8 @@ Variable *lambda(){
     return &none;
 }
 
-Variable *prints(){
-    if(file_tokens[currentToken].type == _VarToken && strcmp(file_tokens[currentToken].keyword, "print") == 0){
+Variable *prints(short newline){
+    if(file_tokens[currentToken].type == _VarToken){
         currentToken++;
         while(!eol(0)){
             if(file_tokens[currentToken].type == _SOL){
@@ -1140,7 +1170,9 @@ Variable *prints(){
         file_tokens[currentToken].keyword);
         raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
     }
-    printf("\n");
+    if(newline){
+        printf("\n");
+    }
     return &none;
 }
 
