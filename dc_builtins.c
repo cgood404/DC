@@ -117,7 +117,7 @@ Variable *plus(){
         }
 
         Variable *var = malloc(sizeof(Variable));
-        var -> value.num = total.value.num;
+        var -> value = total.value;
         var -> type = total.type;
 
         return var;
