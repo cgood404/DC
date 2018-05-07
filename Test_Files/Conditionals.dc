@@ -2,7 +2,7 @@
 (define y 3)
 
 # A basic if (?) statement. the else (::) token is required, but the statement after can be empty
-(? (< x y): (println x " is less than " y):: )
+(? (< x y): (println x " is less than " y)::)
 
 # The same aplies to then (:) tokens, however a space is required
 (? (< y x): :: (println y " is not less than " x))
