@@ -156,6 +156,7 @@ void lex(char *statement, int length){
                         error = 0;
                     // if token is a string, save everything up to the next " as a type -3
                     }else if(i == _Str){
+                        char *returnStr = malloc(MAX_INPUT_SIZE * sizeof(char));
                         current++;
                         slice_str(statement, buffer, current, length);
                         int str_len = 0;
@@ -163,9 +164,26 @@ void lex(char *statement, int length){
                             if(current == length){
                                 sprintf(buffer, "StringError: Unclosed string in statement: \"%s\"", statement);
                                 raise(buffer, filename, line, current);
+                            }else if(statement[current] == '\\'){
+                                current++;
+                                if(statement[current] == 'n'){
+                                    returnStr[str_len] = '\n';
+                                    str_len++;
+                                    current++;
+                                }else if(statement[current] == 't'){
+                                    returnStr[str_len] = '\t';
+                                    str_len++;
+                                    current++;
+                                }else if(statement[current] == 'r'){
+                                    returnStr[str_len] = '\r';
+                                    str_len++;
+                                    current++;
+                                }
+                            }else{
+                                returnStr[str_len] = statement[current];
+                                current++;
+                                str_len++;
                             }
-                            current++;
-                            str_len++;
                             slice_str(statement, buffer, current, length);
                         }
                         
@@ -177,8 +195,7 @@ void lex(char *statement, int length){
                             Token *str_token = malloc(sizeof(Token));
                             str_token -> type = -3;
 
-                            strcpy(str_token -> keyword, &statement[current - str_len]);
-                            str_token -> keyword[str_len] = '\0';
+                            strcpy(str_token -> keyword, returnStr);
                             
                             addToFile(str_token, line, current - str_len);
                             error = 0;
