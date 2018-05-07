@@ -33,27 +33,26 @@ void consumeSOL(){
 Variable *plus(){
     if(file_tokens[currentToken].type == _Plus){
         currentToken++;
-        num_t total;
-        if(file_tokens[currentToken].type == _NumberToken){
-            total = numGet(&file_tokens[currentToken]);
+        Variable total;
+
+        if(file_tokens[currentToken].type == _StringToken){
+            strcpy(total.value.string, strGet(&file_tokens[currentToken]))
             currentToken++;
+            total.type = _String;
+        }else if(file_tokens[currentToken].type == _NumberToken){
+            total.value.num = numGet(&file_tokens[currentToken]);
+            currentToken++;
+            total.type = _Number
         }else if(file_tokens[currentToken].type == _VarToken){
             Variable *var = getVarByName(keywordGet(&file_tokens[currentToken]));
-            if(var -> type == _Number){
-                total = var -> value.num;
-                free(var);
-                currentToken++;
-            }else{
-                char *buffer = malloc(65 + MAX_INPUT_SIZE);
-                sprintf(buffer, "ArithmeticError: Variable \"%s\" is of type: %s, expected: Number",
-                    var -> name, varTypeGet(var));
-                raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
-            }
+            total.type = var -> type;
+            total.value = var -> value;
+            currentToken++;
         }else if(file_tokens[currentToken].type == _SOL){
             Variable *t_var = sol();
              
             if(t_var -> type == _Number){
-                total = t_var -> value.num;
+                total.value.num = t_var -> value.num;
                 free(t_var);
             }else{
                 char *buffer = malloc(107 + MAX_INPUT_SIZE);
@@ -69,12 +68,12 @@ Variable *plus(){
         }
 
         if(file_tokens[currentToken].type == _NumberToken){
-            total += numGet(&file_tokens[currentToken]);
+            total.value.num += numGet(&file_tokens[currentToken]);
             currentToken++;
         }else if(file_tokens[currentToken].type == _VarToken){
             Variable *var = getVarByName(keywordGet(&file_tokens[currentToken]));
             if(var -> type == _Number){
-                total += var -> value.num;
+                total.value.num += var -> value.num;
                 free(var);
                 currentToken++;
             }else{
@@ -87,7 +86,7 @@ Variable *plus(){
             Variable *t_var = sol();
              
             if(t_var -> type == _Number){
-                total += t_var -> value.num;
+                total.value.num += t_var -> value.num;
                 free(t_var);
             }else{
                 char *buffer = malloc(107 + MAX_INPUT_SIZE);
@@ -103,7 +102,7 @@ Variable *plus(){
         }
 
         Variable *var = malloc(sizeof(Variable));
-        var -> value.num = total;
+        var -> value.num = total.value.num;
         var -> type = _Number;
          
 
