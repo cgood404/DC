@@ -1,12 +1,8 @@
-#include "dc_parser.h"
-
-#define num_t long double
+#include "dc_main.h"
 
 
-unsigned int current = 0;
+unsigned int currentToken = 0;
 unsigned int temp_current = 0;
-
-// Nothing below this line changes the "current" variable
 
 void parserError(char *statement, int line, int column){
     raise(statement, filename, line, column);
@@ -14,273 +10,210 @@ void parserError(char *statement, int line, int column){
 
 // returns string (type -3), can be formatted in the future with escape characters
 char *strGet(Token *token){
-    return token -> keyword;
+    if(token -> type == _StringToken){
+        return token -> keyword;
+    }else{
+        char *buffer = malloc(47 + MAX_INPUT_SIZE);
+        sprintf(buffer, "StringError: Expected string or expression resolving to string, received %s",
+        file_tokens[currentToken].keyword);
+        raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+    }
+
+    return NULL;
 }
 
 // returns number (type -2), can be added to in order to prevent overflow, improper tokens, etc
 num_t numGet(Token *token){
-    long double num = 0;
-    num = strtold(token -> keyword, NULL);
-    return num;
+    if(token -> type == _NumberToken){
+        long double num = 0;
+        num = strtold(token -> keyword, NULL);
+        return num;
+    }else{
+        char *buffer = malloc(81 + MAX_INPUT_SIZE);
+        sprintf(buffer, "ArithmeticError: Expected number or expression resolving to number, received %s",
+        file_tokens[currentToken].keyword);
+        raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+    }
+
+    return 0;
 }
 
 // returns keyword (type -1), reserved words such as "define", "lambda", etc. OR
 // user defined functions and/or variables
 char *keywordGet(Token *token){
-    return token -> keyword;
+    if(token -> type == _VarToken){
+        return token -> keyword;
+    }else{
+        char *buffer = malloc(63 + MAX_INPUT_SIZE);
+        sprintf(buffer, "SyntaxError: Expected variable or function name, received %s",
+        file_tokens[currentToken].keyword);
+        raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+    }
+
+    return NULL;
 }
 
-int eof(Token *token){
-    if(token -> type == 13){
-        current++;
-        printf("End of file\n");
+char *varTypeGet(Variable *var){
+    if(var -> type == _none){
+        return "none";
+    }else if(var -> type == _Boolean){
+        return "Boolean";
+    }else if(var -> type == _Number){
+        return "Number";
+    }else if(var -> type == _String){
+        return "String";
+    }
+
+    char *buffer = malloc(54 + MAX_INPUT_SIZE);
+    sprintf(buffer, "TypeError: No variable of type %d exists",
+        var -> type);
+    raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+
+    return NULL;
+}
+
+
+int eol(short raiseEx){
+    if(file_tokens[currentToken].type == _EOL){
+        if(raiseEx){
+            currentToken++;
+            return 1;
+        }else{
+            return 1;
+        }
+    }else{
+        if(raiseEx){
+            char *buffer = malloc(54 + MAX_INPUT_SIZE);
+            sprintf(buffer, "SyntaxError: Unclosed statement, received \"%s\" instead.",
+            file_tokens[currentToken].keyword);
+            raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+        }else{
+            return 0;
+        }
+    }
+    return 0;
+}
+
+int eof(){
+    if(file_tokens[currentToken].type == _EOF){
+        currentToken++;
         return 1;
     }
     return 0;
 }
 
-num_t plus(Token *token){
-    if(token -> type == 2){
-        current++;
-        num_t total;
-        printf("Plus Function\n");
-        if(file_tokens[current].type == -2){
-            total = numGet(&file_tokens[current]);
-        }else if(file_tokens[current].type == -1){
-            // variable stuff
-            total = 0;
-        }else{
-            char *buffer = malloc(67 + MAX_INPUT_SIZE);
-            sprintf(buffer, "Unexpected token in function \"+\", expected number or variable of type number, found:  %s",
-            file_tokens[current].keyword);
-            raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
-        }
-
-        current++;
-        if(file_tokens[current].type == -1 || file_tokens[current].type == -2){
-            while(file_tokens[current].type != 12){
-                if(file_tokens[current].type == -2){
-                    total += numGet(&file_tokens[current]);
-                }else if(file_tokens[current].type == -1){
-                    // variable stuff
-                    total += 0;
-                }else{
-                    char *buffer = malloc(67 + MAX_INPUT_SIZE);
-                    sprintf(buffer, "Unexpected token in function \"+\", expected number or variable of type number, found:  %s",
-                    file_tokens[current].keyword);
-                    raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
-                }
-                current++;
-            }
-            printf("%LG\n", total);
-        }else{
-            char *buffer = malloc(67 + MAX_INPUT_SIZE);
-            sprintf(buffer, "Expected at least two arguments in function \"+\", found:  %s",
-            file_tokens[current].keyword);
-            raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
-        }
+Variable *callBuiltin(){
+    if(strcmp(file_tokens[currentToken].keyword, "define") == 0){
+        return define();
+    }else if(strcmp(file_tokens[currentToken].keyword, "lambda") == 0){
+        return lambda();
+    }else if(strcmp(file_tokens[currentToken].keyword, "print") == 0){
+        return prints();
+    }else if(strcmp(file_tokens[currentToken].keyword, "run") == 0){
+        return runs();
+    }else if(strcmp(file_tokens[currentToken].keyword, "exit") == 0){
+        exits();
     }
+    return NULL;
 }
 
-num_t min(Token *token){
-    if(token -> type == 3){
-        current++;
-        num_t total;
-        printf("Minus Function\n");
-        if(file_tokens[current].type == -2){
-            total = numGet(&file_tokens[current]);
-        }else if(file_tokens[current].type == -1){
-            // variable stuff
-            total = 0;
-        }else{
-            char *buffer = malloc(67 + MAX_INPUT_SIZE);
-            sprintf(buffer, "Unexpected token in function \"-\", expected number or variable of type number, found:  %s",
-            file_tokens[current].keyword);
-            raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
-        }
-
-        current++;
-        if(file_tokens[current].type == -1 || file_tokens[current].type == -2){
-            while(file_tokens[current].type != 12){
-                if(file_tokens[current].type == -2){
-                    total -= numGet(&file_tokens[current]);
-                }else if(file_tokens[current].type == -1){
-                    // variable stuff
-                    total -= 0;
-                }else{
-                    char *buffer = malloc(67 + MAX_INPUT_SIZE);
-                    sprintf(buffer, "Unexpected token in function \"-\", expected number or variable of type number, found:  %s",
-                    file_tokens[current].keyword);
-                    raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
-                }
-                current++;
-            }
-            printf("%LG\n", total);
-        }else{
-            char *buffer = malloc(67 + MAX_INPUT_SIZE);
-            sprintf(buffer, "Expected at least two arguments in function \"-\", found:  %s",
-            file_tokens[current].keyword);
-            raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
-        }
-    }
-}
-
-num_t divs(Token *token){
-    if(token -> type == 3){
-        current++;
-        num_t total;
-        printf("Divide Function\n");
-        if(file_tokens[current].type == -2){
-            total = numGet(&file_tokens[current]);
-        }else if(file_tokens[current].type == -1){
-            // variable stuff
-            total = 0;
-        }else{
-            char *buffer = malloc(67 + MAX_INPUT_SIZE);
-            sprintf(buffer, "Unexpected token in function \"/\", expected number or variable of type number, found:  %s",
-            file_tokens[current].keyword);
-            raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
-        }
-
-        current++;
-        if(file_tokens[current].type == -1 || file_tokens[current].type == -2){
-            while(file_tokens[current].type != 12){
-                if(file_tokens[current].type == -2){
-                    total /= numGet(&file_tokens[current]);
-                }else if(file_tokens[current].type == -1){
-                    // variable stuff
-                    total /= 0;
-                }else{
-                    char *buffer = malloc(67 + MAX_INPUT_SIZE);
-                    sprintf(buffer, "Unexpected token in function \"/\", expected number or variable of type number, found:  %s",
-                    file_tokens[current].keyword);
-                    raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
-                }
-                current++;
-            }
-            printf("%LG\n", total);
-        }else{
-            char *buffer = malloc(67 + MAX_INPUT_SIZE);
-            sprintf(buffer, "Expected at least two arguments in function \"/\", found:  %s",
-            file_tokens[current].keyword);
-            raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
-        }
-    }
-}
-
-num_t mult(Token *token){
-    if(token -> type == 3){
-        current++;
-        num_t total;
-        printf("Multiply Function\n");
-        if(file_tokens[current].type == -2){
-            total = numGet(&file_tokens[current]);
-        }else if(file_tokens[current].type == -1){
-            // variable stuff
-            total = 0;
-        }else{
-            char *buffer = malloc(67 + MAX_INPUT_SIZE);
-            sprintf(buffer, "Unexpected token in function \"*\", expected number or variable of type number, found:  %s",
-            file_tokens[current].keyword);
-            raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
-        }
-
-        current++;
-        if(file_tokens[current].type == -1 || file_tokens[current].type == -2){
-            while(file_tokens[current].type != 12){
-                if(file_tokens[current].type == -2){
-                    total *= numGet(&file_tokens[current]);
-                }else if(file_tokens[current].type == -1){
-                    // variable stuff
-                    total *= 0;
-                }else{
-                    char *buffer = malloc(67 + MAX_INPUT_SIZE);
-                    sprintf(buffer, "Unexpected token in function \"*\", expected number or variable of type number, found:  %s",
-                    file_tokens[current].keyword);
-                    raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
-                }
-                current++;
-            }
-            printf("%LG\n", total);
-        }else{
-            char *buffer = malloc(67 + MAX_INPUT_SIZE);
-            sprintf(buffer, "Expected at least two arguments in function \"*\", found:  %s",
-            file_tokens[current].keyword);
-            raise(buffer, filename, file_tokens[current].line, file_tokens[current].column);
-        }
-    }
-}
-
-num_t mod(Token *token){
-    if(token -> type == 6){
-        current++;
-        printf("Modulus Function\n");
-        return 1;
+Variable *functioncall(){
+    if(file_tokens[currentToken].type == _VarToken){
+        return callBuiltin();
     }
     return 0;
 }
 
-int eql(Token *token){
-    if(token -> type == 7){
-        current++;
-        printf("End of file\n");
-        return 1;
-    }
-    return 0;
-}
-
-int noteql(Token *token){
-    if(token -> type == 8){
-        current++;
-        printf("End of file\n");
-        return 1;
-    }
-    return 0;
-}
-
-num_t sol(Token *token){
-    if(token -> type == 1){
-        current++;
-        printf("Start of line\n");
-
-        if(file_tokens[current].type == -1){
-            // function calls, TODO
-        }else if(file_tokens[current].type == 1){
-            return sol(&file_tokens[current]);
-        }else if(file_tokens[current].type == 2){
-            return plus(&file_tokens[current]);
-        }else if(file_tokens[current].type == 3){
-            return min(&file_tokens[current]);
-        }else if(file_tokens[current].type == 4){
-            return mult(&file_tokens[current]);
-        }else if(file_tokens[current].type == 5){
-            return divs(&file_tokens[current]);
-        }else if(file_tokens[current].type == 6){
-            return mod(&file_tokens[current]);
-        }else if(file_tokens[current].type == 7){
-            return eql(&file_tokens[current]);
-        }else if(file_tokens[current].type == 8){
-            return noteql(&file_tokens[current]);
+Variable *sol(){
+    if(file_tokens[currentToken].type == _SOL){
+        currentToken++;
+        if(file_tokens[currentToken].type == _VarToken){
+            Variable *var = functioncall();
+            eol(1);
+            return var;
+        }else if(file_tokens[currentToken].type == _SOL){
+            Variable *var = sol();
+            eol(1);
+            return var;
+        }else if(file_tokens[currentToken].type == _Plus){
+            Variable *var = plus();
+            eol(1);
+            return var;
+        }else if(file_tokens[currentToken].type == _Min){
+            Variable *var = min();
+            eol(1);
+            return var;
+        }else if(file_tokens[currentToken].type == _Mult){
+            Variable *var = mult();
+            eol(1);
+            return var;
+        }else if(file_tokens[currentToken].type == _Div){
+            Variable *var = divs();
+            eol(1);
+            return var;
+        }else if(file_tokens[currentToken].type == _Mod){
+            Variable *var = mod();
+            eol(1);
+            return var;
+        }else if(file_tokens[currentToken].type == _If){
+            Variable *var = ifs();
+            eol(1);
+            return var;
+        }else if(file_tokens[currentToken].type == _Eql){
+            Variable *var = eql();
+            eol(1);
+            return var;
+        }else if(file_tokens[currentToken].type == _Not){
+            Variable *var = nots();
+            eol(1);
+            return var;
+        }else if(file_tokens[currentToken].type == _LessEql){
+            Variable *var = lessEql();
+            eol(1);
+            return var;
+        }else if(file_tokens[currentToken].type == _GrtrEql){
+            Variable *var = grtrEql();
+            eol(1);
+            return var;
+        }else if(file_tokens[currentToken].type == _Less){
+            Variable *var = less();
+            eol(1);
+            return var;
+        }else if(file_tokens[currentToken].type == _Grtr){
+            Variable *var = grtr();
+            eol(1);
+            return var;
+        }else if(file_tokens[currentToken].type == _EOL){
+            eol(1);
+            return &none;
         }else{
             char *buffer = malloc(40 + MAX_INPUT_SIZE);
-            sprintf(buffer, "Invalid statement after start of line: %s", file_tokens[current].keyword);
-            parserError(buffer, token -> line, token -> column);
+            sprintf(buffer, "SyntaxError: Invalid statement after start of line: %s", file_tokens[currentToken].keyword);
+            raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
         }
     }else{
         char *buffer = malloc(40 + MAX_INPUT_SIZE);
-        sprintf(buffer, "Expected start of line token: \"%s\", found: \"%s\"",
-                    SOL.keyword, file_tokens[current].keyword);
-        parserError(buffer, token -> line, token -> column);
+        sprintf(buffer, "SyntaxError: Expected start of line token: \"%s\", found: \"%s\"",
+                    SOL.keyword, file_tokens[currentToken].keyword);
+        raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
     }
+    char *buffer = malloc(40 + MAX_INPUT_SIZE);
+    sprintf(buffer, "SyntaxError: Expected start of line token: \"%s\", found: \"%s\"",
+                SOL.keyword, file_tokens[currentToken].keyword);
+    raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+
+    return NULL;
 }
 
 int parseFile(){
+    if(currentToken == 0){
+        currentToken++;
+    }
     while(true){
-        current++;
-        if(eof(&file_tokens[current])){
+        if(eof() || file_size == currentToken){
             return EXIT_SUCCESS;
         }
-        sol(&file_tokens[current]);
+        sol();
     };
     return EXIT_SUCCESS;
 }
