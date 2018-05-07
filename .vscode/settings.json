@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "dc.h": "c"
+        "dc.h": "c",
+        "dc_main.h": "c"
     }
 }
