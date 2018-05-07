@@ -36,12 +36,12 @@ Variable *plus(){
         Variable total;
 
         if(file_tokens[currentToken].type == _StringToken){
-            strcpy(total.value.string, strGet(&file_tokens[currentToken]))
+            strcpy(total.value.string, strGet(&file_tokens[currentToken]));
             total.type = _String;
             currentToken++;
         }else if(file_tokens[currentToken].type == _NumberToken){
             total.value.num = numGet(&file_tokens[currentToken]);
-            total.type = _Number
+            total.type = _Number;
             currentToken++;
         }else if(file_tokens[currentToken].type == _VarToken){
             Variable *var = getVarByName(keywordGet(&file_tokens[currentToken]));
@@ -61,12 +61,12 @@ Variable *plus(){
 
         if(file_tokens[currentToken].type == _StringToken){
             if(total.type == _String){
-                strcat(total.value.string, strGet(&file_tokens[currentToken]))
+                strcat(total.value.string, strGet(&file_tokens[currentToken]));
                 currentToken++;
             }else{
                 char *buffer = malloc(107 + MAX_INPUT_SIZE);
                 sprintf(buffer, "TypeError: Conflicting types for function: \"+\", expected type \"%s\" found:  %s",
-                    varTypeGet(_String), file_tokens[currentToken].keyword);
+                    varTypeGet(&total), file_tokens[currentToken].keyword);
                 raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
             }
         }else if(file_tokens[currentToken].type == _NumberToken){
@@ -76,37 +76,37 @@ Variable *plus(){
             }else {
                 char *buffer = malloc(107 + MAX_INPUT_SIZE);
                 sprintf(buffer, "TypeError: Conflicting types for function: \"+\", expected type \"%s\" found:  %s",
-                     varTypeGet(_Number), file_tokens[currentToken].keyword);
+                     varTypeGet(&total), file_tokens[currentToken].keyword);
                 raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
             }
         }else if(file_tokens[currentToken].type == _VarToken){
             Variable *var = getVarByName(keywordGet(&file_tokens[currentToken]));
-            if(var -> type == total.type == _Number){
+            if(var -> type == _Number && total.type == _Number){
                 total.value.num += var -> value.num;
                 free(var);
                 currentToken++;
-            }else if(var -> type == total.type == _String){
-                strcat(total.value.string, var -> value.string)
+            }else if(var -> type == _String && total.type == _String){
+                strcat(total.value.string, var -> value.string);
                 currentToken++;
             }else{
                 char *buffer = malloc(107 + MAX_INPUT_SIZE);
                 sprintf(buffer, "TypeError: Conflicting types for function: \"+\", expected type \"%s\" found:  %s",
-                     varTypeGet(total.type), varTypeGet(var -> type));
+                     varTypeGet(&total), varTypeGet(var));
                 raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
             }
         }else if(file_tokens[currentToken].type == _SOL){
             Variable *t_var = sol();
              
-            if(t_var -> type == total.type == _Number){
+            if(t_var -> type == _Number && total.type == _Number){
                 total.value.num += t_var -> value.num;
                 free(t_var);
-            }else if(t_var -> type == total.type == _String){
-                strcat(total.value.string, t_var -> value.string)
+            }else if(t_var -> type == _String && total.type == _String){
+                strcat(total.value.string, t_var -> value.string);
                 currentToken++;
             }else{
                 char *buffer = malloc(107 + MAX_INPUT_SIZE);
                 sprintf(buffer, "TypeError: Conflicting types for function: \"+\", expected type \"%s\" found:  %s",
-                     varTypeGet(total.type), varTypeGet(t_var -> type));
+                     varTypeGet(&total), varTypeGet(t_var));
                 raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
             }
         }else{
