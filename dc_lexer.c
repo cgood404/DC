@@ -178,7 +178,22 @@ void lex(char *statement, int length){
                                     returnStr[str_len] = '\r';
                                     str_len++;
                                     current++;
-                                }
+                                }else if(statement[current] == 'v'){
+                                    returnStr[str_len] = '\v';
+                                    str_len++;
+                                    current++;
+                                }else if(statement[current] == '\\'){
+                                    returnStr[str_len] = '\\';
+                                    str_len++;
+                                    current++;
+                                }else if(statement[current] == '\''){
+                                    returnStr[str_len] = '\'';
+                                    str_len++;
+                                    current++;
+                                }else if(statement[current] == '\"'){
+                                    returnStr[str_len] = '\"';
+                                    str_len++;
+                                    current++;
                             }else{
                                 returnStr[str_len] = statement[current];
                                 current++;
