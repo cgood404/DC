@@ -106,7 +106,7 @@ Variable *plus(){
             }else{
                 char *buffer = malloc(107 + MAX_INPUT_SIZE);
                 sprintf(buffer, "TypeError: Conflicting types for function: \"+\", expected type \"%s\" found:  %s",
-                     varTypeGet(total.type), varTypeGet(var -> type));
+                     varTypeGet(total.type), varTypeGet(t_var -> type));
                 raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
             }
         }else{
