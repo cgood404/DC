@@ -2,20 +2,20 @@
 (define bar -2)
 
 (define foobar (+ foo bar))
-(print foobar)
+(println foobar)
 
-(print (+ foo bar))
-(print (- foo bar))
-(print (/ foo bar))
-(print (* foo bar))
+(println (+ foo bar))
+(println (- foo bar))
+(println (/ foo bar))
+(println (* foo bar))
 
 (define x 1.2)
 (define y -.4)
 
-(print (+ x y))
-(print (- x y))
-(print (/ x y))
-(print (* x y))
+(println (+ x y))
+(println (- x y))
+(println (/ x y))
+(println (* x y))
 
-(print (/ 10 (- 10 (* 2 (+ 1 1)))))
-(print (/ x (- y (* foo (+ bar 1)))))
+(println (/ 10 (- 10 (* 2 (+ 1 1)))))
+(println (/ x (- y (* foo (+ bar 1)))))
