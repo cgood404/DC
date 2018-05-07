@@ -164,6 +164,12 @@ void lex(char *statement, int length){
                                 sprintf(buffer, "StringError: Unclosed string in statement: \"%s\"", statement);
                                 raise(buffer, filename, line, current);
                             }
+                            // else if(statement[current] == '\\'){
+                            //     current++;
+                            //     if(statement[current] == 'n'){
+
+                            //     }
+                            // }
                             current++;
                             str_len++;
                             slice_str(statement, buffer, current, length);
