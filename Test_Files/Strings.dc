@@ -6,4 +6,4 @@
 (define str34 (+ str3 str4))
 (define str1234 (+ str12 str34))
 
-(print str1234)
+(println str1234)

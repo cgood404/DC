@@ -108,7 +108,9 @@ Variable *callBuiltin(){
     }else if(strcmp(file_tokens[currentToken].keyword, "lambda") == 0){
         return lambda();
     }else if(strcmp(file_tokens[currentToken].keyword, "print") == 0){
-        return prints();
+        return prints(0);
+    }else if(strcmp(file_tokens[currentToken].keyword, "println") == 0){
+        return prints(1);
     }else if(strcmp(file_tokens[currentToken].keyword, "run") == 0){
         return runs();
     }else if(strcmp(file_tokens[currentToken].keyword, "exit") == 0){
