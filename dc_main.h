@@ -180,6 +180,7 @@ Variable *lessEql();
 Variable *grtrEql();
 Variable *less();
 Variable *grtr();
+Variable *loop();
 
 void exits();
 

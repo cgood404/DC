@@ -1287,13 +1287,6 @@ Variable *prints(short newline){
     return &none;
 }
 
-Variable *runs(){
-    if(file_tokens[currentToken].type == _VarToken){
-        
-    }
-    return &none;
-}
-
 void exits(){
     // free all malloc'd memory and exit using given exit status, if any
     if(strcmp(file_tokens[currentToken].keyword, "exit") == 0){
@@ -1320,6 +1313,77 @@ void exits(){
     }else{
         char *buffer = malloc(36 + MAX_INPUT_SIZE);
         sprintf(buffer, "Expected exit token, received \"%s\"",
+        file_tokens[currentToken].keyword);
+        raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+    }
+}
+
+Variable *runs(){
+    if(file_tokens[currentToken].type == _VarToken){
+        currentToken++;
+        while(!eol(0)){
+            sol();
+        }
+        return &none;
+    }
+    return &none;
+}
+
+
+Variable *loop(){
+    if(file_tokens[currentToken].type == _VarToken){
+        currentToken++;
+        unsigned int tokenBackup = currentToken;
+        short runs = 1;
+        
+        do{
+            currentToken = tokenBackup;
+            if(file_tokens[currentToken].type == _VarToken){
+                Variable *var = getVarByName(keywordGet(&file_tokens[currentToken]));
+                if(var -> type == 0){
+                    runs = 0;
+                }else if(var -> type == 1){
+                    runs = var -> value.boolean;
+                }else{
+                    runs = 1;
+                }
+                currentToken++;
+            }else if(file_tokens[currentToken].type == _SOL){
+                Variable *var = sol();
+                if(var -> type == 0){
+                    runs = 0;
+                }else if(var -> type == 1){
+                    runs = var -> value.boolean;
+                }else{
+                    runs = 1;
+                }
+            }else if(file_tokens[currentToken].type == _NumberToken ||
+                    file_tokens[currentToken].type == _StringToken){
+                runs = 1;
+                currentToken++;
+            }else{
+                char *buffer = malloc(52 + MAX_INPUT_SIZE);
+                sprintf(buffer, "ConditionalError: Expected variable or function, found:  %s",
+                file_tokens[currentToken].keyword);
+                raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+            }
+
+            if(runs){
+                sol();
+            }else{
+                while(file_tokens[currentToken].type != _EOL){
+                    if(file_tokens[currentToken].type == _SOL){
+                        consumeSOL();
+                    }else{
+                        currentToken++;
+                    }
+                }
+            }
+        }while(runs);
+        
+    }else{
+        char *buffer = malloc(39 + MAX_INPUT_SIZE);
+        sprintf(buffer, "Expected loop function, received \"%s\"",
         file_tokens[currentToken].keyword);
         raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
     }

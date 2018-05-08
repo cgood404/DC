@@ -113,6 +113,8 @@ Variable *callBuiltin(){
         return prints(1);
     }else if(strcmp(file_tokens[currentToken].keyword, "run") == 0){
         return runs();
+    }else if(strcmp(file_tokens[currentToken].keyword, "loop") == 0){
+        return loop();
     }else if(strcmp(file_tokens[currentToken].keyword, "exit") == 0){
         exits();
     }
