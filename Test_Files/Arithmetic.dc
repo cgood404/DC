@@ -1,21 +1,26 @@
 (define foo 6)
-(define bar -2)
+(define bar -4)
 
-(define foobar (+ foo bar))
-(println foobar)
+(println "foo = " foo)
+(println "bar = " bar)
 
-(println (+ foo bar))
-(println (- foo bar))
-(println (/ foo bar))
-(println (* foo bar))
+
+(println "foo + bar = " (+ foo bar))
+(println "foo - bar = " (- foo bar))
+(println "foo / bar = " (/ foo bar))
+(println "foo * bar = " (* foo bar))
+(println "foo % bar = " (% foo bar))
 
 (define x 1.2)
 (define y -.4)
 
-(println (+ x y))
-(println (- x y))
-(println (/ x y))
-(println (* x y))
+(println "x = " x "\n" "y = " y)
+
+(println "x + y = " (+ x y))
+(println "x - y = " (- x y))
+(println "x / y = " (/ x y))
+(println "x * y = " (* x y))
+(println "x % y = " (% x y))
 
 (println (/ 10 (- 10 (* 2 (+ 1 1)))))
 (println (/ x (- y (* foo (+ bar 1)))))

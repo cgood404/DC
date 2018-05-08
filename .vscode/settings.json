@@ -1,6 +1,8 @@
 {
     "files.associations": {
+        "*.pl": "prolog",
         "dc.h": "c",
-        "dc_main.h": "c"
+        "dc_main.h": "c",
+        "math.h": "c"
     }
 }
