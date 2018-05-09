@@ -762,20 +762,30 @@ Variable *define(){
 
 // does not delete the variable, but marks it to be overwritten by the next define
 Variable *deleteVar(){
-    char *name = keywordGet(&file_tokens[currentToken]);
+    if(file_tokens[currentToken].type == _VarToken){
+        currentToken++;
+        char *name = keywordGet(&file_tokens[currentToken]);
 
-    for(int i = 0; i < variable_table_size; i++){
-        if(strcmp(name, variable_table[i].name) == 0){
-            variable_table[i].type = -1;
-            return &none;
+        for(int i = 0; i < variable_table_size; i++){
+            if(strcmp(name, variable_table[i].name) == 0){
+                variable_table[i].type = -1;
+                currentToken++;
+                return &none;
+            }
         }
-    }
 
-    char *buffer = malloc(46 + MAX_INPUT_SIZE);
-    sprintf(buffer, "SyntaxError: no variable of name \"%s\" exists",
-        file_tokens[currentToken].keyword);
-    raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
-    return NULL;
+        char *buffer = malloc(46 + MAX_INPUT_SIZE);
+        sprintf(buffer, "SyntaxError: no variable of name \"%s\" exists",
+            file_tokens[currentToken].keyword);
+        raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+        return NULL;
+    }else{
+        char *buffer = malloc(54 + MAX_INPUT_SIZE);
+        sprintf(buffer, "SyntaxError: Expected delete function, received \"%s\"",
+            file_tokens[currentToken].keyword);
+        raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+        return &none;
+    }
 }
 
 Variable *lambda(){

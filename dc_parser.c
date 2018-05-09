@@ -117,6 +117,8 @@ Variable *callBuiltin(){
         return runs();
     }else if(strcmp(file_tokens[currentToken].keyword, "loop") == 0){
         return loop();
+    }else if(strcmp(file_tokens[currentToken].keyword, "delete") == 0){
+        return deleteVar();
     }else if(strcmp(file_tokens[currentToken].keyword, "exit") == 0){
         exits();
     }

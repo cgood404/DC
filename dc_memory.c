@@ -93,7 +93,7 @@ int addVariable(Variable *variable){
 
 Variable *getVarByName(char *name){
     for(int i = 0; i < variable_table_size; i++){
-        if(strcmp(name, variable_table[i].name) == 0){
+        if(strcmp(name, variable_table[i].name) == 0 && variable_table[i].type != -1){
             // return a copy of the variable, which can safely be free'd after done
             Variable *var = malloc(sizeof(Variable));
             memcpy(var, &variable_table[i], sizeof(Variable));
