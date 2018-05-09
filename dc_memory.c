@@ -33,7 +33,7 @@ int addFunction(Function *function){
         function_table = buffer;
     }
 
-    memmove(&function_table[function_table_size], function, sizeof(*function));
+    memmove(&function_table[function_table_size], function, sizeof(Function));
 
     function_table_size++;
     return 1;

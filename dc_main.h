@@ -160,17 +160,23 @@ int addToFile();
 void resetFile(void);
 
 
-// BUILTINS /////////////////////////////////////////////////////////////////////////
+// MATH /////////////////////////////////////////////////////////////////////////
 
-Variable *define();
-Variable *lambda();
-Variable *prints(short newline);
-Variable *runs();
+
 Variable *plus();
 Variable *min();
 Variable *divs();
 Variable *mult();
 Variable *mod();
+
+
+// BUILTINS /////////////////////////////////////////////////////////////////////////
+
+
+Variable *define();
+Variable *lambda();
+Variable *prints(short newline);
+Variable *runs();
 Variable *ifs();
 Variable *thens(short runs);
 Variable *elses(short runs);
