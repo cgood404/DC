@@ -93,7 +93,8 @@ typedef union __VARIABLE  _VARIABLE;
 extern Function *function_table;
 extern unsigned long function_table_size;
 extern unsigned long function_table_max;
-int addFunction(Function *function);
+Variable *addFunction(Variable *function);
+Variable *allocateFunction(char *name, char **args, int argsize, int start, int end);
 
 extern Variable *variable_table;
 extern unsigned long variable_table_size;
@@ -106,6 +107,7 @@ int createTables();
 union __VARIABLE { // unions share memory space
     char string[MAX_INPUT_SIZE];
     num_t num;
+    Function *function;
     short boolean;
 };
 
@@ -116,14 +118,13 @@ struct _variable {
 };
 
 struct _function {
-    char name[MAX_INPUT_SIZE];
-    Variable arguments[MAX_FUNCTION_ARGS];
-    Token code[MAX_FUNCTION_SIZE];
+    Variable *arguments;
+    Token *code;
 };
 
 extern Variable none, True, False;
 enum _variable_vypes {
-    _none, _Boolean, _Number, _String
+    _none, _Boolean, _Number, _String, _Function
 };
 
 // PARSER /////////////////////////////////////////////////////////////////////////
@@ -150,7 +151,7 @@ extern Token *file_tokens;
 extern char *filename;
 
 void _init_(void);
-void printToken();
+void printToken(Token *token);
 void lex();
 void lexfile();
 int matchToken();
@@ -174,6 +175,7 @@ Variable *mod();
 
 
 Variable *define();
+Variable *deleteVar();
 Variable *lambda();
 Variable *prints(short newline);
 Variable *runs();

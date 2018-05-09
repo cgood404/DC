@@ -1,0 +1,4 @@
+
+(lambda x (y z) (+ y (+ z 1)))
+
+(println (x 2 2))

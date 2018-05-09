@@ -692,9 +692,9 @@ Variable *define(){
         }else if(strcmp(name, "True") == 0 || strcmp(name, "False") == 0){
             raise("OverwriteError: Cannot overwrite Boolean variable", filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
         }
-        // if variable is already declared, redefine it
+        // if variable is already declared, or is marked to be overwritten, redefine it
         for(int i = 0; i < variable_table_size; i++){
-            if(strcmp(variable_table[i].name, name) == 0){
+            if(strcmp(variable_table[i].name, name) == 0 || variable_table[i].type == -1){
                 Variable *var = malloc(sizeof(Variable));
                 strcpy(var -> name, name);
                 currentToken++;
@@ -754,15 +754,73 @@ Variable *define(){
     }else{
         char *buffer = malloc(53 + MAX_INPUT_SIZE);
         sprintf(buffer, "SyntaxError: Expected define function, received \"%s\"",
-        file_tokens[currentToken].keyword);
+            file_tokens[currentToken].keyword);
         raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
         return &none;
     }
 }
 
+// does not delete the variable, but marks it to be overwritten by the next define
+Variable *deleteVar(){
+    char *name = keywordGet(&file_tokens[currentToken]);
+
+    for(int i = 0; i < variable_table_size; i++){
+        if(strcmp(name, variable_table[i].name) == 0){
+            variable_table[i].type = -1;
+            return &none;
+        }
+    }
+
+    char *buffer = malloc(46 + MAX_INPUT_SIZE);
+    sprintf(buffer, "SyntaxError: no variable of name \"%s\" exists",
+        file_tokens[currentToken].keyword);
+    raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+    return NULL;
+}
+
 Variable *lambda(){
     if(file_tokens[currentToken].type == _VarToken){
-        raise("NotImplementedError", filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+        currentToken++;
+        char *name = keywordGet(&file_tokens[currentToken]);
+        currentToken++;
+
+        int argsize = 0;
+        if(file_tokens[currentToken].type == _SOL){
+            currentToken++;
+            while(!eol(0)){
+                if(file_tokens[currentToken].type == _VarToken){
+                    argsize++;
+                    currentToken++;
+                }else{
+                    char *buffer = malloc(53 + MAX_INPUT_SIZE);
+                    sprintf(buffer, "SyntaxError: Expected function argument as variable name, received \"%s\"",
+                        file_tokens[currentToken].keyword);
+                    raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+                }
+            }
+            char **args = NULL;
+            args = malloc(argsize * sizeof *args);
+            for(int i = 1; i <= argsize; i++){
+                args[i-1] = keywordGet(&file_tokens[currentToken - i]);
+            }
+
+            eol(1);
+            int tokenStart = currentToken;
+            while(!eol(0)){
+                if(file_tokens[currentToken].type == _SOL){
+                    consumeSOL();
+                }else{
+                    currentToken++;
+                }
+            }
+
+            return addFunction(allocateFunction(name, args, argsize, tokenStart, currentToken));
+        }else{
+            char *buffer = malloc(53 + MAX_INPUT_SIZE);
+            sprintf(buffer, "SyntaxError: Expected function args as expression, received \"%s\"",
+                file_tokens[currentToken].keyword);
+            raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+        }
     }
     return &none;
 }

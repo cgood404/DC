@@ -3,6 +3,7 @@
         "*.pl": "prolog",
         "dc.h": "c",
         "dc_main.h": "c",
-        "math.h": "c"
+        "math.h": "c",
+        "typeinfo": "c"
     }
 }

@@ -62,6 +62,8 @@ char *varTypeGet(Variable *var){
         return "Number";
     }else if(var -> type == _String){
         return "String";
+    }else if(var -> type == _Function){
+        return "Function";
     }
 
     char *buffer = malloc(54 + MAX_INPUT_SIZE);
