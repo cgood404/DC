@@ -118,7 +118,7 @@ Variable *callBuiltin(){
     }else if(strcmp(file_tokens[currentToken].keyword, "loop") == 0){
         return loop();
     }else if(strcmp(file_tokens[currentToken].keyword, "delete") == 0){
-        return deleteVar();
+        return delete();
     }else if(strcmp(file_tokens[currentToken].keyword, "exit") == 0){
         exits();
     }
@@ -127,7 +127,25 @@ Variable *callBuiltin(){
 
 Variable *functioncall(){
     if(file_tokens[currentToken].type == _VarToken){
-        return callBuiltin();
+        if(strcmp(keywordGet(&file_tokens[currentToken]), "define") == 0){
+            return define();
+        }else if(strcmp(keywordGet(&file_tokens[currentToken]), "lambda") == 0){
+            return lambda();
+        }else if(strcmp(keywordGet(&file_tokens[currentToken]), "print") == 0){
+            return prints(0);
+        }else if(strcmp(keywordGet(&file_tokens[currentToken]), "println") == 0){
+            return prints(1);
+        }else if(strcmp(keywordGet(&file_tokens[currentToken]), "run") == 0){
+            return runs();
+        }else if(strcmp(keywordGet(&file_tokens[currentToken]), "loop") == 0){
+            return loop();
+        }else if(strcmp(keywordGet(&file_tokens[currentToken]), "delete") == 0){
+            return delete();
+        }else if(strcmp(keywordGet(&file_tokens[currentToken]), "exit") == 0){
+            exits();
+        }else{
+            return runFunction(keywordGet(&file_tokens[currentToken]));
+        }
     }
     return 0;
 }
@@ -214,9 +232,6 @@ Variable *sol(){
 }
 
 int parseFile(){
-    if(currentToken == 0){
-        currentToken++;
-    }
     while(true){
         if(eof() || file_size == currentToken){
             return EXIT_SUCCESS;

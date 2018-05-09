@@ -85,6 +85,8 @@ extern Token COM, SOL, PLUS, MIN, MULT, DIV, MOD,
 
 // MEMORY /////////////////////////////////////////////////////////////////////////
 
+extern char *reservedKeywords[];
+extern int reservedKeywordSize;
 
 typedef struct _variable Variable;
 typedef struct _function Function;
@@ -94,7 +96,8 @@ extern Function *function_table;
 extern unsigned long function_table_size;
 extern unsigned long function_table_max;
 Variable *addFunction(Variable *function);
-Variable *allocateFunction(char *name, char **args, int argsize, int start, int end);
+Variable *allocateFunction(char **args, int argsize, int start, int end);
+Variable *runFunction(char *name);
 
 extern Variable *variable_table;
 extern unsigned long variable_table_size;
@@ -127,11 +130,11 @@ enum _variable_vypes {
     _none, _Boolean, _Number, _String, _Function
 };
 
+
 // PARSER /////////////////////////////////////////////////////////////////////////
 
 
 int parseFile();
-int parse();
 void parserError(char *statement, int line, int column);
 
 char *strGet(Token *token);
@@ -175,7 +178,7 @@ Variable *mod();
 
 
 Variable *define();
-Variable *deleteVar();
+Variable *delete();
 Variable *lambda();
 Variable *prints(short newline);
 Variable *runs();

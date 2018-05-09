@@ -25,7 +25,7 @@ Token *token_symbols[] = {&COM, &SOL, &PLUS, &MIN, &MULT, &DIV,
         &LESSEQL, &GRTREQL, &LESS, &GRTR};
 
 Token *file_tokens;
-int file_size = 1;
+int file_size = 0;
 int file_max = 1;
 
 char *filename;
@@ -253,7 +253,7 @@ void lexfile(char *file_name){
 }
 
 void _init_(void){
-    file_tokens = malloc(0);
+    file_tokens = malloc(sizeof(Token));
     createTables();
     addVariable(&none);
     addVariable(&True);

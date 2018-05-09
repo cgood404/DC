@@ -677,7 +677,7 @@ Variable *grtr(){
     }
     char *buffer = malloc(54 + MAX_INPUT_SIZE);
     sprintf(buffer, "SyntaxError: Expected Greater Than Function, received \"%s\"",
-    file_tokens[currentToken].keyword);
+        file_tokens[currentToken].keyword);
     raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
 
     return NULL;
@@ -687,10 +687,13 @@ Variable *define(){
     if(file_tokens[currentToken].type == _VarToken){
         currentToken++;
         char *name = keywordGet(&file_tokens[currentToken]);
-        if(strcmp(name, "none") == 0){
-            raise("OverwriteError: Cannot overwrite none variable", filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
-        }else if(strcmp(name, "True") == 0 || strcmp(name, "False") == 0){
-            raise("OverwriteError: Cannot overwrite Boolean variable", filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+        for(int i = 0; i < reservedKeywordSize; i++){
+            if(strcmp(name, reservedKeywords[i]) == 0){
+                char *buffer = malloc(54 + MAX_INPUT_SIZE);
+                sprintf(buffer, "OverwriteError: Cannot overwrite variable with reserved name: %s",
+                    file_tokens[currentToken].keyword);
+                raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+            }
         }
         // if variable is already declared, or is marked to be overwritten, redefine it
         for(int i = 0; i < variable_table_size; i++){
@@ -741,6 +744,7 @@ Variable *define(){
             currentToken++;
         }else if(file_tokens[currentToken].type == _SOL){
             var = sol();
+            strcpy(var -> name, name);
         }else{
             char *buffer = malloc(53 + MAX_INPUT_SIZE);
             sprintf(buffer, "SyntaxError: Expected String or Number, received \"%s\" of type %d",
@@ -761,7 +765,7 @@ Variable *define(){
 }
 
 // does not delete the variable, but marks it to be overwritten by the next define
-Variable *deleteVar(){
+Variable *delete(){
     if(file_tokens[currentToken].type == _VarToken){
         currentToken++;
         char *name = keywordGet(&file_tokens[currentToken]);
@@ -790,8 +794,6 @@ Variable *deleteVar(){
 
 Variable *lambda(){
     if(file_tokens[currentToken].type == _VarToken){
-        currentToken++;
-        char *name = keywordGet(&file_tokens[currentToken]);
         currentToken++;
 
         int argsize = 0;
@@ -824,7 +826,7 @@ Variable *lambda(){
                 }
             }
 
-            return addFunction(allocateFunction(name, args, argsize, tokenStart, currentToken));
+            return allocateFunction(args, argsize, tokenStart, currentToken);
         }else{
             char *buffer = malloc(53 + MAX_INPUT_SIZE);
             sprintf(buffer, "SyntaxError: Expected function args as expression, received \"%s\"",
