@@ -1,0 +1,10 @@
+# m = 4294967296
+# a = 1103515245
+# c = 12345
+(define seed (time))
+(define rand (lambda (max) (
+    define seed (% (% (+ 12345 (* 1103515245 seed)) 4294967296) max)
+)))
+
+(define i 0)
+(loop (< i 10) (run (println (rand 10)) (define i (+ i 1))))

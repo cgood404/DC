@@ -30,6 +30,23 @@ void consumeSOL(){
     }
 }
 
+Variable *times(){
+    if(file_tokens[currentToken].type == _VarToken){
+        struct timespec spec;
+        clock_gettime(0, &spec);
+        Variable *var = malloc(sizeof(Variable));
+        var -> type = _Number;
+        var -> value.num = spec.tv_nsec;
+        currentToken++;
+        return var;
+    }else{
+        char *buffer = malloc(52 + MAX_INPUT_SIZE);
+        sprintf(buffer, "SyntaxError: Expected function \"rand\", found:  %s",
+        file_tokens[currentToken].keyword);
+        raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
+    }
+}
+
 Variable *ifs(){
     if(file_tokens[currentToken].type == _If){
         currentToken++;
@@ -724,7 +741,7 @@ Variable *define(){
 
                 variable_table[i] = *var;
 
-                return &none;
+                return &variable_table[i];
             }
         }
 
@@ -754,13 +771,13 @@ Variable *define(){
 
         strcpy(var -> name, name);
         addVariable(var);
-        return &none;
+        return var;
     }else{
         char *buffer = malloc(53 + MAX_INPUT_SIZE);
         sprintf(buffer, "SyntaxError: Expected define function, received \"%s\"",
             file_tokens[currentToken].keyword);
         raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
-        return &none;
+        return NULL;
     }
 }
 

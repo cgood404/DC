@@ -7,6 +7,8 @@
 #include <string.h>
 #include <stdint.h>
 #include <math.h>
+#include <time.h>
+#include <inttypes.h>
 
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
@@ -186,6 +188,7 @@ Variable *mod();
 
 Variable *define();
 Variable *delete();
+Variable *times();
 Variable *lambda();
 Variable *prints(short newline);
 void printsVar(Variable *var);

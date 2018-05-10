@@ -104,27 +104,6 @@ int eof(){
     return 0;
 }
 
-Variable *callBuiltin(){
-    if(strcmp(file_tokens[currentToken].keyword, "define") == 0){
-        return define();
-    }else if(strcmp(file_tokens[currentToken].keyword, "lambda") == 0){
-        return lambda();
-    }else if(strcmp(file_tokens[currentToken].keyword, "print") == 0){
-        return prints(0);
-    }else if(strcmp(file_tokens[currentToken].keyword, "println") == 0){
-        return prints(1);
-    }else if(strcmp(file_tokens[currentToken].keyword, "run") == 0){
-        return runs();
-    }else if(strcmp(file_tokens[currentToken].keyword, "loop") == 0){
-        return loop();
-    }else if(strcmp(file_tokens[currentToken].keyword, "delete") == 0){
-        return delete();
-    }else if(strcmp(file_tokens[currentToken].keyword, "exit") == 0){
-        exits();
-    }
-    return NULL;
-}
-
 Variable *functioncall(){
     if(file_tokens[currentToken].type == _VarToken){
         if(strcmp(keywordGet(&file_tokens[currentToken]), "define") == 0){
@@ -141,6 +120,8 @@ Variable *functioncall(){
             return loop();
         }else if(strcmp(keywordGet(&file_tokens[currentToken]), "delete") == 0){
             return delete();
+        }else if(strcmp(keywordGet(&file_tokens[currentToken]), "time") == 0){
+            return times();
         }else if(strcmp(keywordGet(&file_tokens[currentToken]), "exit") == 0){
             exits();
         }else{

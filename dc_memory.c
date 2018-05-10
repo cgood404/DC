@@ -12,7 +12,7 @@ unsigned long variable_table_size;
 unsigned long variable_table_max;
 
 char *reservedKeywords[] = {"define", "lambda", "print", "println", "run", "loop",
-                    "delete", "exit", "none", "True", "False"};
+                    "delete", "exit", "time", "none", "True", "False"};
 int reservedKeywordSize = 11;
 
 Variable none = {.name = "none", .type = _none, .value = {.num = 0}};
