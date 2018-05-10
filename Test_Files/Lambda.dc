@@ -1,7 +1,9 @@
+(define q "test")
+(define r "test2")
 
-(define x (lambda (y z) (+ 3 2)))
+(define x (lambda (y z) (+ y (+ " " z))))
 
 (println "before")
-(println (x 2 3))
+(println (x "hello" "world"))
 (println "after")
-(println y)
+(println z)

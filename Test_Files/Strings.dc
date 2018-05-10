@@ -8,3 +8,6 @@
 
 (println str1234)
 (println "\nthis will be on \n a new line")
+
+
+(println (+ str1 (+ " " str2)))

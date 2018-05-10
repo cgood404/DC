@@ -54,12 +54,6 @@ void pop(){
     if(var_stack -> top == -1){
         raise("StackUnderflowError: Cannot pop variable off stack, stack is empty",
             filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
-    }else if(var_stack -> top == var_stack -> cap / 2){
-        Variable *var_stack_backup = malloc(sizeof(*(var_stack -> stack)));
-        memmove(var_stack_backup, var_stack -> stack, sizeof(*(var_stack -> stack)));
-
-        var_stack -> stack = malloc((size_t) (sizeof(*var_stack_backup) / size_inc));
-        memcpy(var_stack -> stack, var_stack_backup, sizeof(*var_stack_backup));
     }
     var_stack -> top--;
 }
