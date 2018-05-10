@@ -107,6 +107,12 @@ Variable *getVarByName(char *name);
 
 int createTables();
 
+typedef struct _varstack {
+    int top;
+    unsigned int cap;
+    Variable *stack;
+} VarStack;
+
 union __VARIABLE { // unions share memory space
     char string[MAX_INPUT_SIZE];
     num_t num;
@@ -121,7 +127,8 @@ struct _variable {
 };
 
 struct _function {
-    Variable *arguments;
+    int argsize;
+    char **arguments;
     Token *code;
 };
 
@@ -181,6 +188,7 @@ Variable *define();
 Variable *delete();
 Variable *lambda();
 Variable *prints(short newline);
+void printsVar(Variable *var);
 Variable *runs();
 Variable *ifs();
 Variable *thens(short runs);

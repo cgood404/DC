@@ -810,10 +810,9 @@ Variable *lambda(){
                     raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
                 }
             }
-            char **args = NULL;
-            args = malloc(argsize * sizeof *args);
-            for(int i = 1; i <= argsize; i++){
-                args[i-1] = keywordGet(&file_tokens[currentToken - i]);
+            char *args[argsize];
+            for(int i = 0; i < argsize; i++){
+                args[i] = keywordGet(&file_tokens[currentToken - argsize + i]);
             }
 
             eol(1);

@@ -1,4 +1,7 @@
 
-(define x (lambda (y z) (+ y (+ z 1))))
+(define x (lambda (y z) (+ 3 2)))
 
-(println (x 2 2))
+(println "before")
+(println (x 2 3))
+(println "after")
+(println y)
