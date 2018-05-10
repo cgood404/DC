@@ -46,6 +46,7 @@ Variable *times(){
         file_tokens[currentToken].keyword);
         raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
     }
+    return NULL;
 }
 
 Variable *ifs(){
@@ -988,4 +989,5 @@ Variable *loop(){
         file_tokens[currentToken].keyword);
         raise(buffer, filename, file_tokens[currentToken].line, file_tokens[currentToken].column);
     }
+    return NULL;
 }
