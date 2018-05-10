@@ -6,6 +6,9 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdint.h>
+#include <math.h>
+#include <time.h>
+#include <inttypes.h>
 
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
@@ -84,6 +87,8 @@ extern Token COM, SOL, PLUS, MIN, MULT, DIV, MOD,
 
 // MEMORY /////////////////////////////////////////////////////////////////////////
 
+extern char *reservedKeywords[];
+extern int reservedKeywordSize;
 
 typedef struct _variable Variable;
 typedef struct _function Function;
@@ -92,7 +97,9 @@ typedef union __VARIABLE  _VARIABLE;
 extern Function *function_table;
 extern unsigned long function_table_size;
 extern unsigned long function_table_max;
-int addFunction(Function *function);
+Variable *addFunction(Variable *function);
+Variable *allocateFunction(char **args, int argsize, int start, int end);
+Variable *runFunction(char *name);
 
 extern Variable *variable_table;
 extern unsigned long variable_table_size;
@@ -102,9 +109,16 @@ Variable *getVarByName(char *name);
 
 int createTables();
 
+typedef struct _varstack {
+    int top;
+    unsigned int cap;
+    Variable *stack;
+} VarStack;
+
 union __VARIABLE { // unions share memory space
     char string[MAX_INPUT_SIZE];
     num_t num;
+    Function *function;
     short boolean;
 };
 
@@ -115,21 +129,21 @@ struct _variable {
 };
 
 struct _function {
-    char name[MAX_INPUT_SIZE];
-    Variable arguments[MAX_FUNCTION_ARGS];
-    Token code[MAX_FUNCTION_SIZE];
+    int argsize;
+    char **arguments;
+    Token *code;
 };
 
 extern Variable none, True, False;
 enum _variable_vypes {
-    _none, _Boolean, _Number, _String
+    _none, _Boolean, _Number, _String, _Function
 };
+
 
 // PARSER /////////////////////////////////////////////////////////////////////////
 
 
 int parseFile();
-int parse();
 void parserError(char *statement, int line, int column);
 
 char *strGet(Token *token);
@@ -149,7 +163,7 @@ extern Token *file_tokens;
 extern char *filename;
 
 void _init_(void);
-void printToken();
+void printToken(Token *token);
 void lex();
 void lexfile();
 int matchToken();
@@ -159,17 +173,26 @@ int addToFile();
 void resetFile(void);
 
 
-// BUILTINS /////////////////////////////////////////////////////////////////////////
+// MATH /////////////////////////////////////////////////////////////////////////
 
-Variable *define();
-Variable *lambda();
-Variable *prints(short newline);
-Variable *runs();
+
 Variable *plus();
 Variable *min();
 Variable *divs();
 Variable *mult();
 Variable *mod();
+
+
+// BUILTINS /////////////////////////////////////////////////////////////////////////
+
+
+Variable *define();
+Variable *delete();
+Variable *times();
+Variable *lambda();
+Variable *prints(short newline);
+void printsVar(Variable *var);
+Variable *runs();
 Variable *ifs();
 Variable *thens(short runs);
 Variable *elses(short runs);
@@ -179,6 +202,7 @@ Variable *lessEql();
 Variable *grtrEql();
 Variable *less();
 Variable *grtr();
+Variable *loop();
 
 void exits();
 

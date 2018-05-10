@@ -1,0 +1,19 @@
+(define q "test")
+(define r "test2")
+
+(define x (lambda (y z)
+    (+ y (+ " " z)))
+)
+
+(println "before")
+(println (x "hello" "world"))
+(println "after")
+
+
+(define outer (lambda () 
+    (lambda (s y) 
+        (+ s y)))
+)
+
+(define inner (outer))
+(println (inner 2 2))
