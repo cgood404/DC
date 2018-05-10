@@ -25,7 +25,7 @@ Token *token_symbols[] = {&COM, &SOL, &PLUS, &MIN, &MULT, &DIV,
         &LESSEQL, &GRTREQL, &LESS, &GRTR};
 
 Token *file_tokens;
-int file_size = 1;
+int file_size = 0;
 int file_max = 1;
 
 char *filename;
@@ -194,6 +194,7 @@ void lex(char *statement, int length){
                                     returnStr[str_len] = '\"';
                                     str_len++;
                                     current++;
+                                }
                             }else{
                                 returnStr[str_len] = statement[current];
                                 current++;
@@ -207,6 +208,7 @@ void lex(char *statement, int length){
                             addToFile(&str_token, line, current);
                             error = 0;
                         }else{
+                            returnStr[str_len] = '\0';
                             Token *str_token = malloc(sizeof(Token));
                             str_token -> type = -3;
 
@@ -251,7 +253,7 @@ void lexfile(char *file_name){
 }
 
 void _init_(void){
-    file_tokens = malloc(0);
+    file_tokens = malloc(sizeof(Token));
     createTables();
     addVariable(&none);
     addVariable(&True);

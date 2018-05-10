@@ -1,0 +1,16 @@
+(define x 3)
+(define y 4.5)
+(define z -.1253372)
+
+(define hello "Hello, World!")
+(define newline "This is the first line.\nThis is the second line.")
+
+(println "x is " x)
+(println "y is " y)
+(println "z is " z)
+
+(println hello)
+(println newline)
+
+(delete x)
+(println x)
