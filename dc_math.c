@@ -73,7 +73,6 @@ Variable *plus(){
                 free(t_var);
             }else if(t_var -> type == _String && total.type == _String){
                 strcat(total.value.string, t_var -> value.string);
-                currentToken++;
             }else{
                 char *buffer = malloc(107 + MAX_INPUT_SIZE);
                 sprintf(buffer, "TypeError: Conflicting types for function: \"+\", expected type \"%s\" found:  %s",
