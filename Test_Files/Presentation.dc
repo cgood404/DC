@@ -1,3 +1,5 @@
+# Linear Congruential Random Number Generator
+# X[n] = ((a * X[n-1]) + c) % m
 # m = 4294967296
 # a = 1103515245
 # c = 12345
@@ -7,10 +9,14 @@
     (define seed (% (+ 12345 (* 1103515245 seed)) 4294967296))
 ))
 
+# Get 10 random numbers, and assign each student a grade based on the random number
 (define i 0)
 (loop (< i 10) (run
+    # get a random number between 0 and 99
     (define grade (% (rand) 100))
-    (print "Student " i " got a " grade " which is a ")
+
+    # print the student's number, grade percentage, and letter grade
+    (print "Student " i " got a " grade "% which is a ")
     (? (> grade 89):
         (println "A.")
     ::? (> grade 79):
@@ -23,5 +29,6 @@
         (println "F.")
     )
 
+    # increment i
     (define i (+ i 1))
 ))
