@@ -392,7 +392,6 @@ Variable *mod(){
             Variable *var = getVarByName(keywordGet(&file_tokens[currentToken]));
             if(var -> type == _Number){
                 total = var -> value.num;
-                free(var);
                 currentToken++;
             }else{
                 char *buffer = malloc(65 + MAX_INPUT_SIZE);
@@ -404,7 +403,6 @@ Variable *mod(){
             Variable *t_var = sol();
             if(t_var -> type == _Number){
                 total = t_var -> value.num;
-                free(t_var);
             }else{
                 char *buffer = malloc(107 + MAX_INPUT_SIZE);
                 sprintf(buffer, "ArithmeticError: Unexpected token in function \"%%\", expected Number or variable of type Number, found:  %s",
@@ -432,7 +430,6 @@ Variable *mod(){
             if(var -> type == _Number){
                 if(var -> value.num != 0){
                     total = fmodl(total, var -> value.num);
-                    free(var);
                     currentToken++;
                 }else{
                     char *buffer = malloc(55 + MAX_INPUT_SIZE);
@@ -451,7 +448,6 @@ Variable *mod(){
             if(t_var -> type == _Number){
                 if(t_var -> value.num != 0){
                     total = fmodl(total, t_var -> value.num);
-                    free(t_var);
                 }else{
                     char *buffer = malloc(55 + MAX_INPUT_SIZE);
                     sprintf(buffer, "ArithmeticError: Division by zero with variable \"%s\"", t_var -> name);

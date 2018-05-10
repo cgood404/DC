@@ -1,10 +1,27 @@
 # m = 4294967296
 # a = 1103515245
 # c = 12345
+
 (define seed (time))
-(define rand (lambda (max) (
-    define seed (% (% (+ 12345 (* 1103515245 seed)) 4294967296) max)
-)))
+(define rand (lambda ()
+    (define seed (% (+ 12345 (* 1103515245 seed)) 4294967296))
+))
 
 (define i 0)
-(loop (< i 10) (run (println (rand 10)) (define i (+ i 1))))
+(loop (< i 10) (run
+    (define grade (% (rand) 100))
+    (print "Student " i " got a " grade " which is a ")
+    (? (> grade 89):
+        (println "A.")
+    ::? (> grade 79):
+        (println "B.")
+    ::? (> grade 69):
+        (println "C.")
+    ::? (> grade 59):
+        (println "D.")
+    ::
+        (println "F.")
+    )
+
+    (define i (+ i 1))
+))

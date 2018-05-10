@@ -32,11 +32,12 @@ void consumeSOL(){
 
 Variable *times(){
     if(file_tokens[currentToken].type == _VarToken){
-        struct timespec spec;
-        clock_gettime(0, &spec);
+        struct timespec *spec = malloc(sizeof(struct timespec));
+        clock_gettime(0, spec);
         Variable *var = malloc(sizeof(Variable));
         var -> type = _Number;
-        var -> value.num = spec.tv_nsec;
+        var -> value.num = spec -> tv_nsec;
+        free(spec);
         currentToken++;
         return var;
     }else{
