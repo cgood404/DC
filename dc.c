@@ -22,7 +22,7 @@ int main(int argc, char **argv){
         readfile(argv[1]);
     }
     else{ // if user wants a command line
-        printf("DC v0.5.3\nNo copyright, no money back, no nothin\'\nPress ^C or type (exit) to exit\n\n");
+        printf("DC v1.3.0\nNo copyright, no money back, no nothin\'\nPress ^C or type (exit) to exit\n\n");
         char *inputstr = malloc(MAX_INPUT_SIZE);
         while(true){
             printf(">> ");
